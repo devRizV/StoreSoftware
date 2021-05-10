@@ -27,8 +27,14 @@ Route::get('/', function () {
 Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
-//registration routes
-Route::get('/register-user', 'ProductController@CreateUser')->name('register-user');
+//user routes
+Route::get('/register-user', 'UserController@CreateUser')->name('register-user');
+Route::get('/user-list', 'UserController@getUserList')->name('user-list');
+Route::get('/edit-user/{id}', 'UserController@geteditUser')->name('edit-user');
+Route::get('/delete-user/{id}', 'UserController@deleteUser')->name('delete-user');
+Route::post('/store-user', 'UserController@create')->name('store-user');
+Route::post('/update-user', 'UserController@updateUser')->name('update-user');
+
 
 //product routes
 Route::get('/product-store', 'ProductController@getStoreProduct')->name('product-store');
@@ -39,10 +45,11 @@ Route::post('/update-product', 'ProductController@updateProduct')->name('update-
 Route::get('/delete-product/{id}', 'ProductController@deleteProduct')->name('delete-product');
 Route::get('/view-product/{id}', 'ProductController@viewProduct')->name('view-product');
 Route::get('/all-product', 'ProductController@getAllProduct')->name('all-product');
+Route::get('/order.list', 'ProductController@getPaginatedList')->name('order.list');
 Route::get('/all-usage-product', 'ProductController@getAllUsageProduct')->name('all-usage-product');
 Route::get('/get-product-unit', 'ProductController@getProductUnit')->name('get-product-unit');
 Route::get('/get-product-qty', 'ProductController@getProductQty')->name('get-product-qty');
-Route::get('/live-stock', 'ProductController@getLiveStock')->name('live-stock');
+Route::get('/live-store', 'ProductController@getLiveStock')->name('live-store');
 Route::get('/edit-product/{id}', 'ProductController@getEditProduct')->name('edit-product');
 Route::get('/edit-usage-product/{id}', 'ProductController@getEditUsageProduct')->name('edit-usage-product');
 

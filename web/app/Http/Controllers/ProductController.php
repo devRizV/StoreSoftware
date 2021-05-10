@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use DB;
+use Excel;
 use Illuminate\Http\Request;
 use App\Models\ProductModel;
 use App\Http\Requests\ProductRequest;
@@ -26,6 +27,42 @@ class ProductController extends Controller
     public function CreateUser()
     {
         return view('pages.user.index');
+    }
+
+    //get store product
+    public function getPaginatedList(Request $request){
+        if (empty($request->fix_date)) {
+            $from   = $request->from_date;
+            $to     = $request->to_date;
+           $data['products'] = DB::table('prd_master')->whereBetween('created_at', [$from, $to])->get();
+        }else{
+            $fixdate   = $request->fix_date;
+            $data['products'] = DB::table('prd_master')->whereDate('created_at', $fixdate)->get();
+        }
+
+        if($request->download_excel == 1){
+             $prd_data = DB::table('prd_master')->get()->toArray();
+             $prd_array[] = array('Product Name', 'Quantity', 'Unit', 'Quantity Price', 'Price');
+             foreach($prd_data as $product)
+             {
+              $prd_array[] = array(
+               'Product Name'  => $product->prd_id,
+               'Quantity'   => $product->prd_qty,
+               'Unit'    => $product->prd_unit,
+               'Quantity Price'  => $product->prd_qty_price,
+               'Price'   => $product->prd_price
+              );
+             }
+             Excel::create('Product Data', function($excel) use ($prd_array){
+              $excel->setTitle('Product Data');
+              $excel->sheet('Product Data', function($sheet) use ($prd_array){
+              $sheet->fromArray($prd_array, null, 'A1', false, false);
+              });
+             })->download('xlsx');
+                    
+        }
+        
+        return view('pages.product.product-list', compact('data'));
     }
 
     //get store product

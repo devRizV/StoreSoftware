@@ -20,6 +20,33 @@
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
+        <div class="row">
+          <div class="col-sm-12">
+            <form class="form-inline" action="{{ route('order.list') }}" method="get">
+              <div class="form-group mx-sm-3 mb-2">
+                <label for="from_date" class="sr-only">From Date</label>
+                <input type="text" placeholder="from date" value="{{ request()->get('from_date') }}" readonly="" class="form-control" name="from_date" id="from_date" >
+              </div>
+              <div class="form-group mx-sm-3 mb-2">
+                <label for="to_date" class="sr-only">To Date</label>
+                <input type="text" placeholder="to date" value="{{ request()->get('to_date') }}" readonly="" class="form-control" name="to_date" id="to_date">
+              </div>
+              <div class="form-group mx-sm-3 mb-2">
+                <label for="to_date" class="sr-only">Fix Date</label>
+                <input type="text" placeholder="specific date" value="{{ request()->get('fix_date') }}"  readonly="" name="fix_date" class="form-control" id="fix_date">
+              </div>
+              <div class="form-group mx-sm-3">
+                <button type="submit" class="btn btn-primary mb-2">Search</button>
+              </div>
+               <div class="form-group">
+                  <a class="btn btn-default mb-2" href="{{ route('all-product') }}">Reset</a>
+               </div>
+                <div class="form-group">
+                  <button type="submit" class="btn btn-info mb-2 mx-sm-3" name="download_excel" value="1">Download Excel</button>
+              </div>
+            </form>
+          </div>
+        </div>
       </div><!-- /.container-fluid -->
       <div  class="mt-2 mb-2">
         @if(session('msg'))
@@ -100,5 +127,11 @@
     <!-- /.content -->
 @endsection
 @push('scripts')
-
+  <script>
+  $( function() {
+    $( "#from_date" ).datepicker({ dateFormat: 'yy-mm-dd' });
+    $( "#to_date" ).datepicker({ dateFormat: 'yy-mm-dd' });
+    $( "#fix_date" ).datepicker({ dateFormat: 'yy-mm-dd' });
+  } );
+  </script>
 @endpush

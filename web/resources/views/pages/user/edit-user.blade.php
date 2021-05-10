@@ -1,16 +1,19 @@
 @extends('layouts.app')
+@php
+  $user = $data['users'];
+@endphp
 @section('content')
     <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Register User</h1>
+            <h1 class="m-0">Update User</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Register User</li>
+              <li class="breadcrumb-item active">Update User</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -28,42 +31,44 @@
                 @if(session('msg'))
                   <div class="alert alert-success">{{session('msg')}}</div>
                 @endif
-                @if(session('error'))
-                  <div class="alert alert-danger">{{session('error')}}</div>
-                @endif
               </div>
             <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">Register User</h3>
+                <h3 class="card-title">Update User</h3>
               </div>
               <!-- /.card-header -->
+              @if ($errors->any())
+                  <div class="alert alert-danger mt-2">
+                      <ul>
+                          @foreach ($errors->all() as $error)
+                              <li>{{ $error }}</li>
+                          @endforeach
+                      </ul>
+                  </div>
+              @endif
               <!-- form start -->
-              <form id="quickForm" method="post" action="{{ route('store-user') }}">
+              <form id="quickForm" action="{{route('update-user')}}" method="post">
                 @csrf
                 <div class="card-body">
-                  <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" name="name" class="form-control" id="name" placeholder="Enter name">
+                  <div class="row">
+                     <div class="col-sm-6">
+                       <div class="form-group">
+                        <input type="hidden" name="id" value="{{$user->id}}">
+                        <label for="name">User Name</label>
+                        <input type="text" required="" name="name" value="{{$user->name}}" class="form-control" value="{{old('name')}}" id="name">
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">Email address</label>
+                        <input type="email" required="" value="{{$user->email}}" name="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                      </div>
+                    </div>
                   </div>
-                  <div class="form-group">
-                    <label for="exampleInputEmail1">Email address</label>
-                    <input type="email" name="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputEmail1">User Type</label>
-                    <select class="form-control" name="type">
-                      <option value="1">Store Manager</option>
-                      <option value="0">Admin</option>
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputPassword1">Password</label>
-                    <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-                  </div>
-                </div>
+                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Create User</button>
+                  <button type="submit" class="btn btn-primary">Update User</button>
                 </div>
               </form>
             </div>
@@ -91,21 +96,18 @@ $(function () {
       },
       password: {
         required: true,
-        minlength: 5
+        password: true,
       },
     },
     messages: {
       name: {
-        required: "Please enter user name",
-        name: "Please enter user name"
+        required: "Please enter user name"
       },
       email: {
-        required: "Please enter a email address",
-        email: "Please enter a vaild email address"
+        required: "Please enter email"
       },
       password: {
-        required: "Please provide a password",
-        password: "Your password must be at least 5 characters long"
+        required: "Please enter password"
       },
     },
     errorElement: 'span',
@@ -121,5 +123,8 @@ $(function () {
     }
   });
 });
+
+
+
 </script>
 @endpush
