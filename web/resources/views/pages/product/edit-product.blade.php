@@ -5,32 +5,16 @@
 @php
   $product = $data['products'];
   $prdnames = $data['prdnames'];
+  $department = $data['department'];
+  $supplier = $data['supplier'];
 @endphp
 @section('content')
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0">Update Product</h1>
-          </div><!-- /.col -->
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Update Product</li>
-            </ol>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
-
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
         <!-- Main row -->
         <div class="row">
-          <div class="col-sm-8">
+          <div class="col-sm-10">
             <div class="mt-2 mb-2">
                 @if(session('msg'))
                   <div class="alert alert-success">{{session('msg')}}</div>
@@ -51,13 +35,13 @@
                   </div>
               @endif
               <!-- form start -->
-              <form id="quickForm" action="{{route('update-product')}}" method="post">
+              <form id="editform" action="{{route('update-product')}}" method="post">
                 @csrf
                 <div class="card-body">
                   <div class="row">
                       <div class="col-sm-6">
                        <div class="form-group">
-                        <label for="name">Product Name</label> <br>
+                        <label for="name">Product Name <span style="color:red;">*</span></label> <br>
                         <select class="js-example-basic-single form-control" name="name" id="name">
                           <option value="">Select Product Name</option>
                            @if(isset($prdnames) && count($prdnames) > 0)
@@ -69,10 +53,10 @@
                       </div>
                     </div>
                     <input type="hidden" name="prdid" value="{{$product->pk_no}}">
-                    <div class="col-sm-6">
+                     <div class="col-sm-6">
                        <div class="form-group">
-                        <label for="brand">Product Brand(Opt)</label>
-                        <input type="text" name="brand" class="form-control" value="{{$product->prd_brand}}" id="brand" placeholder="Enter product brand">
+                        <label for="brand">Purchase Date <span style="color:red;">*</span></label>
+                        <input type="text" name="purchasedate" value="{{date('d-M-Y', strtotime($product->prd_purchase_date))}}" readonly="" class="form-control" id="purchasedate" >
                       </div>
                     </div>
                   </div>
@@ -81,13 +65,13 @@
                         <div class="row">
                           <div class="col-6">
                              <div class="form-group">
-                              <label for="brand">Product Quantity</label>
-                              <input type="number" min="1" name="quantity" value="{{$product->prd_qty}}" class="form-control" id="quantity" placeholder="Enter product quantity">
+                              <label for="brand">Product Quantity <span style="color:red;">*</span></label>
+                              <input type="number" name="quantity" value="{{$product->prd_qty}}" class="form-control" id="quantity" placeholder="Enter product quantity">
                             </div>
                           </div>
                           <div class="col-6">
                             <div class="form-group">
-                              <label for="brand">Quantity In (kg,pcs,etc)</label>
+                              <label for="brand">Quantity In (kg,pcs,etc) <span style="color:red;">*</span></label>
                               <input readonly="" type="text" name="unit" value="{{$product->prd_unit}}" class="form-control" id="unit">
                             </div>
                           </div>
@@ -95,53 +79,68 @@
                     </div>
                     <div class="col-sm-6">
                        <div class="form-group">
-                        <label for="brand">Per Quantity Price</label>
-                        <input type="number" min="1" name="quantityprice" value="{{$product->prd_qty_price}}" class="form-control" id="quantityprice" placeholder="Enter product quantity price">
+                        <label for="brand">Per Quantity Price <span style="color:red;">*</span></label>
+                        <input type="number" name="quantityprice" value="{{$product->prd_qty_price}}" class="form-control" id="quantityprice" placeholder="Enter product quantity price">
                       </div>
                     </div>
                   </div>
                   <div class="row">
                       <div class="col-sm-6">
                        <div class="form-group">
-                        <label for="brand">Total Price</label>
+                        <label for="brand">Total Price <span style="color:red;">*</span></label>
                         <input type="number" min="1" name="totalprice" value="{{$product->prd_price}}" class="form-control" id="totalprice" readonly="">
                       </div>
                     </div>
                     <div class="col-sm-6">
                        <div class="form-group">
-                        <label for="brand">Grand Total</label>
+                        <label for="brand">Grand Total <span style="color:red;">*</span></label>
                         <input type="number" min="1" name="grandtotal" value="{{$product->prd_grand_price}}" class="form-control" id="grandtotal" placeholder="Grand total">
                       </div>
                     </div>
                   </div>
                   <div class="row">
-                       <div class="col-sm-6">
+                    <div class="col-sm-6">
+                     <div class="form-group">
+                      <label for="brand">Requisition Dept <span style="color:red;">*</span></label>
+                      <select class="form-control" name="reqdept" id="reqdept">
+                        <option value="">select</option>
+                        @if($department->count() > 0)
+                          @foreach($department as $row)
+                            <option value="{{$row->dep_name}}"  <?php if($row->dep_name == $product->prd_req_dep){echo 'selected';}?>>{{$row->dep_name}}</option>
+                          @endforeach
+                        @endif
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                     <div class="form-group">
+                      <label for="brand">Supplier <span style="color:red;">*</span></label>
+                      <select class="form-control" name="supplier" id="supplier">
+                        <option value="">select</option>
+                        @if($supplier->count() > 0)
+                          @foreach($supplier as $row)
+                            <option value="{{$row->supplier_name}}"<?php if($row->supplier_name == $product->supplier){echo 'selected';}?> >{{$row->supplier_name}}</option>
+                          @endforeach
+                        @endif
+                      </select>
+                    </div>
+                  </div>
+                       
+                    
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-6">
                        <div class="form-group">
                         <label for="brand">Purchase From(Opt)</label>
                         <input type="text" placeholder="Purchase from" value="{{$product->prd_purchase_from}}" class="form-control" name="purchasefrom" id="purchasefrom" >
                       </div>
                     </div>
-                    <div class="col-sm-6">
+                  <div class="col-sm-6">
                        <div class="form-group">
-                        <label for="brand">Purchase Date</label>
-                        <input type="text" name="purchasedate" readonly="" class="form-control" id="purchasedate" >
-                        <span>{{date('d-M-Y', strtotime($product->prd_purchase_date))}}</span>
+                        <label for="brand">Product Brand(Opt)</label>
+                        <input type="text" name="brand" class="form-control" value="{{$product->prd_brand}}" id="brand" placeholder="Enter product brand">
                       </div>
                     </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-sm-6">
-                     <div class="form-group">
-                      <label for="brand">Requisition Dept(Opt)</label>
-                      <input type="text" name="reqdept" value="{{$product->prd_req_dep}}" class="form-control" id="reqdept" placeholder="Requisition department">
-                    </div>
-                  </div>
-                  <div class="col-sm-6">
-                     <div class="form-group">
-                      <label for="brand">Purchase for Dept(Opt)</label>
-                      <input type="text" name="purdept" class="form-control" value="{{$product->prd_for_dep}}" id="purdept" placeholder="Purchase for department">
-                    </div>
-                  </div>
                   </div>
                   <div class="row">
                     <div class="col-sm-6">
@@ -171,7 +170,7 @@
 @push('scripts')
     <script>
 $(function () {
-  $('#quickForm').validate({
+  $('#editform').validate({
     rules: {
       name: {
         required: true,
@@ -196,6 +195,14 @@ $(function () {
         required: true,
         purchasedate: true,
       },
+      reqdept: {
+        required: true,
+        purchasedate: true,
+      },
+      supplier: {
+        required: true,
+        purchasedate: true,
+      }
       
     },
     messages: {
@@ -217,6 +224,12 @@ $(function () {
       purchasedate: {
         required: "Please enter purchase date",
       },
+      purchasedate: {
+        required: "Please sekect requisation department",
+      },
+      supplier: {
+        required: "Please select supplier",
+      }
     },
     errorElement: 'span',
     errorPlacement: function (error, element) {
@@ -274,7 +287,7 @@ $(document).ready(function() {
 function sum() {
     var num1 = document.getElementById('quantity').value;
     var num2 = document.getElementById('quantityprice').value;
-    var result = parseInt(num1) * parseInt(num2);
+    var result = num1 * num2;
     if (!isNaN(result)) {
         document.getElementById('totalprice').value = result;
     }
@@ -288,6 +301,6 @@ function sum() {
   });
 </script>
 <script type="text/javascript">
-  $("#purchasedate").datepicker({ dateFormat: "dd-M-yy"}).datepicker("setDate", new Date());
+  $("#purchasedate").datepicker({ dateFormat: "dd-M-yy"});
 </script>
 @endpush

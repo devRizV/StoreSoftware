@@ -1,29 +1,11 @@
 @extends('layouts.app')
 @push('custom_css')
-
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
 @endpush
 @php
   $products = $data['products'];
 @endphp
 @section('content')
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0">Product Name List</h1>
-          </div><!-- /.col -->
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Product Name List</li>
-            </ol>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
-
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
@@ -41,9 +23,10 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body table-responsive">
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="productlist" class="table table-bordered table-striped">
                   <thead>
                   <tr>
+                    <th>SL.</th>
                     <th>Product Name</th>
                     <th>Unit</th>
                     <th>Remarks</th>
@@ -54,24 +37,18 @@
               @if(isset($products) && count($products) > 0)
                 @foreach($products as $row)
                   <tr>
+                    <td>{{$loop->iteration}}</td>
                     <td>{{$row->prd_name}}</td>
                     <td>{{$row->prd_unit}}</td>
                     <td>{{$row->prd_remarks}}</td>
                     <td>
-                      <a href="{{url('edit-product-name/'.$row->pk_no)}}" class="btn btn-primary"><i class="fa fa-edit"></i></a>
-                      <a onclick="return confirm('Are you really sure to delete ?')" href="{{url('delete-product-name/'.$row->pk_no)}}" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                      <a href="{{url('edit-product-name/'.$row->pk_no)}}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>
+                      <a onclick="return confirm('Are you really sure to delete ?')" href="{{url('delete-product-name/'.$row->pk_no)}}" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a>
                     </td>
                   </tr>
               @endforeach    
                @endif
                   </tbody>
-                  <tfoot>
-                  <tr>
-                    <th>Product Name</th>
-                    <th>Remarks</th>
-                    <th>Action</th>
-                  </tr>
-                  </tfoot>
                 </table>
               </div>
               <!-- /.card-body -->
@@ -86,5 +63,10 @@
     <!-- /.content -->
 @endsection
 @push('scripts')
-
+  <script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('#productlist').DataTable();
+  } );
+  </script>
 @endpush

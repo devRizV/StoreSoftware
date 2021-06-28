@@ -6,35 +6,17 @@
   $prdnames = $data['productsname'];
 @endphp
 @section('content')
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0">Usage Product</h1>
-          </div><!-- /.col -->
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Usage Product</li>
-            </ol>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
-
     <!-- Main content -->
-    <section class="content">
+    <section class="content pt-2">
       <div class="container-fluid">
         <!-- Main row -->
         <div class="row">
-          <div class="col-sm-8">
+          <div class="col-sm-10">
+            @if(session('msg'))
             <div class="mt-2 mb-2">
-                @if(session('msg'))
                   <div class="alert alert-success">{{session('msg')}}</div>
-                @endif
               </div>
+              @endif
             <div class="card card-primary">
               <div class="card-header">
                 <h3 class="card-title">Usage Product</h3>
@@ -56,7 +38,7 @@
                   <div class="row">
                       <div class="col-sm-6">
                        <div class="form-group">
-                        <label for="name">Product Name</label> <br>
+                        <label for="name">Product Name <span style="color:red;">*</span></label> <br>
                         <select class="js-example-basic-single form-control" name="name" id="name">
                           <option value="">Select Product Name</option>
                            @if(isset($prdnames) && count($prdnames) > 0)
@@ -68,61 +50,61 @@
                       </div>
                     </div>
                     <div class="col-sm-6">
-                       <div class="form-group">
-                        <label for="brand">Product Brand(Opt)</label>
-                        <input type="text" name="brand" class="form-control" value="{{old('brand')}}" id="brand" placeholder="Enter product brand">
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                      <div class="col-sm-6">
                         <div class="form-group">
-                        <label for="brand">Taken by</label>
+                        <label for="brand">Taken by <span style="color:red;">*</span></label>
                         <input type="text" name="takenby" class="form-control" value="{{old('takenby')}}" id="takenby" placeholder="Enter taken by name">
                       </div>
                     </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                        <label for="name">Taken Date</label> <br>
-                        <input type="text" name="takendate" readonly="" value="{{old('takendate')}}" class="form-control" id="takendate" >
-                      </div>
-                    </div>
                   </div>
                   <div class="row">
-                      <div class="col-sm-6">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                        <label for="name">Taken Date <span style="color:red;">*</span></label> <br>
+                        <input type="text" name="takendate" readonly="" value="{{old('takendate')}}" placeholder="Taken date" class="form-control" id="takendate" >
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
                         <div class="row">
                           <div class="col-6">
                              <div class="form-group">
-                              <label for="brand">Product Quantity</label>
+                              <label for="brand">Product Quantity <span style="color:red;">*</span></label>
                               <input type="number" min="1" name="quantity" value="{{old('quantity')}}" class="form-control" id="quantity" placeholder="Enter product quantity">
                             </div>
                           </div>
                           <div class="col-6">
                             <div class="form-group">
-                              <label for="brand">Quantity In (kg,pcs,etc)</label>
+                              <label for="brand">Quantity In (kg,pcs,etc) <span style="color:red;">*</span></label>
                               <input readonly="" type="text" name="unit" value="{{old('unit')}}" class="form-control" id="unit">
                             </div>
                           </div>
                         </div>
                     </div>
+                  </div>
+                  <div class="row">
                     <div class="col-sm-6">
                        <div class="form-group">
-                        <label for="brand">Per Quantity Price</label>
+                        <label for="brand">Per Quantity Price <span style="color:red;">*</span></label>
                         <input type="number" min="1" name="quantityprice" value="{{old('quantityprice')}}" class="form-control" id="quantityprice" placeholder="Enter product quantity price">
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                       <div class="form-group">
+                        <label for="brand">Total Price <span style="color:red;">*</span></label>
+                        <input type="number" min="1" name="totalprice" value="{{old('totalprice')}}" class="form-control" id="totalprice" readonly="">
                       </div>
                     </div>
                   </div>
                   <div class="row">
-                      <div class="col-sm-6">
+                    <div class="col-sm-6">
                        <div class="form-group">
-                        <label for="brand">Total Price</label>
-                        <input type="number" min="1" name="totalprice" value="{{old('totalprice')}}" class="form-control" id="totalprice" readonly="">
+                        <label for="brand">Grand Total <span style="color:red;">*</span></label>
+                        <input type="number" min="1" name="grandtotal" value="{{old('grandtotal')}}" class="form-control" id="grandtotal" placeholder="Grand total">
                       </div>
                     </div>
                     <div class="col-sm-6">
                        <div class="form-group">
-                        <label for="brand">Grand Total</label>
-                        <input type="number" min="1" name="grandtotal" value="{{old('grandtotal')}}" class="form-control" id="grandtotal" placeholder="Grand total">
+                        <label for="brand">Product Brand(Opt)</label>
+                        <input type="text" name="brand" class="form-control" value="{{old('brand')}}" id="brand" placeholder="Enter product brand">
                       </div>
                     </div>
                   </div>
@@ -133,7 +115,6 @@
                       <textarea rows="5" placeholder="Product remarks" class="form-control" name="remarks" id="remarks">{{old('remarks')}}</textarea>
                     </div>
                   </div>
-                  <div class="col-sm-6"></div>
                   </div>
                  </div>
                 <!-- /.card-body -->
@@ -257,6 +238,7 @@ $(function () {
                   alert('Sorry !! you do not have enough storage');
                   $("#saveprd").attr('disabled', true);
                 }else{
+                  //alert('success');
                   $("#saveprd").attr('disabled', false);
                 }
               
@@ -293,6 +275,6 @@ function sum() {
   });
 </script>
 <script type="text/javascript">
-  $("#takendate").datepicker({ dateFormat: "dd-M-yy"}).datepicker("setDate", new Date());
+  $("#takendate").datepicker({ dateFormat: "dd-M-yy"});
 </script>
 @endpush

@@ -46,10 +46,11 @@ Route::get('/delete-product/{id}', 'ProductController@deleteProduct')->name('del
 Route::get('/view-product/{id}', 'ProductController@viewProduct')->name('view-product');
 Route::get('/all-product', 'ProductController@getAllProduct')->name('all-product');
 Route::get('/order.list', 'ProductController@getPaginatedList')->name('order.list');
+Route::get('/usage.order.list', 'ProductController@getUsageProductList')->name('usage.order.list');
 Route::get('/all-usage-product', 'ProductController@getAllUsageProduct')->name('all-usage-product');
 Route::get('/get-product-unit', 'ProductController@getProductUnit')->name('get-product-unit');
 Route::get('/get-product-qty', 'ProductController@getProductQty')->name('get-product-qty');
-Route::get('/live-store', 'ProductController@getLiveStock')->name('live-store');
+Route::get('/live-stock', 'ProductController@getLiveStock')->name('live-store');
 Route::get('/edit-product/{id}', 'ProductController@getEditProduct')->name('edit-product');
 Route::get('/edit-usage-product/{id}', 'ProductController@getEditUsageProduct')->name('edit-usage-product');
 
@@ -72,3 +73,11 @@ Route::get('/all-department', 'DepartmentController@getAllDepartment')->name('al
 Route::get('/edit-department/{id}', 'DepartmentController@geteditDepartment')->name('edit-department');
 Route::post('/update-department', 'DepartmentController@updateDepartment')->name('update-department');
 Route::get('/delete-department/{id}', 'DepartmentController@deleteDepartment')->name('delete-department');
+
+//supplier routes
+Route::get('/supplier-store', 'SupplierController@getstoreSupplier')->name('supplier-store');
+Route::post('/save-supplier', 'SupplierController@storeSupplier')->name('save-supplier');
+Route::get('/all-supplier', 'SupplierController@getAllSupplier')->name('all-supplier');
+Route::get('/edit-supplier/{id}', 'SupplierController@geteditSupplier')->name('edit-supplier');
+Route::post('/update-supplier', 'SupplierController@updateSupplier')->name('update-supplier');
+Route::get('/delete-supplier/{id}', 'SupplierController@deleteSupplier')->name('delete-supplier');

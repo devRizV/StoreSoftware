@@ -7,24 +7,6 @@
   $prdnames = $data['prdnames'];
 @endphp
 @section('content')
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0">View Product</h1>
-          </div><!-- /.col -->
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">View Product</li>
-            </ol>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
-
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
@@ -115,37 +97,38 @@
                     </div>
                   </div>
                   <div class="row">
-                       <div class="col-sm-6">
-                       <div class="form-group">
-                        <label for="brand">Purchase From(Opt)</label>
-                        <input type="text" readonly="" placeholder="Purchase from" value="{{$product->prd_purchase_from}}" class="form-control" name="purchasefrom" id="purchasefrom" >
-                      </div>
-                    </div>
-                    <div class="col-sm-6">
-                       <div class="form-group">
-                        <label for="brand">Purchase Date</label>
-                        <input type="date" readonly="" name="purchasedate" value="{{$product->prd_purchase_date}}" class="form-control" id="purchasedate" >
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
                     <div class="col-sm-6">
                      <div class="form-group">
-                      <label for="brand">Requisition Dept(Opt)</label>
+                      <label for="brand">Requisition Dept</label>
                       <input type="text" readonly="" name="reqdept" value="{{$product->prd_req_dep}}" class="form-control" id="reqdept" placeholder="Requisition department">
                     </div>
                   </div>
+                       
+                    <div class="col-sm-6">
+                       <div class="form-group">
+                        <label for="brand">Purchase Date</label>
+                        <input type="text" readonly="" name="purchasedate" value="{{date('d-M-Y', strtotime($product->prd_purchase_date))}}" class="form-control" id="purchasedate" >
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-6">
+                       <div class="form-group">
+                        <label for="brand">Purchase From</label>
+                        <input type="text" readonly="" placeholder="Purchase from" value="{{$product->prd_purchase_from}}" class="form-control" name="purchasefrom" id="purchasefrom" >
+                      </div>
+                    </div>
                   <div class="col-sm-6">
                      <div class="form-group">
-                      <label for="brand">Purchase for Dept(Opt)</label>
-                      <input type="text" readonly="" name="purdept" class="form-control" value="{{$product->prd_for_dep}}" id="purdept" placeholder="Purchase for department">
+                      <label for="brand">Supplier</label>
+                      <input type="text" readonly="" name="supplier" class="form-control" value="{{$product->supplier}}" id="supplier" placeholder="Supplier name">
                     </div>
                   </div>
                   </div>
                   <div class="row">
                     <div class="col-sm-6">
                      <div class="form-group">
-                      <label for="brand">Remarks (Opt)</label>
+                      <label for="brand">Remarks</label>
                       <textarea rows="5" readonly="" placeholder="Product remarks" class="form-control" name="remarks" id="remarks">{{$product->prd_details}}</textarea>
                     </div>
                   </div>

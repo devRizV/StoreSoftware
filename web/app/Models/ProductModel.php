@@ -22,9 +22,9 @@ class ProductModel extends Model
             $this->data['prd_price']          = $request->totalprice;
             $this->data['prd_grand_price']    = $request->grandtotal;
             $this->data['prd_purchase_from']  = $request->purchasefrom;
-            $this->data['prd_purchase_date']  = $request->purchasedate;
+            $this->data['prd_purchase_date']  = date('Y-m-d H:i:s', strtotime($request->purchasedate));
             $this->data['prd_req_dep']        = $request->reqdept;
-            $this->data['prd_for_dep']        = $request->purdept;
+            $this->data['supplier']           = $request->supplier;
             $this->data['prd_details']        = $request->remarks;
             $this->data['created_at']         = date('Y-m-d H:i:s');
            DB::table($this->table)->insert($this->data);
@@ -76,9 +76,9 @@ class ProductModel extends Model
             $this->data['prd_price']          = $request->totalprice;
             $this->data['prd_grand_price']    = $request->grandtotal;
             $this->data['prd_purchase_from']  = $request->purchasefrom;
-            $this->data['prd_purchase_date']  = $request->purchasedate;
+            $this->data['prd_purchase_date']  =  date('Y-m-d H:i:s', strtotime($request->purchasedate));
             $this->data['prd_req_dep']        = $request->reqdept;
-            $this->data['prd_for_dep']        = $request->purdept;
+            $this->data['supplier']           = $request->supplier;
             $this->data['prd_details']        = $request->remarks;
             $this->data['updated_at']         = date('Y-m-d H:i:s');
             //if update prd_master table then update qty on prd_stock table

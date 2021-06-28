@@ -1,52 +1,61 @@
 @extends('layouts.app')
 @push('custom_css')
-
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
+  <style type="text/css">
+    .input-field {
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      padding: 3px 5px;
+  }
+  button, .reset-btn {
+    background: #ffff;
+    border: 1px solid #dddd;
+    border-radius: 3px !important;
+    color: #000;
+    padding: 3px 10px;
+}
+input#from_date,input#to_date,input#specific_date {
+    width: 101px;
+}
+  </style>
 @endpush
 @php
   $products = $data['products'];
+  $department = $data['department'] ?? null;
 @endphp
 @section('content')
     <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0">Product List</h1>
-          </div><!-- /.col -->
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Product List</li>
-            </ol>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-        <div class="row">
-          <div class="col-sm-12">
-            <form class="form-inline" action="{{ route('order.list') }}" method="get">
-              <div class="form-group mx-sm-3 mb-2">
-                <label for="from_date" class="sr-only">From Date</label>
-                <input type="text" placeholder="from date" value="{{ request()->get('from_date') }}" readonly="" class="form-control" name="from_date" id="from_date" >
-              </div>
-              <div class="form-group mx-sm-3 mb-2">
-                <label for="to_date" class="sr-only">To Date</label>
-                <input type="text" placeholder="to date" value="{{ request()->get('to_date') }}" readonly="" class="form-control" name="to_date" id="to_date">
-              </div>
-              <div class="form-group mx-sm-3 mb-2">
-                <label for="to_date" class="sr-only">Fix Date</label>
-                <input type="text" placeholder="specific date" value="{{ request()->get('fix_date') }}"  readonly="" name="fix_date" class="form-control" id="fix_date">
+        <form class="form-inline" action="{{ route('order.list') }}" method="get">
+                <input type="text" placeholder="from date" value="{{ request()->get('from_date') }}" readonly="" class="input-field" name="from_date" id="from_date" >
+              <div class="form-group mx-sm-3">
+                <input type="text" placeholder="to date" value="{{ request()->get('to_date') }}" readonly="" class="input-field" name="to_date" id="to_date">
               </div>
               <div class="form-group mx-sm-3">
-                <button type="submit" class="btn btn-primary mb-2">Search</button>
+                <select class="input-field" name="department">
+                  <option value="">select</option>
+                  @if($department != null && $department->count() > 0)
+                    @foreach($department as $row)
+                      <option value="{{$row->dep_name}}">{{$row->dep_name}}</option>
+                    @endforeach
+                  @endif
+                </select>
+              </div>
+              or
+              <div class="form-group mx-sm-3">
+                <input type="text" placeholder="specific date" value="{{ request()->get('fix_date') }}"  readonly="" name="fix_date" class="input-field" id="fix_date">
+              </div>
+              <div class="form-group mx-sm-3">
+                <button type="submit" class="">Search</button>
               </div>
                <div class="form-group">
-                  <a class="btn btn-default mb-2" href="{{ route('all-product') }}">Reset</a>
+                  <a class="reset-btn" href="{{ route('all-product') }}">Reset</a>
                </div>
                 <div class="form-group">
-                  <button type="submit" class="btn btn-info mb-2 mx-sm-3" name="download_excel" value="1">Download Excel</button>
+                  <button type="submit" class="mx-sm-3" name="download_excel" value="1">Download Excel</button>
               </div>
             </form>
-          </div>
-        </div>
       </div><!-- /.container-fluid -->
       <div  class="mt-2 mb-2">
         @if(session('msg'))
@@ -68,15 +77,16 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body table-responsive">
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="productlist" class="table table-bordered table-striped">
                   <thead>
                   <tr>
                     <th>Name</th>
-                    <th>Quantity</th>
+                    <th>Req. Dept.</th>
+                    <th>Qty</th>
                     <th>Unit</th>
-                    <th>Quantity Price</th>
+                    <th>Qty. Price</th>
                     <th>Price</th>
-                    <th>Grand Total</th>
+                    <th>G. Total</th>
                     <th>Action</th>
                   </tr>
                   </thead>
@@ -88,31 +98,21 @@
                        $prdName = DB::table('prd_name')->where('pk_no', $row->prd_id)->first();
                     @endphp
                     <td>{{$prdName->prd_name}}</td>
+                    <td>{{$row->prd_req_dep}}</td>
                     <td>{{$row->prd_qty}}</td>
                     <td>{{$row->prd_unit}}</td>
                     <td>{{$row->prd_qty_price}}</td>
                     <td>{{$row->prd_price}}</td>
                     <td>{{$row->prd_grand_price}}</td>
                     <td>
-                      <a href="{{url('edit-product/'.$row->pk_no)}}" class="btn btn-primary"><i class="fa fa-edit"></i></a>
-                      <a href="{{url('view-product/'.$row->pk_no)}}" class="btn btn-primary"><i class="fa fa-eye"></i></a>
-                      <a onclick="return confirm('Are you really sure to delete ?');" href="{{url('delete-product/'.$row->pk_no)}}" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                      <a href="{{url('edit-product/'.$row->pk_no)}}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>
+                      <a href="{{url('view-product/'.$row->pk_no)}}" class="btn btn-primary btn-xs"><i class="fa fa-eye"></i></a>
+                      <a onclick="return confirm('Are you really sure to delete ?');" href="{{url('delete-product/'.$row->pk_no)}}" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a>
                     </td>
                   </tr>
               @endforeach    
                @endif
                   </tbody>
-                  <tfoot>
-                  <tr>
-                    <th>Name</th>
-                    <th>Quantity</th>
-                    <th>Unit</th>
-                    <th>Quantity Price</th>
-                    <th>Price</th>
-                    <th>Grand Total</th>
-                    <th>Action</th>
-                  </tr>
-                  </tfoot>
                 </table>
               </div>
               <!-- /.card-body -->
@@ -132,6 +132,12 @@
     $( "#from_date" ).datepicker({ dateFormat: 'yy-mm-dd' });
     $( "#to_date" ).datepicker({ dateFormat: 'yy-mm-dd' });
     $( "#fix_date" ).datepicker({ dateFormat: 'yy-mm-dd' });
+  } );
+  </script>
+  <script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('#productlist').DataTable();
   } );
   </script>
 @endpush

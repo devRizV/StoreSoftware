@@ -23,7 +23,7 @@
           <li class="nav-item">
             <a href="{{route('live-store')}}" class="nav-link">
               <i class="nav-icon fas fa-store"></i>
-              <p>Live Store</p>
+              <p>Live Stock</p>
             </a>
           </li>
           <li class="nav-item">
@@ -114,6 +114,29 @@
                 <a href="{{route('all-department')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Department List</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a href="javascript::void(0)" class="nav-link">
+              <i class="nav-icon fas fa-shopping-basket"></i>
+              <p>
+                Supplier
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{route('supplier-store')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Add Supplier</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{route('all-supplier')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Supplier List</p>
                 </a>
               </li>
             </ul>

@@ -33,6 +33,8 @@ class ProductRequest extends FormRequest
             'totalprice'                    => 'required',
             'grandtotal'                    => 'required',
             'purchasedate'                  => 'required',
+            'reqdept'                       => 'required',
+            'supplier'                      => 'required'
         ];
 
         return $rules;
@@ -47,7 +49,9 @@ class ProductRequest extends FormRequest
             'quantityprice.required'          => 'Product price is required!',
             'totalprice.required'             => 'Product total price is required!',
             'grandtotal.required'             => 'Product grand total is required',
-            'purchasedate.required'           => 'Purchase date is required'
+            'purchasedate.required'           => 'Purchase date is required',
+            'reqdept.required'                => 'Requisation department is required',
+            'supplier.required'               => 'Supplier name is required'
         ];
     }
 

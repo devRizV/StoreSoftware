@@ -3,38 +3,22 @@
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 @endpush
 @php
-  $prdnames = $data['productsname'];
+  $prdnames   = $data['productsname'];
+  $department = $data['department'];
+  $supplier = $data['supplier'];
 @endphp
 @section('content')
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0">Product Entry</h1>
-          </div><!-- /.col -->
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Product Entry</li>
-            </ol>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
-
     <!-- Main content -->
-    <section class="content">
+    <section class="content pt-2">
       <div class="container-fluid">
         <!-- Main row -->
         <div class="row">
-          <div class="col-sm-8">
-            <div class="mt-2 mb-2">
-                @if(session('msg'))
+          <div class="col-sm-10">
+            @if(session('msg'))
+               <div class="mt-2 mb-2">
                   <div class="alert alert-success">{{session('msg')}}</div>
-                @endif
               </div>
+              @endif
             <div class="card card-primary">
               <div class="card-header">
                 <h3 class="card-title">Product Entry</h3>
@@ -56,7 +40,7 @@
                   <div class="row">
                       <div class="col-sm-6">
                        <div class="form-group">
-                        <label for="name">Product Name</label> <br>
+                        <label for="name">Product Name <span style="color:red;">*</span></label> <br>
                         <select class="js-example-basic-single form-control" name="name" id="name">
                           <option value="">Select Product Name</option>
                            @if(isset($prdnames) && count($prdnames) > 0)
@@ -69,8 +53,8 @@
                     </div>
                     <div class="col-sm-6">
                        <div class="form-group">
-                        <label for="brand">Product Brand(Opt)</label>
-                        <input type="text" name="brand" class="form-control" value="{{old('brand')}}" id="brand" placeholder="Enter product brand">
+                        <label for="brand">Purchase Date <span style="color:red;">*</span></label>
+                        <input type="text" name="purchasedate" placeholder="select date" readonly="" value="{{old('purchasedate')}}" class="form-control" id="purchasedate" >
                       </div>
                     </div>
                   </div>
@@ -79,13 +63,13 @@
                         <div class="row">
                           <div class="col-6">
                              <div class="form-group">
-                              <label for="brand">Product Quantity</label>
-                              <input type="number" min="1" name="quantity" value="{{old('quantity')}}" class="form-control" id="quantity" placeholder="Enter product quantity">
+                              <label for="brand">Product Quantity <span style="color:red;">*</span></label>
+                              <input type="number"  name="quantity" value="{{old('quantity')}}" class="form-control" id="quantity" placeholder="Enter product quantity">
                             </div>
                           </div>
                           <div class="col-6">
                             <div class="form-group">
-                              <label for="brand">Quantity In (kg,pcs,etc)</label>
+                              <label for="brand">Quantity In (kg,pcs,etc) <span style="color:red;">*</span></label>
                               <input readonly="" type="text" name="unit" value="{{old('unit')}}" class="form-control" id="unit">
                             </div>
                           </div>
@@ -93,52 +77,66 @@
                     </div>
                     <div class="col-sm-6">
                        <div class="form-group">
-                        <label for="brand">Per Quantity Price</label>
-                        <input type="number" min="1" name="quantityprice" value="{{old('quantityprice')}}" class="form-control" id="quantityprice" placeholder="Enter product quantity price">
+                        <label for="brand">Per Quantity Price <span style="color:red;">*</span></label>
+                        <input type="number"  name="quantityprice" value="{{old('quantityprice')}}" class="form-control" id="quantityprice" placeholder="Enter product quantity price">
                       </div>
                     </div>
                   </div>
                   <div class="row">
                       <div class="col-sm-6">
                        <div class="form-group">
-                        <label for="brand">Total Price</label>
+                        <label for="brand">Total Price <span style="color:red;">*</span></label>
                         <input type="number" min="1" name="totalprice" value="{{old('totalprice')}}" class="form-control" id="totalprice" readonly="">
                       </div>
                     </div>
                     <div class="col-sm-6">
                        <div class="form-group">
-                        <label for="brand">Grand Total</label>
+                        <label for="brand">Grand Total <span style="color:red;">*</span></label>
                         <input type="number" min="1" name="grandtotal" value="{{old('grandtotal')}}" class="form-control" id="grandtotal" placeholder="Grand total">
                       </div>
                     </div>
                   </div>
                   <div class="row">
-                       <div class="col-sm-6">
-                       <div class="form-group">
-                        <label for="brand">Purchase From(Opt)</label>
-                        <input type="text" placeholder="Purchase from" value="{{old('purchasefrom')}}" class="form-control" name="purchasefrom" id="purchasefrom" >
-                      </div>
-                    </div>
-                    <div class="col-sm-6">
-                       <div class="form-group">
-                        <label for="brand">Purchase Date</label>
-                        <input type="text" name="purchasedate" readonly="" value="{{old('purchasedate')}}" class="form-control" id="purchasedate" >
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
                     <div class="col-sm-6">
                      <div class="form-group">
-                      <label for="brand">Requisition Dept(Opt)</label>
-                      <input type="text" name="reqdept" value="{{old('reqdept')}}" class="form-control" id="reqdept" placeholder="Requisition department">
+                      <label for="brand">Requisition Dept. <span style="color:red;">*</span></label>
+                      <select class="form-control" name="reqdept" id="reqdept">
+                        <option value="">select</option>
+                        @if($department->count() > 0)
+                          @foreach($department as $row)
+                            <option value="{{$row->dep_name}}">{{$row->dep_name}}</option>
+                          @endforeach
+                        @endif
+                      </select>
                     </div>
                   </div>
                   <div class="col-sm-6">
                      <div class="form-group">
-                      <label for="brand">Purchase for Dept(Opt)</label>
-                      <input type="text" name="purdept" class="form-control" value="{{old('purdept')}}" id="purdept" placeholder="Purchase for department">
+                      <label for="brand">Supplier <span style="color:red;">*</span></label>
+                      <select class="form-control" name="supplier" id="supplier">
+                        <option value="">select</option>
+                        @if($supplier->count() > 0)
+                          @foreach($supplier as $row)
+                            <option value="{{$row->supplier_name}}">{{$row->supplier_name}}</option>
+                          @endforeach
+                        @endif
+                      </select>
                     </div>
                   </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-6">
+                       <div class="form-group">
+                        <label for="brand">Product Brand(Opt)</label>
+                        <input type="text" name="brand" class="form-control" value="{{old('brand')}}" id="brand" placeholder="Enter product brand">
+                      </div>
+                    </div>
+                   <div class="col-sm-6">
+                       <div class="form-group">
+                        <label for="brand">Purchase From(Opt)</label>
+                      <input type="text" name="purchasefrom" class="form-control" value="{{old('purchasefrom')}}" id="purchasefrom" placeholder="Purchase from">
+                      </div>
+                    </div>
                   </div>
                   <div class="row">
                     <div class="col-sm-6">
@@ -193,6 +191,14 @@ $(function () {
         required: true,
         purchasedate: true,
       },
+      reqdept: {
+        required: true,
+        reqdept: true,
+      },
+      supplier: {
+        required: true,
+        reqdept: true,
+      },
       
     },
     messages: {
@@ -213,6 +219,12 @@ $(function () {
       },
       purchasedate: {
         required: "Please enter purchase date",
+      },
+      reqdept: {
+        required: "Please enter requisition department",
+      },
+      supplier: {
+        required: "Please enter supplier name",
       },
     },
     errorElement: 'span',
@@ -271,7 +283,7 @@ $(document).ready(function() {
 function sum() {
     var num1 = document.getElementById('quantity').value;
     var num2 = document.getElementById('quantityprice').value;
-    var result = parseInt(num1) * parseInt(num2);
+    var result = num1 * num2;
     if (!isNaN(result)) {
         document.getElementById('totalprice').value = result;
     }
@@ -285,6 +297,6 @@ function sum() {
   });
 </script>
 <script type="text/javascript">
-  $("#purchasedate").datepicker({ dateFormat: "dd-M-yy"}).datepicker("setDate", new Date());
+  $("#purchasedate").datepicker({ dateFormat: "dd-M-yy"});
 </script>
 @endpush

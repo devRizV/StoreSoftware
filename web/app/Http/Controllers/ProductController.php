@@ -3,20 +3,28 @@
 namespace App\Http\Controllers;
 
 use DB;
-use Excel;
 use Illuminate\Http\Request;
 use App\Models\ProductModel;
+use App\Models\SupplierModel;
+use App\Models\OrderExport;
+use App\Models\DepartmentModel;
+use App\Models\OrderModel;
+use Maatwebsite\Excel\Excel;
 use App\Http\Requests\ProductRequest;
 use App\Http\Requests\ProductStorageRequest;
 class ProductController extends Controller
 {
     protected $product;
-    public function __construct(ProductModel $product)
+    protected $supplier;
+    protected $getProductList;
+    public function __construct(ProductModel $product, OrderModel $getProductList,SupplierModel $supplier)
     {
         $this->middleware('auth');
         $data = array();
 
+        $this->getProductList = $getProductList;
         $this->product = $product;
+        $this->supplier = $supplier;
     }
 
     /**
@@ -31,49 +39,38 @@ class ProductController extends Controller
 
     //get store product
     public function getPaginatedList(Request $request){
-        if (empty($request->fix_date)) {
-            $from   = $request->from_date;
-            $to     = $request->to_date;
-           $data['products'] = DB::table('prd_master')->whereBetween('created_at', [$from, $to])->get();
-        }else{
-            $fixdate   = $request->fix_date;
-            $data['products'] = DB::table('prd_master')->whereDate('created_at', $fixdate)->get();
+        $data['products'] = $this->getProductList->fetchDate($request);
+        if($request->download_excel == 1){
+             return \Excel::download(new OrderExport($data), date('d-m-Y').'_order.xlsx');
         }
 
+        return view('pages.product.product-list', compact('data'));
+    }
+    //get usage product list
+    public function getUsageProductList(Request $request){
+        $data['products'] = $this->getProductList->fetchUsagePrdDate($request);
         if($request->download_excel == 1){
-             $prd_data = DB::table('prd_master')->get()->toArray();
-             $prd_array[] = array('Product Name', 'Quantity', 'Unit', 'Quantity Price', 'Price');
-             foreach($prd_data as $product)
-             {
-              $prd_array[] = array(
-               'Product Name'  => $product->prd_id,
-               'Quantity'   => $product->prd_qty,
-               'Unit'    => $product->prd_unit,
-               'Quantity Price'  => $product->prd_qty_price,
-               'Price'   => $product->prd_price
-              );
-             }
-             Excel::create('Product Data', function($excel) use ($prd_array){
-              $excel->setTitle('Product Data');
-              $excel->sheet('Product Data', function($sheet) use ($prd_array){
-              $sheet->fromArray($prd_array, null, 'A1', false, false);
-              });
-             })->download('xlsx');
-                    
+             return \Excel::download(new OrderExport($data), date('d-m-Y').'_order.xlsx');
         }
         
-        return view('pages.product.product-list', compact('data'));
+        return view('pages.product.product-usage-list', compact('data'));
     }
 
     //get store product
     public function getStoreProduct(){
+        $data['department'] = DepartmentModel::all();
+        $data['supplier'] = SupplierModel::all();
         $data['productsname'] = DB::table('prd_name')->orderBy('pk_no', 'DESC')->get();
         return view('pages.product.index', compact('data'));
     }
 
     //get usage product
     public function getUsageProduct(){
-        $data['productsname'] = DB::table('prd_name')->orderBy('pk_no', 'DESC')->get();
+        $data['productsname'] = DB::table('prd_stock as S')
+        ->leftJoin('prd_name as N', 'N.pk_no', '=', 'S.prd_id')
+        ->select('N.prd_name', 'N.pk_no')
+        ->orderBy('N.pk_no', 'DESC')
+        ->get();
         return view('pages.product.usage-product', compact('data'));
     }
     //get product unit
@@ -96,7 +93,8 @@ class ProductController extends Controller
     }
     //get all product
     public function getAllProduct(){
-        $data['products'] = DB::table('prd_master')->orderBy('pk_no', 'DESC')->paginate(10);
+        $data['products'] = DB::table('prd_master')->orderBy('pk_no', 'DESC')->get();
+        $data['department'] = DepartmentModel::all();
         return view('pages.product.product-list', compact('data'));
     }
     //get get All Usage Product
@@ -114,7 +112,8 @@ class ProductController extends Controller
     //get edit product 
     public function getEditProduct($prdId){
         $data['products'] = DB::table('prd_master')->where('pk_no', $prdId)->first();
-
+         $data['department'] = DepartmentModel::all();
+         $data['supplier'] = SupplierModel::all();
         $data['prdnames'] = DB::table('prd_name')->get();
         return view('pages.product.edit-product', compact('data'));
     }
@@ -122,7 +121,11 @@ class ProductController extends Controller
     public function getEditUsageProduct($prdId){
         $data['products'] = DB::table('prd_usage')->where('pk_no', $prdId)->first();
 
-        $data['prdnames'] = DB::table('prd_name')->get();
+        $data['prdnames'] = DB::table('prd_stock as S')
+        ->leftJoin('prd_name as N', 'N.pk_no', '=', 'S.prd_id')
+        ->select('N.prd_name', 'N.pk_no')
+        ->orderBy('N.pk_no', 'DESC')
+        ->get();
         return view('pages.product.edit-usage-product', compact('data'));
     }
 

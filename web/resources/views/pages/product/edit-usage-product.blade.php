@@ -7,24 +7,6 @@
   $prdnames = $data['prdnames'];
 @endphp
 @section('content')
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0">Update Usage Product</h1>
-          </div><!-- /.col -->
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Update Usage Product</li>
-            </ol>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
-
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
@@ -57,7 +39,7 @@
                   <div class="row">
                       <div class="col-sm-6">
                        <div class="form-group">
-                        <label for="name">Product Name</label> <br>
+                        <label for="name">Product Name <span style="color:red;">*</span></label> <br>
                         <select class="js-example-basic-single form-control" name="name" id="name">
                           <option value="">Select Product Name</option>
                            @if(isset($prdnames) && count($prdnames) > 0)
@@ -70,62 +52,61 @@
                     </div>
                     <input type="hidden" name="prdid" value="{{$product->pk_no}}">
                     <div class="col-sm-6">
-                       <div class="form-group">
-                        <label for="brand">Product Brand(Opt)</label>
-                        <input type="text" name="brand" class="form-control" value="{{$product->prd_brand}}" id="brand" placeholder="Enter product brand">
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                      <div class="col-sm-6">
                         <div class="form-group">
-                        <label for="brand">Taken by</label>
+                        <label for="brand">Taken by <span style="color:red;">*</span></label>
                         <input type="text" name="takenby" value="{{$product->taken_by}}" class="form-control" id="takenby" placeholder="Enter taken by name">
                       </div>
                     </div>
-                    <div class="col-sm-6">
-                       <div class="form-group">
-                        <label for="name">Taken Date</label> <br>
-                        <input type="text" name="takendate" readonly="" id="takendate" class="form-control" id="takendate" >
-                        <span>{{date('d-M-Y', strtotime($product->taken_date))}}</span>
-                      </div>
-                    </div>
                   </div>
                   <div class="row">
-                      <div class="col-sm-6">
+                    <div class="col-sm-6">
+                       <div class="form-group">
+                        <label for="name">Taken Date <span style="color:red;">*</span></label> <br>
+                        <input type="text" name="takendate" value="{{date('d-M-Y', strtotime($product->taken_date))}}" readonly="" id="takendate" class="form-control" id="takendate" >
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
                         <div class="row">
                           <div class="col-6">
                              <div class="form-group">
-                              <label for="brand">Product Quantity</label>
+                              <label for="brand">Product Quantity <span style="color:red;">*</span></label>
                               <input type="number" min="1" name="quantity" value="{{$product->prd_qty}}" class="form-control" id="quantity" placeholder="Enter product quantity">
                             </div>
                           </div>
                           <div class="col-6">
                             <div class="form-group">
-                              <label for="brand">Quantity In (kg,pcs,etc)</label>
+                              <label for="brand">Quantity In (kg,pcs,etc) <span style="color:red;">*</span></label>
                               <input readonly="" type="text" name="unit" value="{{$product->prd_unit}}" class="form-control" id="unit">
                             </div>
                           </div>
                         </div>
                     </div>
+                  </div>
+                  <div class="row">
                     <div class="col-sm-6">
                        <div class="form-group">
-                        <label for="brand">Per Quantity Price</label>
+                        <label for="brand">Per Quantity Price <span style="color:red;">*</span></label>
                         <input type="number" min="1" name="quantityprice" value="{{$product->prd_qty_price}}" class="form-control" id="quantityprice" placeholder="Enter product quantity price">
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                       <div class="form-group">
+                        <label for="brand">Total Price <span style="color:red;">*</span></label>
+                        <input type="number" min="1" name="totalprice" value="{{$product->prd_price}}" class="form-control" id="totalprice" readonly="">
                       </div>
                     </div>
                   </div>
                   <div class="row">
-                      <div class="col-sm-6">
+                    <div class="col-sm-6">
                        <div class="form-group">
-                        <label for="brand">Total Price</label>
-                        <input type="number" min="1" name="totalprice" value="{{$product->prd_price}}" class="form-control" id="totalprice" readonly="">
+                        <label for="brand">Grand Total <span style="color:red;">*</span></label>
+                        <input type="number" min="1" name="grandtotal" value="{{$product->prd_grand_price}}" class="form-control" id="grandtotal" placeholder="Grand total">
                       </div>
                     </div>
                     <div class="col-sm-6">
                        <div class="form-group">
-                        <label for="brand">Grand Total</label>
-                        <input type="number" min="1" name="grandtotal" value="{{$product->prd_grand_price}}" class="form-control" id="grandtotal" placeholder="Grand total">
+                        <label for="brand">Product Brand(Opt)</label>
+                        <input type="text" name="brand" class="form-control" value="{{$product->prd_brand}}" id="brand" placeholder="Enter product brand">
                       </div>
                     </div>
                   </div>
@@ -136,12 +117,11 @@
                       <textarea rows="5" placeholder="Product remarks" class="form-control" name="remarks" id="remarks">{{$product->prd_remarks}}</textarea>
                     </div>
                   </div>
-                  <div class="col-sm-6"></div>
                   </div>
                  </div>
                 <!-- /.card-body -->
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Update Product</button>
+                  <button type="submit" id="editprd" class="btn btn-primary">Update Product</button>
                 </div>
               </form>
             </div>
@@ -156,7 +136,7 @@
 @endsection
 @push('scripts')
 <script type="text/javascript">
-  $("#takendate").datepicker({ dateFormat: "dd-M-yy"}).datepicker("setDate", new Date());
+  $("#takendate").datepicker({ dateFormat: "dd-M-yy"});
 </script>
     <script>
 $(function () {
@@ -221,22 +201,6 @@ $(function () {
   });
 });
 
-//get prd unit
-/*$(document).ready(function() {
-    $("#name").on("change", function() {
-         var nameid = $('#name').val();
-         var URL = "{{url('/')}}";
-        $.ajax({
-           type:'POST',
-           url: URL+'/get-product-unit',
-           data: {"_token": "{{ csrf_token() }}","nameid": nameid}
-           success:function(data) {
-              //$("#msg").html(data.msg);
-              alert(data);
-           }
-        });
-    });
-});*/
   $(function(){
     $(document).on('change','#name',function(){
       var nameid = $('#name').val();
@@ -263,9 +227,9 @@ $(function () {
           success:function(data){
                 if (data == "over") {
                   alert('Sorry !! you do not have enough storage');
-                  $("#saveprd").attr('disabled', true);
+                  $("#editprd").attr('disabled', true);
                 }else{
-                  $("#saveprd").attr('disabled', false);
+                  $("#editprd").attr('disabled', false);
                 }
               
           }
