@@ -49,7 +49,9 @@ Route::get('/order.list', 'ProductController@getPaginatedList')->name('order.lis
 Route::get('/usage.order.list', 'ProductController@getUsageProductList')->name('usage.order.list');
 Route::get('/all-usage-product', 'ProductController@getAllUsageProduct')->name('all-usage-product');
 Route::get('/get-product-unit', 'ProductController@getProductUnit')->name('get-product-unit');
+Route::get('/get-product-unit-price', 'ProductController@getProductUnitAndPrice')->name('get-product-unit-price');
 Route::get('/get-product-qty', 'ProductController@getProductQty')->name('get-product-qty');
+Route::get('/update-product-qty', 'ProductController@updateProductQty')->name('update-product-qty');
 Route::get('/live-stock', 'ProductController@getLiveStock')->name('live-store');
 Route::get('/edit-product/{id}', 'ProductController@getEditProduct')->name('edit-product');
 Route::get('/edit-usage-product/{id}', 'ProductController@getEditUsageProduct')->name('edit-usage-product');

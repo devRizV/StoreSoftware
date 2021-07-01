@@ -80,11 +80,35 @@ class ProductController extends Controller
         echo $productUnit->prd_unit;
     }
     //get product unit
+    public function getProductUnitAndPrice(Request $request){
+        $prdNameId = $request->nameid;
+        $productUnit = DB::table('prd_name')->where('pk_no', $prdNameId)->first();
+        $data['productUnit'] = DB::table('prd_name as N')
+        ->leftJoin('prd_master as M', 'M.prd_id', '=', 'N.pk_no')
+        ->select('N.prd_unit', 'M.prd_qty_price')
+        ->first();
+        return $data;
+    }
+    //get product unit
     public function getProductQty(Request $request){
         $prdNameId = $request->nameid;
         $quantity = $request->quantity;
         $productUnit = DB::table('prd_stock')->where('prd_id', $prdNameId)->first();
         if ($quantity > $productUnit->prd_qty) {
+            echo "over";
+        }else{
+            echo "success";
+        }
+        
+    }
+    //get product unit
+    public function updateProductQty(Request $request){
+        $prdNameId = $request->nameid;
+        $quantity = $request->quantity;
+        $productStockUnit = DB::table('prd_stock')->where('prd_id', $prdNameId)->first();
+        $productUsageUnit = DB::table('prd_usage')->where('prd_name_id', $prdNameId)->first();
+        $TotalQuantity = $productStockUnit->prd_qty+$productUsageUnit->prd_qty;
+        if ($quantity > $TotalQuantity) {
             echo "over";
         }else{
             echo "success";

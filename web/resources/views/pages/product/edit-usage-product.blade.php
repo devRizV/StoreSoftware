@@ -214,14 +214,14 @@ $(function () {
       });
     });
     //quantity check
-    $(document).on('change','#quantity',function(){
+    $(document).on('keyup','#quantity',function(){
       var nameid      = $('#name').val();
       var quantityval = $('#quantity').val();
       if (nameid == "") {
         alert('Product name can not be empty !!');
       }
       $.ajax({
-          url:"{{route('get-product-qty') }}",
+          url:"{{route('update-product-qty') }}",
           type:"GET",
           data:{nameid:nameid,quantity:quantityval},
           success:function(data){
@@ -255,6 +255,7 @@ function sum() {
     var result = parseInt(num1) * parseInt(num2);
     if (!isNaN(result)) {
         document.getElementById('totalprice').value = result;
+        document.getElementById('grandtotal').value = result;
     }
 }
 </script>

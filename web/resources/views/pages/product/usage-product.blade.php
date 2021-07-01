@@ -214,16 +214,17 @@ $(function () {
     $(document).on('change','#name',function(){
       var nameid = $('#name').val();
       $.ajax({
-          url:"{{route('get-product-unit') }}",
+          url:"{{route('get-product-unit-price') }}",
           type:"GET",
           data:{nameid:nameid},
           success:function(data){
+              console.log(data->prd_qty_price);
               $('#unit').val(data);
           }
       });
     });
     //quantity check
-    $(document).on('change','#quantity',function(){
+    $(document).on('keyup','#quantity',function(){
       var nameid      = $('#name').val();
       var quantityval = $('#quantity').val();
       if (nameid == "") {
@@ -264,6 +265,7 @@ function sum() {
     var result = parseInt(num1) * parseInt(num2);
     if (!isNaN(result)) {
         document.getElementById('totalprice').value = result;
+        document.getElementById('grandtotal').value = result;
     }
 }
 </script>

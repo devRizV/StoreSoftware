@@ -290,6 +290,7 @@ function sum() {
     var result = num1 * num2;
     if (!isNaN(result)) {
         document.getElementById('totalprice').value = result;
+        document.getElementById('grandtotal').value = result;
     }
 }
 </script>
