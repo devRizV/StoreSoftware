@@ -64,7 +64,7 @@
                           <div class="col-6">
                              <div class="form-group">
                               <label for="brand">Product Quantity <span style="color:red;">*</span></label>
-                              <input type="number"  name="quantity" value="{{old('quantity')}}" class="form-control" id="quantity" placeholder="Enter product quantity">
+                              <input type="text"  name="quantity" value="{{old('quantity')}}" class="form-control" id="quantity" placeholder="Enter product quantity">
                             </div>
                           </div>
                           <div class="col-6">
@@ -78,7 +78,8 @@
                     <div class="col-sm-6">
                        <div class="form-group">
                         <label for="brand">Per Quantity Price <span style="color:red;">*</span></label>
-                        <input type="number"  name="quantityprice" value="{{old('quantityprice')}}" class="form-control" id="quantityprice" placeholder="Enter product quantity price">
+                        <input type="text"  name="quantityprice" value="{{old('quantityprice')}}" class="form-control quantityprice" id="quantityprice" placeholder="Enter product quantity price">
+                        <span id="showmsg"></span>
                       </div>
                     </div>
                   </div>
@@ -165,98 +166,6 @@
 @endsection
 @push('scripts')
     <script>
-$(function () {
-  $('#quickForm').validate({
-    rules: {
-      name: {
-        required: true,
-        name: true,
-      },
-      quantity: {
-        required: true,
-        quantity: true,
-      },
-      unit: {
-        required: true,
-      },
-      quantityprice: {
-        required: true,
-        quantityprice: true,
-      },
-      grandtotal: {
-        required: true,
-        grandtotal: true,
-      },
-      purchasedate: {
-        required: true,
-        purchasedate: true,
-      },
-      reqdept: {
-        required: true,
-        reqdept: true,
-      },
-      supplier: {
-        required: true,
-        reqdept: true,
-      },
-      
-    },
-    messages: {
-      name: {
-        required: "Please enter product name"
-      },
-      quantity: {
-        required: "Please enter product quantity"
-      },
-      unit: {
-        required: "Please enter quantity unit name"
-      },
-      quantityprice: {
-        required: "Please enter product quantity price"
-      },
-      grandtotal: {
-        required: "Please enter grand total"
-      },
-      purchasedate: {
-        required: "Please enter purchase date",
-      },
-      reqdept: {
-        required: "Please enter requisition department",
-      },
-      supplier: {
-        required: "Please enter supplier name",
-      },
-    },
-    errorElement: 'span',
-    errorPlacement: function (error, element) {
-      error.addClass('invalid-feedback');
-      element.closest('.form-group').append(error);
-    },
-    highlight: function (element, errorClass, validClass) {
-      $(element).addClass('is-invalid');
-    },
-    unhighlight: function (element, errorClass, validClass) {
-      $(element).removeClass('is-invalid');
-    }
-  });
-});
-
-//get prd unit
-/*$(document).ready(function() {
-    $("#name").on("change", function() {
-         var nameid = $('#name').val();
-         var URL = "{{url('/')}}";
-        $.ajax({
-           type:'POST',
-           url: URL+'/get-product-unit',
-           data: {"_token": "{{ csrf_token() }}","nameid": nameid}
-           success:function(data) {
-              //$("#msg").html(data.msg);
-              alert(data);
-           }
-        });
-    });
-});*/
   $(function(){
     $(document).on('change','#name',function(){
       var nameid = $('#name').val();
@@ -271,6 +180,32 @@ $(function () {
     });
   });
 
+    $(document).on('keyup','#quantityprice',function(){
+      var price     = $(this).val();
+      var productId = $('#name').val();
+      if (productId == "") {
+        alert('Product Name can not be empty !!');
+      }else{
+        $('#showmsg').text('Processing...');
+        $.ajax({
+            url:"{{route('get-product-price') }}",
+            type:"GET",
+            data:{prdprice:price, productId:productId},
+            success:function(data){
+                console.log(data);
+                if (data.status == 'error') {
+                  $('#showmsg').html('<span style="color:#ff0000">Previous price was -></span>'+data.price);
+                }else if(data.status == 'success'){
+                   $('#showmsg').html('<span style="color:#008000">Both price are same</span>');
+                }else if(data.status == 'fentry'){
+                   $('#showmsg').html('<span style="color:#008000">This is first entry</span>');
+                }else{
+                   console.log('something wrong !!');
+                }
+            }
+        });
+      }
+    });
 //multiplication
 $(document).ready(function() {
     //this calculates values automatically 
@@ -279,6 +214,8 @@ $(document).ready(function() {
         sum();
     });
 });
+
+
 
 function sum() {
     var num1 = document.getElementById('quantity').value;

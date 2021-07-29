@@ -71,6 +71,7 @@ class ProductController extends Controller
         ->select('N.prd_name', 'N.pk_no')
         ->orderBy('N.pk_no', 'DESC')
         ->get();
+        dd($data);
         return view('pages.product.usage-product', compact('data'));
     }
     //get product unit
@@ -129,7 +130,9 @@ class ProductController extends Controller
 
     //get live stock
     public function getLiveStock(){
-        $data['products'] = DB::table('prd_stock')->join('prd_name', 'prd_name.pk_no', '=', 'prd_stock.prd_id')->get();
+        $data['products'] = DB::table('prd_stock')
+        ->join('prd_name', 'prd_name.pk_no', '=', 'prd_stock.prd_id')
+        ->get();
         return view('pages.product.live-stock', compact('data'));
     }
 
@@ -181,5 +184,30 @@ class ProductController extends Controller
     public function deleteProduct($prdid){
            $resp = $this->product->DeleteProduct($prdid); 
            return redirect()->back()->with('msg', $resp);
+    }
+
+    //check product price
+    public function checkProductPrice(Request $request){
+            $productPrice  = $request->prdprice;
+            $productId = $request->productId;
+            $getPrdPrice = DB::table('prd_master')
+            ->where('prd_id', $productId)
+            ->orderBy('pk_no', 'DESC')
+            ->first();
+            if ($getPrdPrice == null) {
+                $data['status'] = 'fentry';
+                return response()->json($data);
+            }else{
+                if ($productPrice != $getPrdPrice->prd_qty_price) {
+                $data['price']  = $getPrdPrice->prd_qty_price;
+                $data['status'] = 'error';
+                return response()->json($data);
+                }else{
+                    $data['status'] = 'success';
+                    return response()->json($data);
+                }
+            }
+            
+
     }
 }

@@ -55,6 +55,7 @@ Route::get('/update-product-qty', 'ProductController@updateProductQty')->name('u
 Route::get('/live-stock', 'ProductController@getLiveStock')->name('live-store');
 Route::get('/edit-product/{id}', 'ProductController@getEditProduct')->name('edit-product');
 Route::get('/edit-usage-product/{id}', 'ProductController@getEditUsageProduct')->name('edit-usage-product');
+Route::get('get-product-price/', 'ProductController@checkProductPrice')->name('get-product-price');
 
 //product name
 Route::get('/save-product-name', 'ProductNameController@getAddProductName')->name('save-product-name');

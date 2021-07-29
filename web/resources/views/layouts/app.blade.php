@@ -62,8 +62,8 @@
 <!-- jQuery Mapael -->
 <script src="{{asset('assets/plugins/jquery-mousewheel/jquery.mousewheel.js')}}"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-<script src="{{asset('assets/js/jquery.validate.js')}}"></script>
-<script src="{{asset('assets/plugins/raphael/raphael.min.js')}}"></script>
+<!-- <script src="{{asset('assets/js/jquery.validate.js')}}"></script>
+ --><script src="{{asset('assets/plugins/raphael/raphael.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-mapael/jquery.mapael.min.js')}}"></script>
 <script src="{{asset('assets/plugins/jquery-mapael/maps/usa_states.min.js')}}"></script>
 <!-- ChartJS -->
