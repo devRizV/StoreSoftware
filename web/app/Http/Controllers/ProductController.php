@@ -71,7 +71,6 @@ class ProductController extends Controller
         ->select('N.prd_name', 'N.pk_no')
         ->orderBy('N.pk_no', 'DESC')
         ->get();
-        dd($data);
         return view('pages.product.usage-product', compact('data'));
     }
     //get product unit
@@ -96,7 +95,9 @@ class ProductController extends Controller
         $quantity = $request->quantity;
         $productUnit = DB::table('prd_stock')->where('prd_id', $prdNameId)->first();
         if ($quantity > $productUnit->prd_qty) {
-            echo "over";
+            $data['qty']  = $productUnit->prd_qty;
+            $data['status'] = 'over';
+            return response()->json($data);
         }else{
             echo "success";
         }
@@ -110,7 +111,9 @@ class ProductController extends Controller
         $productUsageUnit = DB::table('prd_usage')->where('prd_name_id', $prdNameId)->first();
         $TotalQuantity = $productStockUnit->prd_qty+$productUsageUnit->prd_qty;
         if ($quantity > $TotalQuantity) {
-            echo "over";
+            $data['qty']  = $TotalQuantity;
+            $data['status'] = 'over';
+            return response()->json($data);
         }else{
             echo "success";
         }

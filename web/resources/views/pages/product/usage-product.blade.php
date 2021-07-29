@@ -68,7 +68,7 @@
                           <div class="col-6">
                              <div class="form-group">
                               <label for="brand">Product Quantity <span style="color:red;">*</span></label>
-                              <input type="number" min="1" name="quantity" value="{{old('quantity')}}" class="form-control" id="quantity" placeholder="Enter product quantity">
+                              <input type="text" min="1" name="quantity" value="{{old('quantity')}}" class="form-control" id="quantity" placeholder="Enter product quantity">
                             </div>
                           </div>
                           <div class="col-6">
@@ -84,7 +84,7 @@
                     <div class="col-sm-6">
                        <div class="form-group">
                         <label for="brand">Per Quantity Price <span style="color:red;">*</span></label>
-                        <input type="number" min="1" name="quantityprice" value="{{old('quantityprice')}}" class="form-control" id="quantityprice" placeholder="Enter product quantity price">
+                        <input type="text" min="1" name="quantityprice" value="{{old('quantityprice')}}" class="form-control" id="quantityprice" placeholder="Enter product quantity price">
                       </div>
                     </div>
                     <div class="col-sm-6">
@@ -134,91 +134,14 @@
 @endsection
 @push('scripts')
     <script>
-$(function () {
-  $('#quickForm').validate({
-    rules: {
-      name: {
-        required: true,
-        name: true,
-      },
-      quantity: {
-        required: true,
-        quantity: true,
-      },
-      unit: {
-        required: true,
-      },
-      quantityprice: {
-        required: true,
-        quantityprice: true,
-      },
-      grandtotal: {
-        required: true,
-        grandtotal: true,
-      },
-      purchasedate: {
-        required: true,
-        purchasedate: true,
-      },
-      takenby: {
-        required: true,
-        takenby: true,
-      },
-      takendate: {
-        required: true,
-        takendate: true,
-      },
-      
-    },
-    messages: {
-      name: {
-        required: "Please enter product name"
-      },
-      quantity: {
-        required: "Please enter product quantity"
-      },
-      unit: {
-        required: "Please enter quantity unit name"
-      },
-      quantityprice: {
-        required: "Please enter product quantity price"
-      },
-      grandtotal: {
-        required: "Please enter grand total"
-      },
-      purchasedate: {
-        required: "Please enter purchase date",
-      },
-      takenby: {
-        required: "Please enter taken by name",
-      },
-      takendate: {
-        required: "Please enter taken date",
-      },
-    },
-    errorElement: 'span',
-    errorPlacement: function (error, element) {
-      error.addClass('invalid-feedback');
-      element.closest('.form-group').append(error);
-    },
-    highlight: function (element, errorClass, validClass) {
-      $(element).addClass('is-invalid');
-    },
-    unhighlight: function (element, errorClass, validClass) {
-      $(element).removeClass('is-invalid');
-    }
-  });
-});
-
   $(function(){
     $(document).on('change','#name',function(){
       var nameid = $('#name').val();
       $.ajax({
-          url:"{{route('get-product-unit-price') }}",
+          url:"{{route('get-product-unit') }}",
           type:"GET",
           data:{nameid:nameid},
           success:function(data){
-              console.log(data->prd_qty_price);
               $('#unit').val(data);
           }
       });
@@ -235,8 +158,8 @@ $(function () {
           type:"GET",
           data:{nameid:nameid,quantity:quantityval},
           success:function(data){
-                if (data == "over") {
-                  alert('Sorry !! you do not have enough storage');
+                if (data.status == "over") {
+                  alert('Sorry !! You have only -> '+data.qty+' products');
                   $("#saveprd").attr('disabled', true);
                 }else{
                   //alert('success');
