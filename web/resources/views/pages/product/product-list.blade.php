@@ -22,6 +22,7 @@ input#from_date,input#to_date,input#specific_date {
 @php
   $products = $data['products'];
   $department = $data['department'] ?? null;
+  $supplier = $data['supplier'] ?? null;
 @endphp
 @section('content')
     <!-- Content Header (Page header) -->
@@ -32,9 +33,13 @@ input#from_date,input#to_date,input#specific_date {
               <div class="form-group mx-sm-3">
                 <input type="text" placeholder="to date" value="{{ request()->get('to_date') }}" readonly="" class="input-field" name="to_date" id="to_date">
               </div>
+              or
+              <div class="form-group mx-sm-3">
+                <input type="text" placeholder="specific date" value="{{ request()->get('fix_date') }}"  readonly="" name="fix_date" class="input-field" id="fix_date">
+              </div>
               <div class="form-group mx-sm-3">
                 <select class="input-field" name="department">
-                  <option value="">select</option>
+                  <option value="">select department</option>
                   @if($department != null && $department->count() > 0)
                     @foreach($department as $row)
                       <option value="{{$row->dep_name}}">{{$row->dep_name}}</option>
@@ -42,19 +47,23 @@ input#from_date,input#to_date,input#specific_date {
                   @endif
                 </select>
               </div>
-              or
               <div class="form-group mx-sm-3">
-                <input type="text" placeholder="specific date" value="{{ request()->get('fix_date') }}"  readonly="" name="fix_date" class="input-field" id="fix_date">
+                <select class="input-field" name="supplier">
+                  <option value="">select supplier</option>
+                  @if($supplier != null && $supplier->count() > 0)
+                    @foreach($supplier as $row)
+                      <option value="{{$row->supplier_name}}">{{$row->supplier_name}}</option>
+                    @endforeach
+                  @endif
+                </select>
               </div>
               <div class="form-group mx-sm-3">
-                <button type="submit" class="">Search</button>
+                <button style="background: #0af1c685; color:#000;" type="submit" class="">Search</button>
               </div>
                <div class="form-group">
-                  <a class="reset-btn" href="{{ route('all-product') }}">Reset</a>
+                  <a style="background: #f10a5e; color:#fff;" class="reset-btn" href="{{ route('all-product') }}">Reset</a>
                </div>
-                <div class="form-group">
-                  <button type="submit" class="mx-sm-3" name="download_excel" value="1">Download Excel</button>
-              </div>
+                  <button style="background: #008000; color:#fff;" type="submit" class="mt-2" name="download_excel" value="1">Download Excel</button>
             </form>
       </div><!-- /.container-fluid -->
       <div  class="mt-2 mb-2">
@@ -97,7 +106,7 @@ input#from_date,input#to_date,input#specific_date {
                     @php
                        $prdName = DB::table('prd_name')->where('pk_no', $row->prd_id)->first();
                     @endphp
-                    <td>{{$prdName->prd_name}}</td>
+                    <td>{{$prdName->prd_name ?? ''}}</td>
                     <td>{{$row->prd_req_dep}}</td>
                     <td>{{$row->prd_qty}}</td>
                     <td>{{$row->prd_unit}}</td>

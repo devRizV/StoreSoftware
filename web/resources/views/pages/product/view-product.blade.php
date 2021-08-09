@@ -12,7 +12,7 @@
       <div class="container-fluid">
         <!-- Main row -->
         <div class="row">
-          <div class="col-sm-8">
+          <div class="col-sm-10">
             <div class="mt-2 mb-2">
                 @if(session('msg'))
                   <div class="alert alert-success">{{session('msg')}}</div>
@@ -50,11 +50,10 @@
                         </select>
                       </div>
                     </div>
-                    <input type="hidden" name="prdid" value="{{$product->pk_no}}">
                     <div class="col-sm-6">
                        <div class="form-group">
-                        <label for="brand">Product Brand(Opt)</label>
-                        <input type="text" readonly="" name="brand" class="form-control" value="{{$product->prd_brand}}" id="brand" placeholder="Enter product brand">
+                        <label for="brand">Purchase Date <span style="color:red;">*</span></label>
+                        <input type="text" name="purchasedate" value="{{date('d-M-Y', strtotime($product->prd_purchase_date))}}" readonly="" class="form-control" id="purchasedate" >
                       </div>
                     </div>
                   </div>
@@ -103,13 +102,13 @@
                       <input type="text" readonly="" name="reqdept" value="{{$product->prd_req_dep}}" class="form-control" id="reqdept" placeholder="Requisition department">
                     </div>
                   </div>
-                       
                     <div class="col-sm-6">
-                       <div class="form-group">
-                        <label for="brand">Purchase Date</label>
-                        <input type="text" readonly="" name="purchasedate" value="{{date('d-M-Y', strtotime($product->prd_purchase_date))}}" class="form-control" id="purchasedate" >
-                      </div>
+                     <div class="form-group">
+                      <label for="brand">Supplier</label>
+                      <input type="text" readonly="" name="supplier" class="form-control" value="{{$product->supplier}}" id="supplier" placeholder="Supplier name">
                     </div>
+                  </div>    
+                   
                   </div>
                   <div class="row">
                     <div class="col-sm-6">
@@ -118,12 +117,12 @@
                         <input type="text" readonly="" placeholder="Purchase from" value="{{$product->prd_purchase_from}}" class="form-control" name="purchasefrom" id="purchasefrom" >
                       </div>
                     </div>
-                  <div class="col-sm-6">
-                     <div class="form-group">
-                      <label for="brand">Supplier</label>
-                      <input type="text" readonly="" name="supplier" class="form-control" value="{{$product->supplier}}" id="supplier" placeholder="Supplier name">
+                    <div class="col-sm-6">
+                       <div class="form-group">
+                        <label for="brand">Product Brand(Opt)</label>
+                        <input type="text" name="brand" class="form-control" value="{{$product->prd_brand}}" readonly="" id="brand" placeholder="Enter product brand">
+                      </div>
                     </div>
-                  </div>
                   </div>
                   <div class="row">
                     <div class="col-sm-6">

@@ -138,11 +138,12 @@
     $(document).on('change','#name',function(){
       var nameid = $('#name').val();
       $.ajax({
-          url:"{{route('get-product-unit') }}",
+          url:"{{route('get-product-usage-unit') }}",
           type:"GET",
           data:{nameid:nameid},
           success:function(data){
-              $('#unit').val(data);
+              $('#unit').val(data.unit);
+              $('#quantityprice').val(data.qtyprice);
           }
       });
     });

@@ -33,7 +33,7 @@
                   </div>
               @endif
               <!-- form start -->
-              <form id="quickForm" action="{{route('update-product')}}" method="post">
+              <form id="quickForm" action="{{route('update-usage-product', $product->pk_no)}}" method="get">
                 @csrf
                 <div class="card-body">
                   <div class="row">

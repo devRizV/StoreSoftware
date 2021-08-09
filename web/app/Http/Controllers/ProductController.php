@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use DB;
 use Illuminate\Http\Request;
 use App\Models\ProductModel;
+use App\Models\ProductUsageModel;
 use App\Models\SupplierModel;
 use App\Models\OrderExport;
 use App\Models\DepartmentModel;
@@ -16,8 +17,9 @@ class ProductController extends Controller
 {
     protected $product;
     protected $supplier;
+    protected $prdusage;
     protected $getProductList;
-    public function __construct(ProductModel $product, OrderModel $getProductList,SupplierModel $supplier)
+    public function __construct(ProductModel $product, ProductUsageModel $prdusage, OrderModel $getProductList,SupplierModel $supplier)
     {
         $this->middleware('auth');
         $data = array();
@@ -25,6 +27,7 @@ class ProductController extends Controller
         $this->getProductList = $getProductList;
         $this->product = $product;
         $this->supplier = $supplier;
+        $this->prdusage = $prdusage;
     }
 
     /**
@@ -39,8 +42,11 @@ class ProductController extends Controller
 
     //get store product
     public function getPaginatedList(Request $request){
-        $data['products'] = $this->getProductList->fetchDate($request);
+
+        $data['products'] = $this->getProductList->fetchData($request);
+
         if($request->download_excel == 1){
+            //dd($data['products']);
              return \Excel::download(new OrderExport($data), date('d-m-Y').'_order.xlsx');
         }
 
@@ -79,6 +85,19 @@ class ProductController extends Controller
         $productUnit = DB::table('prd_name')->where('pk_no', $prdNameId)->first();
         echo $productUnit->prd_unit;
     }
+
+    //get product unit and price for usage page
+    public function getUsageProductUnit(Request $request){
+        $prdNameId = $request->nameid;
+        $productdata = DB::table('prd_master')
+        ->where('prd_id', $prdNameId)
+        ->orderBy('pk_no', 'DESC')
+        ->first();
+        $data['unit']  = $productdata->prd_unit;
+        $data['qtyprice']  = $productdata->prd_qty_price;
+        $data['status'] = 'over';
+        return response()->json($data);
+    }
     //get product unit
     public function getProductUnitAndPrice(Request $request){
         $prdNameId = $request->nameid;
@@ -103,7 +122,7 @@ class ProductController extends Controller
         }
         
     }
-    //get product unit
+    //get product qty
     public function updateProductQty(Request $request){
         $prdNameId = $request->nameid;
         $quantity = $request->quantity;
@@ -123,6 +142,7 @@ class ProductController extends Controller
     public function getAllProduct(){
         $data['products'] = DB::table('prd_master')->orderBy('pk_no', 'DESC')->get();
         $data['department'] = DepartmentModel::all();
+        $data['supplier'] = SupplierModel::all();
         return view('pages.product.product-list', compact('data'));
     }
     //get get All Usage Product
@@ -174,7 +194,13 @@ class ProductController extends Controller
     }
     //store Storage Product
     public function storeStorageProduct(ProductStorageRequest $request){
-           $resp = $this->product->StoreStorageProduct($request); 
+           $resp = $this->prdusage->StoreUsagesProduct($request); 
+           return redirect()->back()->with('msg', $resp);
+    }
+
+    //update storage product
+    public function updateUsageProduct(ProductStorageRequest $request, $id){
+           $resp = $this->prdusage->updateUsageProduct($request, $id); 
            return redirect()->back()->with('msg', $resp);
     }
 
@@ -183,7 +209,15 @@ class ProductController extends Controller
            $resp = $this->product->UpdateProduct($request); 
            return redirect()->back()->with('msg', $resp);
     }
+
+    
     //delete product
+    public function deleteUsageProduct($prdid){
+           $resp = $this->prdusage->DeleteProduct($prdid); 
+           return redirect()->back()->with('msg', $resp);
+    }
+
+//delete product
     public function deleteProduct($prdid){
            $resp = $this->product->DeleteProduct($prdid); 
            return redirect()->back()->with('msg', $resp);

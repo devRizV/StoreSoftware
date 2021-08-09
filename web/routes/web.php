@@ -42,13 +42,16 @@ Route::get('/usage-product', 'ProductController@getUsageProduct')->name('usage-p
 Route::post('/save-product', 'ProductController@storeProduct')->name('save-product');
 Route::post('/save-storage-product', 'ProductController@storeStorageProduct')->name('save-storage-product');
 Route::post('/update-product', 'ProductController@updateProduct')->name('update-product');
+Route::get('/update-usage-product/{id}', 'ProductController@updateUsageProduct')->name('update-usage-product');
 Route::get('/delete-product/{id}', 'ProductController@deleteProduct')->name('delete-product');
+Route::get('/delete-usage-product/{id}', 'ProductController@deleteUsageProduct')->name('delete-usage-product');
 Route::get('/view-product/{id}', 'ProductController@viewProduct')->name('view-product');
 Route::get('/all-product', 'ProductController@getAllProduct')->name('all-product');
-Route::get('/order.list', 'ProductController@getPaginatedList')->name('order.list');
+Route::get('/order-list', 'ProductController@getPaginatedList')->name('order.list');
 Route::get('/usage.order.list', 'ProductController@getUsageProductList')->name('usage.order.list');
 Route::get('/all-usage-product', 'ProductController@getAllUsageProduct')->name('all-usage-product');
 Route::get('/get-product-unit', 'ProductController@getProductUnit')->name('get-product-unit');
+Route::get('/get-product-usage-unit', 'ProductController@getUsageProductUnit')->name('get-product-usage-unit');
 Route::get('/get-product-unit-price', 'ProductController@getProductUnitAndPrice')->name('get-product-unit-price');
 Route::get('/get-product-qty', 'ProductController@getProductQty')->name('get-product-qty');
 Route::get('/update-product-qty', 'ProductController@updateProductQty')->name('update-product-qty');

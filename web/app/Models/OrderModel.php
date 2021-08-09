@@ -13,32 +13,30 @@ class OrderModel extends Model
 
 
 
- public function fetchDate($request){
+ public function fetchData($request){
       //dd($request->All());
-      if (empty($request->fix_date)) {
-            if (empty($request->department)) {
-                $from   = $request->from_date;
-                $to     = $request->to_date;
-               $data = DB::table('prd_master')
-               ->whereBetween('prd_purchase_date', [$from, $to])
-               ->get();
-               return $data;
-            }else{
-              $from   = $request->from_date;
-                $to     = $request->to_date;
-               $data = DB::table('prd_master')
-               ->whereBetween('prd_purchase_date', [$from, $to])
-               ->where('prd_req_dep', $request->department)
-               ->get();
-               return $data;
-            }
-            
+       $query = DB::table('prd_master');
+       if($request->fix_date){
+            $query->whereDate('prd_purchase_date', $request->fix_date);
         }else{
-            $fixdate   = $request->fix_date;
-            $data = DB::table('prd_master')->whereDate('prd_purchase_date', $fixdate)->get();
-            return $data;
+           if ($request->from_date && $request->to_date) {
+              $from   = $request->from_date;
+              $to     = $request->to_date;
+              $query->whereBetween('prd_purchase_date', [$from, $to]);
+           }
+            
         }
- }
+
+        if($request->department){
+            $query->where('prd_req_dep', $request->department);
+        }
+        if($request->supplier){
+            $query->where('supplier', $request->supplier);
+        }
+
+        $data = $query->orderBy('prd_master.pk_no','DESC')->get();
+        return $data;
+     }
  public function fetchUsagePrdDate($request){
       if (empty($request->fix_date)) {
             $from   = $request->from_date;

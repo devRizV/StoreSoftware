@@ -91,7 +91,7 @@ input#from_date,input#to_date,input#specific_date {
                     @php
                        $prdName = DB::table('prd_name')->where('pk_no', $row->prd_name_id)->first();
                     @endphp
-                    <td>{{$prdName->prd_name}}</td>
+                    <td>{{$prdName->prd_name ?? ''}}</td>
                     <td>{{$row->prd_qty}}</td>
                     <td>{{$row->prd_unit}}</td>
                     <td>{{$row->prd_qty_price}}</td>
@@ -100,7 +100,7 @@ input#from_date,input#to_date,input#specific_date {
                     <td>
                       <a href="{{url('edit-usage-product/'.$row->pk_no)}}" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></a>
                       <a href="{{url('view-product/'.$row->pk_no)}}" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></a>
-                      <a onclick="return confirm('Are you really sure to delete ?');" href="{{url('delete-product/'.$row->pk_no)}}" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
+                      <a onclick="return confirm('Are you really sure to delete ?');" href="{{url('delete-usage-product/'.$row->pk_no)}}" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
                     </td>
                   </tr>
               @endforeach    

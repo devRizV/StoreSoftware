@@ -43,7 +43,7 @@
                     <td>{{$row->prd_remarks}}</td>
                     <td>
                       <a href="{{url('edit-product-name/'.$row->pk_no)}}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>
-                      <a onclick="return confirm('Are you really sure to delete ?')" href="{{url('delete-product-name/'.$row->pk_no)}}" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a>
+                      {{--<a onclick="return confirm('Are you really sure to delete ?')" href="{{url('delete-product-name/'.$row->pk_no)}}" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a> --}}
                     </td>
                   </tr>
               @endforeach    
