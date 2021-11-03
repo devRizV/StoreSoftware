@@ -35,18 +35,24 @@
                   <div class="row">
                       <div class="col-sm-6">
                        <div class="form-group">
-                        <label for="name">Product Name</label>
+                        <label for="name">Product Name <span style="color:red;">*</span></label>
                         <input type="text" name="name" class="form-control" value="{{old('name')}}" id="name" placeholder="Enter product name">
                       </div>
                     </div>
                     <div class="col-sm-6">
                        <div class="form-group">
-                        <label for="brand">Quantity In (kg,pcs,etc)</label>
+                        <label for="brand">Quantity In (kg,pcs,etc) <span style="color:red;">*</span></label>
                         <input type="text" name="unit" value="{{old('unit')}}" class="form-control" id="unit" placeholder="kg,pcs,etc">
                       </div>
                     </div>
                   </div>
                   <div class="row">
+                    <div class="col-sm-6">
+                       <div class="form-group">
+                        <label for="minqty">Minimum Alert Qty</label>
+                        <input type="text" name="minqty" value="{{old('minqty')}}" class="form-control" id="minqty" placeholder="Min Qty">
+                      </div>
+                    </div>
                     <div class="col-sm-6">
                      <div class="form-group">
                       <label for="brand">Remarks (Opt)</label>

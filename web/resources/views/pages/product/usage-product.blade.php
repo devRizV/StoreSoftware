@@ -4,6 +4,7 @@
 @endpush
 @php
   $prdnames = $data['productsname'];
+  $department = $data['department'];
 @endphp
 @section('content')
     <!-- Main content -->
@@ -90,7 +91,7 @@
                     <div class="col-sm-6">
                        <div class="form-group">
                         <label for="brand">Total Price <span style="color:red;">*</span></label>
-                        <input type="number" min="1" name="totalprice" value="{{old('totalprice')}}" class="form-control" id="totalprice" readonly="">
+                        <input type="text" name="totalprice" value="{{old('totalprice')}}" class="form-control" id="totalprice" readonly="">
                       </div>
                     </div>
                   </div>
@@ -98,17 +99,30 @@
                     <div class="col-sm-6">
                        <div class="form-group">
                         <label for="brand">Grand Total <span style="color:red;">*</span></label>
-                        <input type="number" min="1" name="grandtotal" value="{{old('grandtotal')}}" class="form-control" id="grandtotal" placeholder="Grand total">
+                        <input type="text" name="grandtotal" value="{{old('grandtotal')}}" class="form-control" id="grandtotal" placeholder="Grand total">
                       </div>
                     </div>
+                    <div class="col-sm-6">
+                     <div class="form-group">
+                      <label for="brand">Requisition Dept. <span style="color:red;">*</span></label>
+                      <select class="form-control" name="reqdept" id="reqdept">
+                        <option value="">select</option>
+                        @if($department->count() > 0)
+                          @foreach($department as $row)
+                            <option value="{{$row->dep_name}}">{{$row->dep_name}}</option>
+                          @endforeach
+                        @endif
+                      </select>
+                    </div>
+                  </div>
+                  </div>
+                  <div class="row">
                     <div class="col-sm-6">
                        <div class="form-group">
                         <label for="brand">Product Brand(Opt)</label>
                         <input type="text" name="brand" class="form-control" value="{{old('brand')}}" id="brand" placeholder="Enter product brand">
                       </div>
                     </div>
-                  </div>
-                  <div class="row">
                     <div class="col-sm-6">
                      <div class="form-group">
                       <label for="brand">Remarks (Opt)</label>
@@ -143,6 +157,7 @@
           data:{nameid:nameid},
           success:function(data){
               $('#unit').val(data.unit);
+              $('#reqdept').val(data.dep);
               $('#quantityprice').val(data.qtyprice);
           }
       });
@@ -183,10 +198,12 @@ $(document).ready(function() {
     });
 });
 
+
+
 function sum() {
     var num1 = document.getElementById('quantity').value;
     var num2 = document.getElementById('quantityprice').value;
-    var result = parseInt(num1) * parseInt(num2);
+    var result = num1 * num2;
     if (!isNaN(result)) {
         document.getElementById('totalprice').value = result;
         document.getElementById('grandtotal').value = result;
@@ -202,5 +219,11 @@ function sum() {
 </script>
 <script type="text/javascript">
   $("#takendate").datepicker({ dateFormat: "dd-M-yy"});
+  $(document).ready(function () {
+    $("#quickForm").submit(function () {
+        $("#saveprd").attr("disabled", true);
+        return true;
+    });
+});
 </script>
 @endpush

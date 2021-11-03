@@ -27,6 +27,7 @@
                   <thead>
                   <tr>
                     <th>Name</th>
+                    <th>Role</th>
                     <th>Remarks</th>
                     <th>Action</th>
                   </tr>
@@ -36,6 +37,7 @@
                 @foreach($users as $row)
                   <tr>
                     <td>{{$row->name}}</td>
+                    <td>@if($row->user_type == 0) Admin @else Store Manager @endif</td>
                     <td>{{$row->email}}</td>
                     <td>
                       <a href="{{url('edit-user/'.$row->id)}}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>

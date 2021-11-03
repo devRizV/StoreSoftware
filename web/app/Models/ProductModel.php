@@ -25,6 +25,12 @@ class ProductModel extends Model
             $this->data['prd_purchase_date']  = date('Y-m-d H:i:s', strtotime($request->purchasedate));
             $this->data['prd_req_dep']        = $request->reqdept;
             $this->data['supplier']           = $request->supplier;
+            if ($request->expirydate){
+                $this->data['expiry_date']        = date('Y-m-d H:i:s', strtotime($request->expirydate));
+            }
+            if ($request->expiryalert) {
+                $this->data['date_alert']         = date('Y-m-d H:i:s', strtotime($request->expiryalert));
+            }
             $this->data['prd_details']        = $request->remarks;
             $this->data['created_at']         = date('Y-m-d H:i:s');
            DB::table($this->table)->insert($this->data);
@@ -79,6 +85,8 @@ class ProductModel extends Model
             $this->data['prd_purchase_date']  =  date('Y-m-d H:i:s', strtotime($request->purchasedate));
             $this->data['prd_req_dep']        = $request->reqdept;
             $this->data['supplier']           = $request->supplier;
+            $this->data['expiry_date']        = date('Y-m-d H:i:s', strtotime($request->expirydate));
+            $this->data['date_alert']         = $request->expiryalert;
             $this->data['prd_details']        = $request->remarks;
             $this->data['updated_at']         = date('Y-m-d H:i:s');
             //if update prd_master table then update qty on prd_stock table

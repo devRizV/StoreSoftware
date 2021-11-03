@@ -131,7 +131,10 @@
                       <textarea rows="5" readonly="" placeholder="Product remarks" class="form-control" name="remarks" id="remarks">{{$product->prd_details}}</textarea>
                     </div>
                   </div>
-                  <div class="col-sm-6"></div>
+                  <div class="col-sm-6">
+                    <label for="brand">Created At</label>
+                    <input type="text" class="form-control" readonly="" value="{{date('d-M-y', strtotime($product->created_at))}}" name="">
+                  </div>
                   </div>
                  </div>
                 <!-- /.card-body -->

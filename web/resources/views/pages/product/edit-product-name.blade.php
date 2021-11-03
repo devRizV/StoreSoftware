@@ -52,6 +52,12 @@
                   </div>
                   <div class="row">
                     <div class="col-sm-6">
+                       <div class="form-group">
+                        <label for="minqty">Minimum Alert Qty</label>
+                        <input type="text" name="minqty" value="{{$prd->min_qty}}" class="form-control" id="minqty">
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
                      <div class="form-group">
                       <label for="brand">Remarks (Opt)</label>
                       <textarea rows="5" class="form-control"  name="remarks" id="remarks">{{$prd->prd_remarks}}</textarea>

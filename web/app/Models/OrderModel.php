@@ -38,16 +38,24 @@ class OrderModel extends Model
         return $data;
      }
  public function fetchUsagePrdDate($request){
-      if (empty($request->fix_date)) {
-            $from   = $request->from_date;
-            $to     = $request->to_date;
-           $data = DB::table('prd_usage')->whereBetween('created_at', [$from, $to])->get();
-           return $data;
+      $query = DB::table('prd_usage');
+       if($request->fix_date){
+            $query->whereDate('taken_date', $request->fix_date);
         }else{
-            $fixdate   = $request->fix_date;
-            $data = DB::table('prd_usage')->whereDate('created_at', $fixdate)->get();
-            return $data;
+           if ($request->from_date && $request->to_date) {
+              $from   = $request->from_date;
+              $to     = $request->to_date;
+              $query->whereBetween('taken_date', [$from, $to]);
+           }
+            
         }
+
+        if($request->department){
+            $query->where('dept', $request->department);
+        }
+
+        $data = $query->orderBy('prd_usage.pk_no','DESC')->get();
+        return $data;
  }   
 
  

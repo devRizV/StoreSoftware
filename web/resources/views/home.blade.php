@@ -1,5 +1,23 @@
 @extends('layouts.app')
 @section('content')
+@push('custom_css')
+  <style type="text/css">
+    .alert-danger {
+        color: #fff;
+        background-color: #f44336;
+        border-color: #f44336;
+        border-radius: 0;
+        padding: 7px;
+    }
+    a.alert-link.pull-right {
+      display: inline-block;
+      float: right;
+  }
+  </style>
+@endpush
+@php
+  $notify = $data['notify'] ?? '';
+@endphp
     <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container-fluid">
@@ -84,6 +102,22 @@
             </div>
             <!-- /.info-box -->
           </div>
+          <!-- /.col -->
+        </div>
+      </div><!--/. container-fluid -->
+      <hr>
+      <div class="container-fluid landing-warning">
+        <!-- Info boxes -->
+        <div class="row">
+          @if(count($notify) > 0)
+            @foreach($notify as $row)
+          <div class="col-12 col-sm-4">
+            <div class="alert alert-danger" role="alert">
+                <strong><span style="color: #000;">Warning !!</span> {{$row->product_name}} {{$row->pk_no}} </strong> less than minimum quantity. <a href="#" class="alert-link pull-right"> Take Action <i class="fa fa-arrow-right"></i></a>
+              </div>
+          </div>
+          @endforeach
+            @endif
           <!-- /.col -->
         </div>
       </div><!--/. container-fluid -->

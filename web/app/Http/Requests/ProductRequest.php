@@ -35,6 +35,7 @@ class ProductRequest extends FormRequest
             'purchasedate'                  => 'required',
             'reqdept'                       => 'required',
             'supplier'                      => 'required'
+            
         ];
 
         return $rules;

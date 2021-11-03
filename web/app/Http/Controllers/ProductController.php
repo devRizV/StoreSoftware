@@ -8,6 +8,7 @@ use App\Models\ProductModel;
 use App\Models\ProductUsageModel;
 use App\Models\SupplierModel;
 use App\Models\OrderExport;
+use App\Models\UsageOrderExport;
 use App\Models\DepartmentModel;
 use App\Models\OrderModel;
 use Maatwebsite\Excel\Excel;
@@ -42,23 +43,24 @@ class ProductController extends Controller
 
     //get store product
     public function getPaginatedList(Request $request){
-
+        //dd($request->All());
         $data['products'] = $this->getProductList->fetchData($request);
 
         if($request->download_excel == 1){
             //dd($data['products']);
              return \Excel::download(new OrderExport($data), date('d-m-Y').'_order.xlsx');
         }
-
+        $data['department'] = DepartmentModel::all();
+        $data['supplier'] = SupplierModel::all();
         return view('pages.product.product-list', compact('data'));
     }
     //get usage product list
     public function getUsageProductList(Request $request){
         $data['products'] = $this->getProductList->fetchUsagePrdDate($request);
         if($request->download_excel == 1){
-             return \Excel::download(new OrderExport($data), date('d-m-Y').'_order.xlsx');
+             return \Excel::download(new UsageOrderExport($data), date('d-m-Y').'_order.xlsx');
         }
-        
+        $data['department'] = DepartmentModel::all();
         return view('pages.product.product-usage-list', compact('data'));
     }
 
@@ -77,6 +79,7 @@ class ProductController extends Controller
         ->select('N.prd_name', 'N.pk_no')
         ->orderBy('N.pk_no', 'DESC')
         ->get();
+        $data['department'] = DepartmentModel::all();
         return view('pages.product.usage-product', compact('data'));
     }
     //get product unit
@@ -95,6 +98,7 @@ class ProductController extends Controller
         ->first();
         $data['unit']  = $productdata->prd_unit;
         $data['qtyprice']  = $productdata->prd_qty_price;
+        $data['dep']  = $productdata->prd_req_dep;
         $data['status'] = 'over';
         return response()->json($data);
     }
@@ -148,6 +152,7 @@ class ProductController extends Controller
     //get get All Usage Product
     public function getAllUsageProduct(){
         $data['products'] = DB::table('prd_usage')->orderBy('pk_no', 'DESC')->paginate(10);
+        $data['department'] = DepartmentModel::all();
         return view('pages.product.product-usage-list', compact('data'));
     }
 

@@ -89,13 +89,13 @@
                       <div class="col-sm-6">
                        <div class="form-group">
                         <label for="brand">Total Price <span style="color:red;">*</span></label>
-                        <input type="number" min="1" name="totalprice" value="{{$product->prd_price}}" class="form-control" id="totalprice" readonly="">
+                        <input type="text" name="totalprice" value="{{$product->prd_price}}" class="form-control" id="totalprice" readonly="">
                       </div>
                     </div>
                     <div class="col-sm-6">
                        <div class="form-group">
                         <label for="brand">Grand Total <span style="color:red;">*</span></label>
-                        <input type="number" min="1" name="grandtotal" value="{{$product->prd_grand_price}}" class="form-control" id="grandtotal" placeholder="Grand total">
+                        <input type="text"  name="grandtotal" value="{{$product->prd_grand_price}}" class="form-control" id="grandtotal" placeholder="Grand total">
                       </div>
                     </div>
                   </div>
@@ -126,36 +126,51 @@
                       </select>
                     </div>
                   </div>
-                       
-                    
                   </div>
                   <div class="row">
+                    <div class="col-sm-6">
+                       <div class="form-group">
+                        <label for="expirydate">Expiry Date</label>
+                        <input type="text" name="expirydate" readonly="" value="@if($product->expiry_date){date('d-M-Y', strtotime($product->expiry_date))} @endif"  class="form-control" id="expirydate" >
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                       <div class="form-group">
+                        <label for="expiryalert">Expiry Alert Date</label>
+                        <input type="text" readonly="" name="expiryalert" value="@if($product->date_alert){date('d-M-Y', strtotime($product->date_alert))} @endif" class="form-control" id="expiryalert" >
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-6">
+                       <div class="form-group">
+                        <label for="brand">Product Brand(Opt)</label>
+                        <input type="text" name="brand" class="form-control" value="{{$product->prd_brand}}" id="brand" >
+                      </div>
+                    </div>
                     <div class="col-sm-6">
                        <div class="form-group">
                         <label for="brand">Purchase From(Opt)</label>
-                        <input type="text" placeholder="Purchase from" value="{{$product->prd_purchase_from}}" class="form-control" name="purchasefrom" id="purchasefrom" >
-                      </div>
-                    </div>
-                  <div class="col-sm-6">
-                       <div class="form-group">
-                        <label for="brand">Product Brand(Opt)</label>
-                        <input type="text" name="brand" class="form-control" value="{{$product->prd_brand}}" id="brand" placeholder="Enter product brand">
+                      <input type="text" name="purchasefrom" class="form-control" value="{{$product->prd_purchase_from}}" id="purchasefrom">
                       </div>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-sm-6">
+                    <label for="brand">Created At</label>
+                    <input type="text" class="form-control" readonly="" value="{{date('d-M-y', strtotime($product->created_at))}}">
+                  </div>
+                  <div class="col-sm-6">
                      <div class="form-group">
                       <label for="brand">Remarks (Opt)</label>
-                      <textarea rows="5" placeholder="Product remarks" class="form-control" name="remarks" id="remarks">{{$product->prd_details}}</textarea>
+                      <textarea rows="5" class="form-control" name="remarks" id="remarks">{{$product->prd_details}}</textarea>
                     </div>
                   </div>
-                  <div class="col-sm-6"></div>
                   </div>
                  </div>
                 <!-- /.card-body -->
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Update Product</button>
+                  <button type="submit" class="btn btn-primary" id="editsubmit">Update Product</button>
                 </div>
               </form>
             </div>
@@ -238,5 +253,13 @@ function sum() {
 </script>
 <script type="text/javascript">
   $("#purchasedate").datepicker({ dateFormat: "dd-M-yy"});
+  $("#expirydate").datepicker({ dateFormat: "dd-M-yy",changeYear:true, yearRange: "2021:2050"});
+  $("#expiryalert").datepicker({ dateFormat: "dd-M-yy",changeYear:true, yearRange: "2021:2050"});
+  $(document).ready(function () {
+    $("#editform").submit(function () {
+        $("#editsubmit").attr("disabled", true);
+        return true;
+    });
+});
 </script>
 @endpush

@@ -47,14 +47,18 @@ class ProductNameController extends Controller
 
     //get update department
     public function updateProductName(Request $request){
+     
        $str  = strtolower($request->name);
        $slug = preg_replace('/\s+/', '-', $str);
-       $slugChk = DB::table('prd_name')->where('prd_slug', $slug)->count();
+       $slugChk = DB::table('prd_name')
+       ->where('prd_slug', $slug)
+       ->where('pk_no', '!=', $request->id)
+       ->count();
         if ($slugChk > 0) {
            $resp = "Product name already taken !!";
            return redirect()->back()->with('error', $resp);
         }
-       $update = DB::table('prd_name')->where('pk_no', $request->id)->update([ 'prd_name' => $request->name, 'prd_slug' => $slug, 'prd_remarks' => $request->remarks ]);
+       $update = DB::table('prd_name')->where('pk_no', $request->id)->update([ 'prd_name' => $request->name, 'prd_slug' => $slug, 'prd_remarks' => $request->remarks, 'prd_unit' => $request->unit,'min_qty' => $request->minqty ]);
        if ($update) {
            return redirect()->back()->with('success', 'Updated Successfully.');
         }else{

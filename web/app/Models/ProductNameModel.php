@@ -22,6 +22,7 @@ class ProductNameModel extends Model
             try {
                 $this->data['prd_name']           = $request->name;
                 $this->data['prd_unit']           = $request->unit;
+                $this->data['min_qty']            = $request->minqty;
                 $this->data['prd_slug']           = $slug;
                 $this->data['prd_remarks']        = $request->remarks;
                 $this->data['created_at']         = date('Y-m-d H:i:s');

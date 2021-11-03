@@ -92,7 +92,7 @@
                     <div class="col-sm-6">
                        <div class="form-group">
                         <label for="brand">Total Price <span style="color:red;">*</span></label>
-                        <input type="number" min="1" name="totalprice" value="{{$product->prd_price}}" class="form-control" id="totalprice" readonly="">
+                        <input type="text" name="totalprice" value="{{$product->prd_price}}" class="form-control" id="totalprice" readonly="">
                       </div>
                     </div>
                   </div>
@@ -100,7 +100,7 @@
                     <div class="col-sm-6">
                        <div class="form-group">
                         <label for="brand">Grand Total <span style="color:red;">*</span></label>
-                        <input type="number" min="1" name="grandtotal" value="{{$product->prd_grand_price}}" class="form-control" id="grandtotal" placeholder="Grand total">
+                        <input type="text" name="grandtotal" value="{{$product->prd_grand_price}}" class="form-control" id="grandtotal" placeholder="Grand total">
                       </div>
                     </div>
                     <div class="col-sm-6">
@@ -203,5 +203,12 @@ function sum() {
   $(document).ready(function() {
       $('.js-example-basic-single').select2();
   });
+
+  $(document).ready(function () {
+    $("#quickForm").submit(function () {
+        $("#editprd").attr("disabled", true);
+        return true;
+    });
+});
 </script>
 @endpush

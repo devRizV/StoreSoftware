@@ -87,13 +87,13 @@
                       <div class="col-sm-6">
                        <div class="form-group">
                         <label for="brand">Total Price <span style="color:red;">*</span></label>
-                        <input type="number" min="1" name="totalprice" value="{{old('totalprice')}}" class="form-control" id="totalprice" readonly="">
+                        <input type="text" name="totalprice" value="{{old('totalprice')}}" class="form-control" id="totalprice" readonly="">
                       </div>
                     </div>
                     <div class="col-sm-6">
                        <div class="form-group">
                         <label for="brand">Grand Total <span style="color:red;">*</span></label>
-                        <input type="number" min="1" name="grandtotal" value="{{old('grandtotal')}}" class="form-control" id="grandtotal" placeholder="Grand total">
+                        <input type="text" name="grandtotal" value="{{old('grandtotal')}}" class="form-control" id="grandtotal" placeholder="Grand total">
                       </div>
                     </div>
                   </div>
@@ -128,11 +128,25 @@
                   <div class="row">
                     <div class="col-sm-6">
                        <div class="form-group">
+                        <label for="expirydate">Expiry Date</label>
+                        <input type="text" name="expirydate" placeholder="expiry date" readonly="" value="{{old('expirydate')}}" class="form-control" id="expirydate" >
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                       <div class="form-group">
+                        <label for="expiryalert">Expiry Alert Date</label>
+                        <input type="text" readonly="" name="expiryalert" value="{{old('expiryalert')}}" class="form-control" id="expiryalert" placeholder="Expiry alert date">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-6">
+                       <div class="form-group">
                         <label for="brand">Product Brand(Opt)</label>
                         <input type="text" name="brand" class="form-control" value="{{old('brand')}}" id="brand" placeholder="Enter product brand">
                       </div>
                     </div>
-                   <div class="col-sm-6">
+                    <div class="col-sm-6">
                        <div class="form-group">
                         <label for="brand">Purchase From(Opt)</label>
                       <input type="text" name="purchasefrom" class="form-control" value="{{old('purchasefrom')}}" id="purchasefrom" placeholder="Purchase from">
@@ -146,12 +160,11 @@
                       <textarea rows="5" placeholder="Product remarks" class="form-control" name="remarks" id="remarks">{{old('remarks')}}</textarea>
                     </div>
                   </div>
-                  <div class="col-sm-6"></div>
                   </div>
                  </div>
                 <!-- /.card-body -->
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Save Product</button>
+                  <button type="submit" id="saveproduct" class="btn btn-primary">Save Product</button>
                 </div>
               </form>
             </div>
@@ -236,5 +249,14 @@ function sum() {
 </script>
 <script type="text/javascript">
   $("#purchasedate").datepicker({ dateFormat: "dd-M-yy"});
+  $("#expirydate").datepicker({ dateFormat: "dd-M-yy",changeYear:true, yearRange: "2021:2050"});
+  $("#expiryalert").datepicker({ dateFormat: "dd-M-yy",changeYear:true, yearRange: "2021:2050"});
+
+  $(document).ready(function () {
+    $("#quickForm").submit(function () {
+        $("#saveproduct").attr("disabled", true);
+        return true;
+    });
+});
 </script>
 @endpush

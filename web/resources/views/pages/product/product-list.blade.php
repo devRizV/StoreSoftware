@@ -42,7 +42,7 @@ input#from_date,input#to_date,input#specific_date {
                   <option value="">select department</option>
                   @if($department != null && $department->count() > 0)
                     @foreach($department as $row)
-                      <option value="{{$row->dep_name}}">{{$row->dep_name}}</option>
+                      <option value="{{$row->dep_name}}" {{ request()->get('department') == $row->dep_name ? 'selected' : '' }}>{{$row->dep_name}}</option>
                     @endforeach
                   @endif
                 </select>
@@ -52,7 +52,7 @@ input#from_date,input#to_date,input#specific_date {
                   <option value="">select supplier</option>
                   @if($supplier != null && $supplier->count() > 0)
                     @foreach($supplier as $row)
-                      <option value="{{$row->supplier_name}}">{{$row->supplier_name}}</option>
+                      <option value="{{$row->supplier_name}}" {{ request()->get('supplier') == $row->supplier_name ? 'selected' : '' }} >{{$row->supplier_name}}</option>
                     @endforeach
                   @endif
                 </select>
@@ -89,6 +89,7 @@ input#from_date,input#to_date,input#specific_date {
                 <table id="productlist" class="table table-bordered table-striped">
                   <thead>
                   <tr>
+                    <th>SL.</th>
                     <th>Name</th>
                     <th>Req. Dept.</th>
                     <th>Qty</th>
@@ -96,6 +97,7 @@ input#from_date,input#to_date,input#specific_date {
                     <th>Qty. Price</th>
                     <th>Price</th>
                     <th>G. Total</th>
+                    <th>Purchase Date</th>
                     <th>Action</th>
                   </tr>
                   </thead>
@@ -106,6 +108,7 @@ input#from_date,input#to_date,input#specific_date {
                     @php
                        $prdName = DB::table('prd_name')->where('pk_no', $row->prd_id)->first();
                     @endphp
+                    <td>{{$loop->iteration}}</td>
                     <td>{{$prdName->prd_name ?? ''}}</td>
                     <td>{{$row->prd_req_dep}}</td>
                     <td>{{$row->prd_qty}}</td>
@@ -113,6 +116,7 @@ input#from_date,input#to_date,input#specific_date {
                     <td>{{$row->prd_qty_price}}</td>
                     <td>{{$row->prd_price}}</td>
                     <td>{{$row->prd_grand_price}}</td>
+                    <td>{{date('d-M-Y', strtotime($row->prd_purchase_date))}}</td>
                     <td>
                       <a href="{{url('edit-product/'.$row->pk_no)}}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>
                       <a href="{{url('view-product/'.$row->pk_no)}}" class="btn btn-primary btn-xs"><i class="fa fa-eye"></i></a>
