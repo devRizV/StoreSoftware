@@ -142,6 +142,12 @@
             </ul>
           </li>
           <li class="nav-item">
+            <a href="{{route('req-list')}}" class="nav-link">
+              <i class="nav-icon fas fa-store"></i>
+              <p>Requisation List</p>
+            </a>
+          </li>
+          <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="nav-icon fa fa-users"></i>
               <p>

@@ -70,7 +70,7 @@ Route::get('/delete-product-name/{id}', 'ProductNameController@deleteProductName
 
 
 
-
+Route::get('/req-list', 'RequisationController@getIndex')->name('req-list');
 
 //department routes
 Route::get('/department-store', 'DepartmentController@getstoreDepartment')->name('department-store');

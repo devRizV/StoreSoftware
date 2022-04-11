@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @push('custom_css')
-
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
 @endpush
 @php
   $departments = $data['departments'];
@@ -23,9 +23,10 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body table-responsive">
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="tbldeplist" class="table table-bordered table-striped">
                   <thead>
                   <tr>
+                    <th>SL.</th>
                     <th>Name</th>
                     <th>Remarks</th>
                     <th>Action</th>
@@ -35,11 +36,12 @@
               @if(isset($departments) && count($departments) > 0)
                 @foreach($departments as $row)
                   <tr>
+                    <td>{{$loop->iteration}}</td>
                     <td>{{$row->dep_name}}</td>
                     <td>{{$row->dep_remarks}}</td>
                     <td>
                       <a href="{{url('edit-department/'.$row->pk_no)}}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>
-                      <a onclick="return confirm('Are you really sure to delete ?');" href="{{url('delete-department/'.$row->pk_no)}}" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a>
+                      <!-- <a onclick="return confirm('Are you really sure to delete ?');" href="{{url('delete-department/'.$row->pk_no)}}" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a> -->
                     </td>
                   </tr>
               @endforeach    
@@ -59,5 +61,10 @@
     <!-- /.content -->
 @endsection
 @push('scripts')
-
+  <script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('#tbldeplist').DataTable();
+  } );
+  </script>
 @endpush

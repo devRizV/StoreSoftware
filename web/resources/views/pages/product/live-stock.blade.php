@@ -26,6 +26,7 @@
                 <table id="livestock" class="table table-bordered table-striped">
                   <thead>
                   <tr>
+                    <th>SL.</th>
                     <th>Product Name</th>
                     <th>Product Qty</th>
                     <th>Product Unit</th>
@@ -35,6 +36,7 @@
               @if(isset($products) && count($products) > 0)
                 @foreach($products as $row)
                   <tr>
+                    <td>{{$loop->iteration}}</td>
                     <td>{{$row->prd_name}}</td>
                     <td>{{$row->prd_qty}}</td>
                     <td>{{$row->prd_unit}}</td>

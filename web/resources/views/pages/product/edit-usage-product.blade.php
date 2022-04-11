@@ -5,6 +5,7 @@
 @php
   $product = $data['products'];
   $prdnames = $data['prdnames'];
+  $department = $data['department'];
 @endphp
 @section('content')
     <!-- Main content -->
@@ -104,13 +105,26 @@
                       </div>
                     </div>
                     <div class="col-sm-6">
+                     <div class="form-group">
+                      <label for="brand">Requisition Dept <span style="color:red;">*</span></label>
+                      <select class="form-control" name="reqdept" id="reqdept">
+                        <option value="">select</option>
+                        @if($department->count() > 0)
+                          @foreach($department as $row)
+                            <option value="{{$row->dep_name}}"  <?php if($row->dep_name == $product->dept){echo 'selected';}?>>{{$row->dep_name}}</option>
+                          @endforeach
+                        @endif
+                      </select>
+                    </div>
+                  </div>
+                  </div>
+                  <div class="row">
+                  	<div class="col-sm-6">
                        <div class="form-group">
                         <label for="brand">Product Brand(Opt)</label>
                         <input type="text" name="brand" class="form-control" value="{{$product->prd_brand}}" id="brand" placeholder="Enter product brand">
                       </div>
                     </div>
-                  </div>
-                  <div class="row">
                     <div class="col-sm-6">
                      <div class="form-group">
                       <label for="brand">Remarks (Opt)</label>

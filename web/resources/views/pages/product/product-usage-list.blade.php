@@ -87,6 +87,7 @@ input#from_date,input#to_date,input#specific_date {
                     <th>Price</th>
                     <th>G. Total</th>
                     <th>Taken Date</th>
+                    <th>Created</th>
                     <th>Action</th>
                   </tr>
                   </thead>
@@ -106,6 +107,7 @@ input#from_date,input#to_date,input#specific_date {
                     <td>{{$row->prd_price}}</td>
                     <td>{{$row->prd_grand_price}}</td>
                     <td>{{date('d-M-Y', strtotime($row->taken_date))}}</td>
+                    <td>{{date('d-M-Y', strtotime($row->created_at))}}</td>
                     <td>
                       <a href="{{url('edit-usage-product/'.$row->pk_no)}}" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></a>
                       <a href="{{url('view-product/'.$row->pk_no)}}" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></a>

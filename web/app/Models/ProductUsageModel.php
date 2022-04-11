@@ -43,7 +43,7 @@ class ProductUsageModel extends Model
         try {
             $prdId                            = $id;
             $this->data['prd_name_id']        = $request->name;
-            $this->data['dept']               = $request->dept;
+            $this->data['dept']               = $request->reqdept;
             $this->data['taken_by']           = $request->takenby;
             $this->data['taken_date']         = date('Y-m-d H:i:s', strtotime($request->takendate));
             $this->data['prd_qty']            = $request->quantity;

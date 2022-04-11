@@ -31,6 +31,11 @@ class ProductController extends Controller
         $this->prdusage = $prdusage;
     }
 
+    
+
+
+
+
     /**
      * Show the application dashboard.
      *
@@ -158,9 +163,22 @@ class ProductController extends Controller
 
     //get live stock
     public function getLiveStock(){
-        $data['products'] = DB::table('prd_stock')
-        ->join('prd_name', 'prd_name.pk_no', '=', 'prd_stock.prd_id')
-        ->get();
+        // $data['products'] = DB::table('prd_stock')
+        // ->join('prd_name', 'prd_name.pk_no', '=', 'prd_stock.prd_id')
+        // ->join('prd_master', 'prd_master.prd_id', '=', 'prd_stock.prd_id')
+        // ->get();
+        //  $data['products'] = DB::table('prd_stock')
+        //         ->join('prd_master','prd_stock.prd_id', '=', 'prd_master.prd_id')
+        //         ->select('prd_stock.prd_id','prd_stock.prd_qty', 'prd_master.prd_qty_price')
+        //         ->groupBy('prd_stock.prd_id', 'prd_stock.prd_qty','prd_master.prd_qty_price')
+        //         ->limit(10)
+        //         ->get();
+        
+        // dd($data['products']);
+
+        $sql = "SELECT pk_no FROM prd_name LEFT JOIN prd_stock ON prd_name.pk_no = prd_stock.prd_id LEFT JOIN prd_master ON prd_name.pk_no = prd_master.prd_id limit 50";
+        $data['products'] = DB::select($sql);
+        dd($data['products']);
         return view('pages.product.live-stock', compact('data'));
     }
 
@@ -175,7 +193,7 @@ class ProductController extends Controller
     //get edit usage product
     public function getEditUsageProduct($prdId){
         $data['products'] = DB::table('prd_usage')->where('pk_no', $prdId)->first();
-
+        $data['department'] = DepartmentModel::all();
         $data['prdnames'] = DB::table('prd_stock as S')
         ->leftJoin('prd_name as N', 'N.pk_no', '=', 'S.prd_id')
         ->select('N.prd_name', 'N.pk_no')

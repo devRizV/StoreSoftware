@@ -45,7 +45,11 @@
                           <option value="">Select Product Name</option>
                            @if(isset($prdnames) && count($prdnames) > 0)
                             @foreach($prdnames as $row)
-                              <option value="{{$row->pk_no}}">{{$row->prd_name}}</option>
+                              @if(request()->get('name'))
+                                <option <?php if(request()->get('name') == $row->prd_name) echo 'selected';  ?> value="{{$row->pk_no}}">{{$row->prd_name}}</option>
+                              @else
+                                <option value="{{$row->pk_no}}">{{$row->prd_name}}</option>
+                              @endif
                             @endforeach    
                           @endif
                         </select>
@@ -70,7 +74,11 @@
                           <div class="col-6">
                             <div class="form-group">
                               <label for="brand">Quantity In (kg,pcs,etc) <span style="color:red;">*</span></label>
+                              @if(request()->get('unit'))
+                                  <input readonly="" type="text" name="unit" value="{{request()->get('unit')}}" class="form-control" id="unit">
+                              @else
                               <input readonly="" type="text" name="unit" value="{{old('unit')}}" class="form-control" id="unit">
+                              @endif
                             </div>
                           </div>
                         </div>

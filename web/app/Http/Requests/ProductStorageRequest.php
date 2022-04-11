@@ -33,7 +33,8 @@ class ProductStorageRequest extends FormRequest
             'unit'                          => 'required',
             'quantityprice'                 => 'required',
             'totalprice'                    => 'required',
-            'grandtotal'                    => 'required'
+            'grandtotal'                    => 'required',
+            'reqdept'                       => 'required'
         ];
 
         return $rules;
@@ -49,7 +50,8 @@ class ProductStorageRequest extends FormRequest
             'unit.required'                   => 'Product quantity unit is required!',
             'quantityprice.required'          => 'Product price is required!',
             'totalprice.required'             => 'Product total price is required!',
-            'grandtotal.required'             => 'Product grand total is required'
+            'grandtotal.required'             => 'Product grand total is required',
+            'reqdept.required'                => 'Department can not be empty !!'
         ];
     }
 

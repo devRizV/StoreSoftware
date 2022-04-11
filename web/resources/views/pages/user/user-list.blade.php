@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @push('custom_css')
-
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
 @endpush
 @php
   $users = $data['users'];
@@ -23,9 +23,10 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body table-responsive">
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="tbluserlist" class="table table-bordered table-striped">
                   <thead>
                   <tr>
+                    <th>SL.</th>
                     <th>Name</th>
                     <th>Role</th>
                     <th>Remarks</th>
@@ -36,6 +37,7 @@
               @if(isset($users) && count($users) > 0)
                 @foreach($users as $row)
                   <tr>
+                    <td>{{$loop->iteration}}</td>
                     <td>{{$row->name}}</td>
                     <td>@if($row->user_type == 0) Admin @else Store Manager @endif</td>
                     <td>{{$row->email}}</td>
@@ -61,5 +63,10 @@
     <!-- /.content -->
 @endsection
 @push('scripts')
-
+  <script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('#tbluserlist').DataTable();
+  } );
+  </script>
 @endpush
