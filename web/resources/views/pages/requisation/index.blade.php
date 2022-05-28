@@ -44,8 +44,9 @@
                     <td>{{$price->prd_qty_price ?? ''}}</td>
                     <td><input type="text" data-id="{{$row->pk_no}}" data-price="{{$price->prd_qty_price ?? ''}}" class="form-control getqty"></td>
                     <td data-total="" id="total{{$row->pk_no}}">0</td>
+                    <td class="d-none"><input type="text" id="totalStore{{$row->pk_no}}" class="totalValue form-control" hidden readonly/></td>
                   </tr>
-              @endforeach    
+              @endforeach
                   <tr>
                     <td colspan="6" class="text-right">Grand Total</td>
                     <td colspan="1" id="grandtotal">0</td>
@@ -88,7 +89,7 @@
                     <td style="border: 1px solid #ddd; padding: 5px;">{{$price->prd_qty_price}}</td>
                     <td style="border: 1px solid #ddd; padding: 5px;" ></td>
                   </tr>
-              @endforeach    
+              @endforeach
                @endif
                   </tbody>
           </table>
@@ -121,16 +122,23 @@
        var id = $(this).attr('data-id')
        var total = qty*price;
        $('#total'+id).html(total);
+       $('#totalStore'+id).val(total);
        $('#total'+id).attr( 'data-total',total);
+        CalculateGrandTotal();
+    });
 
-       //var gtotal = $('#total'+id).attr('data-total');
-       //var grandtotal = parseInt(preValue, 10) + parseInt(gtotal, 10);
-      var totalPrice = 0;
-      $('.getqty').each(function () {
-        totalPrice += parseInt($(this).attr('data-total'), 10);
-    });
-       $('#grandtotal').html(totalPrice);
-    });
+    function CalculateGrandTotal() {
+        var grandTotal = 0;
+
+        $.each($('#productlist').find('.totalValue'), function () {
+            if ($(this).val() != '' && !isNaN($(this).val())) {
+                grandTotal += parseFloat($(this).val());
+            }
+        });
+
+        $('#grandtotal').html(grandTotal);
+
+    }
 
   </script>
 @endpush
