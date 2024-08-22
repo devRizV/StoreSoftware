@@ -34,7 +34,6 @@ class HomeController extends Controller
         $todayPur = DB::table('prd_master')->whereDate('created_at', DB::raw('CURDATE()'))
         ->sum('prd_price');
 
-
          $data['notify'] = DB::SELECT("SELECT prd_name.*, prd_stock.prd_qty, prd_master.supplier,prd_master.prd_req_dep from prd_name 
             JOIN prd_stock ON prd_stock.prd_id = prd_name.pk_no 
             JOIN prd_master ON prd_master.prd_id = prd_name.pk_no WHERE prd_name.min_qty >= prd_stock.prd_qty ");

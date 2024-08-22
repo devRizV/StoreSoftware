@@ -49,7 +49,7 @@
               @endforeach
                   <tr>
                     <td colspan="6" class="text-right">Grand Total</td>
-                    <td colspan="1" id="grandtotal">0</td>
+                    <td colspan="1" id="grandtotal">BDT 0</td>
                   </tr>
                @endif
                   </tbody>
@@ -67,7 +67,7 @@
     <!-- /.content -->
     <div class="printarea d-none" id="printdata">
       <h2 style="text-align: center;font-size: 15px; font-weight: bold; padding: 10px;">Requisation Product List</h2>
-         <table id="tblreqproductlist" style="border:1px solid #ddd;" cellpadding="3" class="table table-bordered table-striped">
+         <table style="border:1px solid #ddd;" cellpadding="3" class="table table-bordered table-striped">
                   <thead>
                   <tr style="border: 1px solid #ddd; padding: 5px;">
                     <th style="border: 1px solid #ddd; padding: 5px;">SL.</th>
@@ -76,6 +76,7 @@
                     <th style="border: 1px solid #ddd; padding: 5px;">Current Stock</th>
                     <th style="border: 1px solid #ddd; padding: 5px;">Price</th>
                     <th style="border: 1px solid #ddd; padding: 5px;">Quantity</th>
+                    <th style="border: 1px solid #ddd; padding: 5px;">Total</th>
                   </tr>
                   </thead>
                   <tbody>
@@ -86,12 +87,18 @@
                     <td style="border: 1px solid #ddd; padding: 5px;">{{$row->prd_name}}</td>
                     <td style="border: 1px solid #ddd; padding: 5px;">{{$row->prd_unit}}</td>
                     <td style="border: 1px solid #ddd; padding: 5px;">{{$row->prd_qty}}</td>
+                    @php $price = DB::table('prd_master')->where('prd_id', $row->pk_no)->orderBy('created_at', 'desc')->first('prd_qty_price'); @endphp
                     <td style="border: 1px solid #ddd; padding: 5px;">{{$price->prd_qty_price}}</td>
-                    <td style="border: 1px solid #ddd; padding: 5px;" ></td>
+                    <td style="border: 1px solid #ddd; padding: 5px;" id="qtyp{{$row->pk_no}}">0</td>
+                    <td style="border: 1px solid #ddd; padding: 5px;" id="totalp{{$row->pk_no}}">0</td>
                   </tr>
               @endforeach
-               @endif
-                  </tbody>
+               <tr>
+                <td style="border: 1px solid #ddd; padding: 5px;"  colspan="6" class="text-right">Grand Total</td>
+                <td style="border: 1px solid #ddd; padding: 5px;"  colspan="1" id="grandtotalp">BDT 0</td>
+              </tr>
+              @endif
+            </tbody>
           </table>
     </div>
 @endsection
@@ -122,6 +129,8 @@
        var id = $(this).attr('data-id')
        var total = qty*price;
        $('#total'+id).html(total);
+       $('#qtyp'+id).html(qty);
+        $('#totalp'+id).html(total);
        $('#totalStore'+id).val(total);
        $('#total'+id).attr( 'data-total',total);
         CalculateGrandTotal();
@@ -136,9 +145,16 @@
             }
         });
 
-        $('#grandtotal').html(grandTotal);
+        $('#grandtotal').html(formatter.format(grandTotal));
+        $('#grandtotalp').html(formatter.format(grandTotal));
 
     }
+
+    // Create our number formatter.
+      var formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'BDT',
+      });
 
   </script>
 @endpush

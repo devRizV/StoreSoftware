@@ -25,19 +25,23 @@ class ProductStorageRequest extends FormRequest
 
     public function rules()
     {
-        $rules = [
-            'name'                          => 'required',
-            'takenby'                       => 'required',
-            'takendate'                     => 'required',
-            'quantity'                      => 'required',
-            'unit'                          => 'required',
-            'quantityprice'                 => 'required',
-            'totalprice'                    => 'required',
-            'grandtotal'                    => 'required',
-            'reqdept'                       => 'required'
-        ];
+        
 
-        return $rules;
+        return [
+            'name'                          => 'required|array',
+            'name.*'                        => 'required|integer|exists:prd_name,pk_no',
+            'quantity'                      => 'required|array',
+            'quantity.*'                    => 'required|numeric|min:0',
+            'unit'                          => 'required|array',
+            'unit.*'                        => 'required|string',
+            'quantityprice'                 => 'required|array',
+            'quantityprice.*'               => 'required|numeric|min:0',
+            'totalprice'                    => 'required|array',
+            'totalprice.*'                  => 'required|numeric|min:0',
+            'takendate'                     => 'required|date',
+            'reqdept'                       => 'required|string',
+            'takenby'                       => 'required|string',
+        ];
     }
 
     public function messages()
@@ -50,7 +54,6 @@ class ProductStorageRequest extends FormRequest
             'unit.required'                   => 'Product quantity unit is required!',
             'quantityprice.required'          => 'Product price is required!',
             'totalprice.required'             => 'Product total price is required!',
-            'grandtotal.required'             => 'Product grand total is required',
             'reqdept.required'                => 'Department can not be empty !!'
         ];
     }

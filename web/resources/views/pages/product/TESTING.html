@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+    
+<head>
+    <title>
+        Testing
+    </title>
+
+    <script>
+        var inc = 0;
+        function create(){
+            var form = document.getElementById('test');
+            var newSelect = document.createElement('select');
+            var newOption = document.createElement('option');
+            var id = "newSelect";
+            newSelect.id = id;           
+                        
+            if (newSelect.id == id){
+                newSelect.appendChild(newOption);
+                newOption.innerHTML = "new"+inc;
+                newOption.id = id;
+                document.getElementById('test').value = newOption.id;
+                newSelect.id = id+1;
+            }
+            else{
+                newSelect.appendChild(newOption);
+                newOption.innerHTML = "new"+inc;
+                newOption.id = id+inc;
+                document.getElementById('test').value = newOption.id;
+            }
+            
+            inc++;
+        }
+    </script>
+
+    
+
+<!-- <script type="text/javascript">
+
+
+  function createRow() {
+      var row = document.createElement('tr'); // create row node
+      var prodName = document.createElement('td'); // create column node
+      var supplier = document.createElement('td'); // create second column node
+      var qty = document.createElement('td');
+      var price = document.createElement('td');
+      var total = document.createElement('td');
+      var gTotal = document.createElement('td');
+      var unit = document.createElement('td');
+      row.appendChild(prodName);  
+      row.appendChild(qty);      
+      row.appendChild(unit);
+      row.appendChild(price);
+      row.appendChild(total);
+      row.appendChild(gTotal);
+      row.appendChild(supplier);
+
+      prodName.innerHTML = '<div class="form-group"><select class="js-example-basic-single form-control" name="name" id="name"><option value="">Product Name</option>                                     @if(isset($prdnames) && count($prdnames) > 0)                                      @foreach($prdnames as $row)                                        @if(request()->get('name'))                                          <option <?php if(request()->get('name') == $row->prd_name) echo 'selected';  ?> value="{{$row->pk_no}}">{{$row->prd_name}}</option>                                        @else                                          <option value="{{$row->pk_no}}">{{$row->prd_name}}</option>                                        @endif                                      @endforeach                                        @endif</select></div> ';
+      
+      qty.innerHTML = '<div class="form-group">                              <input type="text"  name="quantity" value="{{old('quantity')}}" class="form-control" id="quantity" placeholder="Quantity">                            </div>';
+      
+      supplier.innerHTML = '<div class="form-group"> <select class="form-control" name="supplier" id="supplier"><option value="">select</option> @if($supplier->count() > 0) @foreach($supplier as $row)    <option value="{{$row->supplier_name}}">{{$row->supplier_name}}</option>  @endforeach   @endif      </select>';
+      
+      price.innerHTML = '<div class="form-group"><input type="text"  name="quantityprice" value="{{old('quantityprice')}}" class="form-control quantityprice" id="quantityprice" placeholder="unit price">                                  <span id="showmsg"></span></div>';
+      
+      total.innerHTML = '<div class="form-group"><input type="text" name="totalprice" value="{{old('totalprice')}}" class="form-control" id="totalprice" readonly=""></div>';
+
+      gTotal.innerHTML = '<div class="form-group"><input type="text" name="grandtotal" value="{{old('grandtotal')}}" class="form-control" id="grandtotal" placeholder="Grand total" readonly=""> </div>';
+
+      unit.innerHTML = '<div class="form-group">@if(request()->get('unit')) <input readonly="" type="text"name="unit" value="{{request()->get('unit')}}" class="form-control" id="unit"> @else <input readonly="" type="text" name="unit" value="{{old('unit')}}" class="form-control" id="unit"> @endif </div> ';
+
+      var table = document.getElementById("productlist"); // find table to append to
+      table.appendChild(row); // append row to table
+    }
+</script> -->
+
+
+    
+
+</head>
+<body style="text-align:center;">
+
+
+<form id="test">
+<input type="text" id ="check" placeholder="check"/>
+
+<br>
+
+
+</form>
+<button type="button" id="buttons" onclick="create()">Show</button>
+
+
+</body>
+
+</html>

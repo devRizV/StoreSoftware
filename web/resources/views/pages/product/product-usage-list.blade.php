@@ -22,6 +22,7 @@ input#from_date,input#to_date,input#specific_date {
 @php
   $products = $data['products'];
   $department = $data['department'] ?? null;
+  $sum = $data['sum'] ?? null;
 @endphp
 @section('content')
     <!-- Content Header (Page header) -->
@@ -60,6 +61,12 @@ input#from_date,input#to_date,input#specific_date {
           <div class="alert alert-success">{{session('msg')}}</div>
       </div>
       @endif
+      
+      @if($sum)
+      <div  class="mt-2 mb-2">
+          <div class="alert alert-success">{{$sum}}</div>
+      </div>
+      @endif
     </div>
     <!-- /.content-header -->
 
@@ -88,15 +95,19 @@ input#from_date,input#to_date,input#specific_date {
                     <th>G. Total</th>
                     <th>Taken Date</th>
                     <th>Created</th>
+                    <th>Stock</th>
                     <th>Action</th>
                   </tr>
                   </thead>
                   <tbody>
               @if(isset($products) && count($products) > 0)
+                    {{-- @dd($products) --}}
                 @foreach($products as $row)
+                  
+                  {{-- @dd($row) --}}
                   <tr>
                     @php
-                       $prdName = DB::table('prd_name')->where('pk_no', $row->prd_name_id)->first();
+                      $prdName = DB::table('prd_name')->where('pk_no', $row->prd_name_id)->first();
                     @endphp
                     <td>{{$loop->iteration}}</td>
                     <td>{{$prdName->prd_name ?? ''}}</td>
@@ -108,6 +119,7 @@ input#from_date,input#to_date,input#specific_date {
                     <td>{{$row->prd_grand_price}}</td>
                     <td>{{date('d-M-Y', strtotime($row->taken_date))}}</td>
                     <td>{{date('d-M-Y', strtotime($row->created_at))}}</td>
+                    <td>{{$row->stock}}</td>
                     <td>
                       <a href="{{url('edit-usage-product/'.$row->pk_no)}}" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></a>
                       <a href="{{url('view-product/'.$row->pk_no)}}" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></a>

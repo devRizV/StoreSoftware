@@ -14,16 +14,16 @@ class ProductUsageModel extends Model
     public function StoreUsagesProduct($request){
         DB::beginTransaction();
         try {
-            $this->data['prd_name_id']        = $request->name;
-            $this->data['dept']               = $request->reqdept;
-            $this->data['taken_by']           = $request->takenby;
-            $this->data['taken_date']         = date('Y-m-d H:i:s', strtotime($request->takendate));
-            $this->data['prd_qty']            = $request->quantity;
-            $this->data['prd_qty_price']      = $request->quantityprice;
-            $this->data['prd_price']          = $request->totalprice;
-            $this->data['prd_grand_price']    = $request->grandtotal;
-            $this->data['prd_unit']           = $request->unit;
-            $this->data['prd_remarks']        = $request->remarks;
+            $this->data['prd_name_id']        = $request['name'];
+            $this->data['dept']               = $request['reqdept'];
+            $this->data['taken_by']           = $request['takenby'];
+            $this->data['taken_date']         = date('Y-m-d H:i:s', strtotime($request['takendate']));
+            $this->data['prd_qty']            = $request['quantity'];
+            $this->data['prd_qty_price']      = $request['quantityprice'];
+            $this->data['prd_price']          = $request['totalprice'];
+            $this->data['prd_grand_price']    = $request['totalprice'];
+            $this->data['prd_unit']           = $request['unit'];
+            $this->data['prd_remarks']        = $request['remarks'];
             $this->data['created_at']         = date('Y-m-d H:i:s');
            DB::table('prd_usage')->insert($this->data);
 
@@ -49,7 +49,7 @@ class ProductUsageModel extends Model
             $this->data['prd_qty']            = $request->quantity;
             $this->data['prd_qty_price']      = $request->quantityprice;
             $this->data['prd_price']          = $request->totalprice;
-            $this->data['prd_grand_price']    = $request->grandtotal;
+            $this->data['prd_grand_price']    = $request->totalprice;
             $this->data['prd_unit']           = $request->unit;
             $this->data['prd_remarks']        = $request->remarks;
             $this->data['created_at']         = date('Y-m-d H:i:s');
@@ -100,9 +100,5 @@ class ProductUsageModel extends Model
         }
         DB::commit();
         return $resp = 'Product has been deleted successfully !!';
-       }
-
- 
-
-    
+       }    
 }

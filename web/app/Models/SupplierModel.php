@@ -16,7 +16,7 @@ class SupplierModel extends Model
         try {
             $this->data['supplier_name']           = $request->name;
             $this->data['supplier_remarks']        = $request->remarks;
-            $this->data['created_at']         = date('Y-m-d H:i:s');
+            $this->data['created_at']              = date('Y-m-d H:i:s');
            DB::table($this->table)->insert($this->data);
           } catch (\Exception $e) {
             //dd($e);

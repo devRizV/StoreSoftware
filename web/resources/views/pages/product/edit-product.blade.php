@@ -52,7 +52,7 @@
                         </select>
                       </div>
                     </div>
-                    <input type="hidden" name="prdid" value="{{$product->pk_no}}">
+                    <input type="hidden" name="prdid" id="prdid" value="{{$product->pk_no}}">
                      <div class="col-sm-6">
                        <div class="form-group">
                         <label for="brand">Purchase Date <span style="color:red;">*</span></label>
@@ -184,7 +184,7 @@
     <!-- /.content -->
 @endsection
 @push('scripts')
-    <script>
+<script>
   $(function(){
     $(document).on('change','#name',function(){
       var nameid = $('#name').val();
@@ -193,7 +193,7 @@
           type:"GET",
           data:{nameid:nameid},
           success:function(data){
-              $('#unit').val(data);
+              $('#unit').val(data.unit);
           }
       });
     });
@@ -227,7 +227,7 @@
     });
 //multiplication
 $(document).ready(function() {
-    //this calculates values automatically 
+    //this calculates values automatically     
     sum();
     $("#quantity, #quantityprice").on("keydown keyup", function() {
         sum();
@@ -257,9 +257,10 @@ function sum() {
   $("#expiryalert").datepicker({ dateFormat: "dd-M-yy",changeYear:true, yearRange: "2021:2050"});
   $(document).ready(function () {
     $("#editform").submit(function () {
+        console.log($(this).serialize());
         $("#editsubmit").attr("disabled", true);
         return true;
     });
-});
+  });
 </script>
 @endpush

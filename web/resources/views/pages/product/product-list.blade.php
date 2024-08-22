@@ -23,6 +23,7 @@ input#from_date,input#to_date,input#specific_date {
   $products = $data['products'];
   $department = $data['department'] ?? null;
   $supplier = $data['supplier'] ?? null;
+  $sum = $data['sum'] ?? null;
 @endphp
 @section('content')
     <!-- Content Header (Page header) -->
@@ -71,6 +72,13 @@ input#from_date,input#to_date,input#specific_date {
           <div class="alert alert-success">{{session('msg')}}</div>
         @endif
       </div>
+      <div  class="mt-2 mb-2">
+        @if($sum ?? '')
+          <div class="alert alert-success">{{ $sum }} <div>
+        @endif
+      </div>
+
+
     </div>
     <!-- /.content-header -->
 
@@ -92,41 +100,49 @@ input#from_date,input#to_date,input#specific_date {
                     <th>SL.</th>
                     <th>Name</th>
                     <th>Req. Dept.</th>
-                    <th>Qty</th>
+                    <th>Quantity</th>
                     <th>Unit</th>
-                    <th>Qty. Price</th>
-                    <th>Price</th>
+                    <th>Purchase Price</th>
+                    <th>Total Price</th>
                     <th>G. Total</th>
                     <th>Purchase Date</th>
                     <th>Created</th>
+                    <th>Stock</th>
                     <th>Action</th>
                   </tr>
                   </thead>
                   <tbody>
-              @if(isset($products) && count($products) > 0)
-                @foreach($products as $row)
-                  <tr>
-                    @php
-                       $prdName = DB::table('prd_name')->where('pk_no', $row->prd_id)->first();
-                    @endphp
-                    <td>{{$loop->iteration}}</td>
-                    <td>{{$prdName->prd_name ?? ''}}</td>
-                    <td>{{$row->prd_req_dep}}</td>
-                    <td>{{$row->prd_qty}}</td>
-                    <td>{{$row->prd_unit}}</td>
-                    <td>{{$row->prd_qty_price}}</td>
-                    <td>{{$row->prd_price}}</td>
-                    <td>{{$row->prd_grand_price}}</td>
-                    <td>{{date('d-M-Y', strtotime($row->prd_purchase_date))}}</td>
-                    <td>{{date('d-M-Y', strtotime($row->created_at))}}</td>
-                    <td>
-                      <a href="{{url('edit-product/'.$row->pk_no)}}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>
-                      <a href="{{url('view-product/'.$row->pk_no)}}" class="btn btn-primary btn-xs"><i class="fa fa-eye"></i></a>
-                      <a onclick="return confirm('Are you really sure to delete ?');" href="{{url('delete-product/'.$row->pk_no)}}" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a>
-                    </td>
-                  </tr>
-              @endforeach    
-               @endif
+                    @if(isset($products) && count($products) > 0)
+                      @foreach($products as $row)
+                        <tr>
+                          @php
+                              // $prdName = DB::table('prd_name')
+                              //     ->where('pk_no', $row->prd_id)
+                              //     ->first();
+                              // // $prdStock = DB::table('prd_stock')
+                              // //       ->where('prd_id', $row->prd_id)
+                              // //       ->first();
+                              // // dd($prdStock, $row->prd_id);
+                          @endphp
+                          <td>{{$loop->iteration}}</td>
+                          <td>{{$row->prd_name}}</td>
+                          <td>{{$row->prd_req_dep}}</td>
+                          <td>{{$row->prd_qty}}</td>
+                          <td>{{$row->prd_unit}}</td>
+                          <td>{{$row->prd_qty_price}}</td>
+                          <td>{{$row->prd_price}}</td>
+                          <td>{{$row->prd_grand_price}}</td>
+                          <td>{{date('d-M-Y', strtotime($row->prd_purchase_date))}}</td>
+                          <td>{{date('d-M-Y', strtotime($row->created_at))}}</td>
+                          <td>{{$row->stock ?? ''}}</td>
+                          <td>
+                            <a href="{{url('edit-product/'.$row->pk_no)}}" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></a>
+                            <a href="{{url('view-product/'.$row->pk_no)}}" class="btn btn-primary btn-xs"><i class="fa fa-eye"></i></a>
+                            <a onclick="return confirm('Are you really sure to delete ?');" href="{{url('delete-product/'.$row->pk_no)}}" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a>
+                          </td>
+                        </tr>
+                    @endforeach
+                    @endif
                   </tbody>
                 </table>
               </div>
@@ -153,6 +169,7 @@ input#from_date,input#to_date,input#specific_date {
   <script type="text/javascript">
     $(document).ready(function() {
       $('#productlist').DataTable();
+      
   } );
   </script>
 @endpush

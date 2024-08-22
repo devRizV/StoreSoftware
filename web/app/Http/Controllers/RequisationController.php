@@ -28,6 +28,5 @@ class RequisationController extends Controller
           $data['reqlist'] = DB::SELECT("SELECT prd_name.*, prd_stock.prd_qty from prd_name JOIN prd_stock ON prd_stock.prd_id = prd_name.pk_no WHERE prd_name.min_qty >= prd_stock.prd_qty ");
         return view('pages.requisation.index', compact('data'));
     }
-
     
 }

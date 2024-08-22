@@ -34,11 +34,36 @@ class ProductNameModel extends Model
               return $resp = 'Product name not created successfully !!'.$e;
             }
             DB::commit();
-            return $resp = 'Product name has been created successfully !!';
+                return $resp = 'Product name has been created successfully !!';
            }
-    
 
- 
+    public function exportProductName($request)
+        {
+            $query = DB::table('prd_name')
+                ->select('pk_no', 'prd_name', 'prd_unit', 'created_at');
 
-    
+            if ($request->prd_name) {
+                $query->where('prd_name', $request->prd_name);
+            }
+
+            $data = $query->orderBy('pk_no', 'ASC')->get();
+
+            return $data;
+        }
+    public function exportLiveStock()
+        {
+            $query = DB::table('prd_stock')
+                ->join('prd_name', 'prd_name.pk_no', '=', 'prd_stock.prd_id')
+                ->select('prd_stock.prd_id', 'prd_name.prd_name', 'prd_name.prd_unit', 'prd_stock.prd_qty')
+                ->get();
+
+            $data = $query->map(function ($item) {
+                $minQty = DB::table('prd_name')->where('pk_no', $item->prd_id)->value('min_qty');
+                $item->alert = ($item->prd_qty <= $minQty) ? 'Needs to be restocked' : 'Does not need restocking';
+                return $item;
+            });
+
+            return $data;
+        }
+        
 }

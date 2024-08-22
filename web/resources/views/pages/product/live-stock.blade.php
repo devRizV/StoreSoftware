@@ -23,26 +23,32 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body table-responsive">
+                <div class="mb-2">
+                  <a href="{{ route('livestock.export') }}" class="btn btn-primary">Export To Excel</a>
+                </div>
                 <table id="livestock" class="table table-bordered table-striped">
                   <thead>
                   <tr>
                     <th>SL.</th>
                     <th>Product Name</th>
-                    <th>Product Qty</th>
                     <th>Product Unit</th>
+                    <th>Product Qty</th>
                   </tr>
                   </thead>
                   <tbody>
               @if(isset($products) && count($products) > 0)
-                @foreach($products as $row)
-                  <tr>
-                    <td>{{$loop->iteration}}</td>
-                    <td>{{$row->prd_name}}</td>
-                    <td>{{$row->prd_qty}}</td>
-                    <td>{{$row->prd_unit}}</td>
-                  </tr>
-              @endforeach    
-               @endif
+                  @foreach($products as $row)
+                      @php
+                          $rowClass = ($row->prd_qty <= $row->min_qty) ? 'bg-danger' : '';
+                      @endphp
+                      <tr class="{{$rowClass}}">
+                          <td>{{$loop->iteration}}</td>
+                          <td>{{$row->prd_name}}</td>
+                          <td>{{$row->prd_unit}}</td>
+                          <td>{{$row->prd_qty}}</td>
+                      </tr>
+                  @endforeach    
+              @endif
                   </tbody>
                 </table>
               </div>

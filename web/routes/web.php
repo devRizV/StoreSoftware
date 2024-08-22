@@ -10,6 +10,8 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+
 Route::get('/cc', function() {
     \Artisan::call('cache:clear');
     \Artisan::call('view:clear');
@@ -35,11 +37,15 @@ Route::get('/delete-user/{id}', 'UserController@deleteUser')->name('delete-user'
 Route::post('/store-user', 'UserController@create')->name('store-user');
 Route::post('/update-user', 'UserController@updateUser')->name('update-user');
 
-
 //product routes
 Route::get('/product-store', 'ProductController@getStoreProduct')->name('product-store');
 Route::get('/usage-product', 'ProductController@getUsageProduct')->name('usage-product');
+Route::get('/multi-product-store', 'ProductController@getMultiStoreProduct')->name('multi-product-store');
+Route::get('/multi-usage-product', 'ProductController@getMultiUsageProduct')->name('multi-usage-product');
+
 Route::post('/save-product', 'ProductController@storeProduct')->name('save-product');
+Route::post('/save-multiple-product', 'ProductController@storeMultiProduct')->name('save-multiple-product');
+Route::post('/save-multiple-storage-product', 'ProductController@storeMultiStorageProduct')->name('save-multiple-storage-product');
 Route::post('/save-storage-product', 'ProductController@storeStorageProduct')->name('save-storage-product');
 Route::post('/update-product', 'ProductController@updateProduct')->name('update-product');
 Route::get('/update-usage-product/{id}', 'ProductController@updateUsageProduct')->name('update-usage-product');
@@ -58,7 +64,7 @@ Route::get('/update-product-qty', 'ProductController@updateProductQty')->name('u
 Route::get('/live-stock', 'ProductController@getLiveStock')->name('live-store');
 Route::get('/edit-product/{id}', 'ProductController@getEditProduct')->name('edit-product');
 Route::get('/edit-usage-product/{id}', 'ProductController@getEditUsageProduct')->name('edit-usage-product');
-Route::get('get-product-price/', 'ProductController@checkProductPrice')->name('get-product-price');
+Route::get('/get-product-price', 'ProductController@checkProductPrice')->name('get-product-price');
 
 //product name
 Route::get('/save-product-name', 'ProductNameController@getAddProductName')->name('save-product-name');
@@ -87,3 +93,8 @@ Route::get('/all-supplier', 'SupplierController@getAllSupplier')->name('all-supp
 Route::get('/edit-supplier/{id}', 'SupplierController@geteditSupplier')->name('edit-supplier');
 Route::post('/update-supplier', 'SupplierController@updateSupplier')->name('update-supplier');
 Route::get('/delete-supplier/{id}', 'SupplierController@deleteSupplier')->name('delete-supplier');
+
+//export routess
+Route::get('export-products', 'ProductController@export')->name('export-products');
+Route::get('/livestock/export', 'ProductController@exportLivestock')->name('livestock.export');
+

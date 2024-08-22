@@ -5,6 +5,8 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
+
+
 class ProductRequest extends FormRequest
 {
     /**
@@ -17,7 +19,7 @@ class ProductRequest extends FormRequest
         return true;
     }
 
-    /**
+    /*
      * Get the validation rules that apply to the request.
      *
      * @return array
@@ -25,22 +27,28 @@ class ProductRequest extends FormRequest
 
     public function rules()
     {
-        $rules = [
-            'name'                          => 'required',
-            'quantity'                      => 'required',
-            'unit'                          => 'required',
-            'quantityprice'                 => 'required',
-            'totalprice'                    => 'required',
-            'grandtotal'                    => 'required',
-            'purchasedate'                  => 'required',
-            'reqdept'                       => 'required',
-            'supplier'                      => 'required'
-            
+        
+        $req =  [
+            'name'                          => 'required|array',
+            'name.*'                        => 'required|string|exists:prd_name,pk_no',
+            'quantity'                      => 'required|array',
+            'quantity.*'                    => 'required|numeric|min:0',
+            'unit'                          => 'required|array',
+            'unit.*'                        => 'required|string',
+            'quantityprice'                 => 'required|array',
+            'quantityprice.*'               => 'required|numeric|min:0',
+            'totalprice'                    => 'required|array',
+            'totalprice.*'                  => 'required|numeric|min:0',
+            'purchasedate'                  => 'required|date',
+            'reqdept'                       => 'required|string',
+            'supplier'                      => 'required|string',
         ];
-
-        return $rules;
+        return $req;
     }
 
+        
+        
+        
     public function messages()
     {
         return [
@@ -49,11 +57,9 @@ class ProductRequest extends FormRequest
             'unit.required'                   => 'Product quantity unit is required!',
             'quantityprice.required'          => 'Product price is required!',
             'totalprice.required'             => 'Product total price is required!',
-            'grandtotal.required'             => 'Product grand total is required',
             'purchasedate.required'           => 'Purchase date is required',
-            'reqdept.required'                => 'Requisation department is required',
-            'supplier.required'               => 'Supplier name is required'
+            'reqdept.required'                => 'Requisition department is required',
+            'supplier.required'               => 'Supplier name is required',
         ];
     }
-
   }  

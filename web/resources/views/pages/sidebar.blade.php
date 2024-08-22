@@ -11,10 +11,10 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="{{asset('assets/img/user2-160x160.jpg')}}" class="img-circle elevation-2" alt="User Image">
+          <img src="{{asset('assets/img/AdminLTELogo.png')}}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Hello {{Auth::user()->name}}</a>
+          <a href="#" class="d-block">{{Auth::user()->name}}</a>
         </div>
       </div>
       <!-- Sidebar Menu -->
@@ -65,6 +65,12 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a href="{{route('multi-product-store')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Add Multiple Products</p>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a href="{{route('all-product')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Product List</p>
@@ -85,6 +91,12 @@
                 <a href="{{route('usage-product')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Usage Product</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{route('multi-usage-product')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Usage Multiple Product</p>
                 </a>
               </li>
               <li class="nav-item">

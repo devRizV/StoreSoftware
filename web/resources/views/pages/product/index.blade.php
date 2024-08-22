@@ -1,270 +1,299 @@
 @extends('layouts.app')
 @push('custom_css')
-  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 @endpush
 @php
-  $prdnames   = $data['productsname'];
-  $department = $data['department'];
-  $supplier = $data['supplier'];
+$prdnames = $data['productsname'];
+$department = $data['department'];
+$supplier = $data['supplier']
 @endphp
 @section('content')
-    <!-- Main content -->
-    <section class="content pt-2">
-      <div class="container-fluid">
-        <!-- Main row -->
-        <div class="row">
-          <div class="col-sm-10">
-            @if(session('msg'))
-               <div class="mt-2 mb-2">
-                  <div class="alert alert-success">{{session('msg')}}</div>
-              </div>
-              @endif
-            <div class="card card-primary">
-              <div class="card-header">
-                <h3 class="card-title">Product Entry</h3>
-              </div>
-              <!-- /.card-header -->
-              @if ($errors->any())
-                  <div class="alert alert-danger mt-2">
-                      <ul>
-                          @foreach ($errors->all() as $error)
-                              <li>{{ $error }}</li>
-                          @endforeach
-                      </ul>
-                  </div>
-              @endif
-              <!-- form start -->
-              <form id="quickForm" action="{{route('save-product')}}" method="post">
-                @csrf
-                <div class="card-body">
-                  <div class="row">
-                      <div class="col-sm-6">
-                       <div class="form-group">
-                        <label for="name">Product Name <span style="color:red;">*</span></label> <br>
-                        <select class="js-example-basic-single form-control" name="name" id="name">
-                          <option value="">Select Product Name</option>
-                           @if(isset($prdnames) && count($prdnames) > 0)
-                            @foreach($prdnames as $row)
-                              @if(request()->get('name'))
-                                <option <?php if(request()->get('name') == $row->prd_name) echo 'selected';  ?> value="{{$row->pk_no}}">{{$row->prd_name}}</option>
-                              @else
-                                <option value="{{$row->pk_no}}">{{$row->prd_name}}</option>
-                              @endif
-                            @endforeach    
-                          @endif
-                        </select>
-                      </div>
+<!-- Main content -->
+<section class="content pt-2">
+  <div class="container-fluid">
+    <!-- Main row -->
+    <div class="row">
+      <div class="col-sm-12">
+        @if(session('msg'))
+        <div class="mt-2 mb-2">
+          <div id="successMsg" class="alert alert-success">{{session('msg')}}</div>
+        </div>
+        @endif
+        <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">Usage Product</h3>
+          </div>
+          <!-- /.card-header -->
+          @if ($errors->any())
+          <div class="alert alert-danger mt-2">
+            <ul>
+              @foreach ($errors->all() as $error)
+              <li>{{ $error }}</li>
+              @endforeach
+            </ul>
+          </div>
+          @endif
+          <div>
+            <!-- form start -->
+            <form id="quickForm" action="{{ route('save-product') }}" method="POST">
+              @csrf
+              @method('post')
+              <div class="card-body">
+                <div class="row">
+                  <div class="row col-md-12">
+                    <div class="col-sm-4 form-group">
+                      <label for="purchasedate">Purchase Date <span style="color: red">*</span></label><br>
+                      <input type="text" name="purchasedate" value="{{old('purchasedate')}}" placeholder="Purchase date" class="form-control" id="purchasedate">
                     </div>
-                    <div class="col-sm-6">
-                       <div class="form-group">
-                        <label for="brand">Purchase Date <span style="color:red;">*</span></label>
-                        <input type="text" name="purchasedate" placeholder="select date" readonly="" value="{{old('purchasedate')}}" class="form-control" id="purchasedate" >
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                      <div class="col-sm-6">
-                        <div class="row">
-                          <div class="col-6">
-                             <div class="form-group">
-                              <label for="brand">Product Quantity <span style="color:red;">*</span></label>
-                              <input type="text"  name="quantity" value="{{old('quantity')}}" class="form-control" id="quantity" placeholder="Enter product quantity">
-                            </div>
-                          </div>
-                          <div class="col-6">
-                            <div class="form-group">
-                              <label for="brand">Quantity In (kg,pcs,etc) <span style="color:red;">*</span></label>
-                              @if(request()->get('unit'))
-                                  <input readonly="" type="text" name="unit" value="{{request()->get('unit')}}" class="form-control" id="unit">
-                              @else
-                              <input readonly="" type="text" name="unit" value="{{old('unit')}}" class="form-control" id="unit">
-                              @endif
-                            </div>
-                          </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                       <div class="form-group">
-                        <label for="brand">Per Quantity Price <span style="color:red;">*</span></label>
-                        <input type="text"  name="quantityprice" value="{{old('quantityprice')}}" class="form-control quantityprice" id="quantityprice" placeholder="Enter product quantity price">
-                        <span id="showmsg"></span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                      <div class="col-sm-6">
-                       <div class="form-group">
-                        <label for="brand">Total Price <span style="color:red;">*</span></label>
-                        <input type="text" name="totalprice" value="{{old('totalprice')}}" class="form-control" id="totalprice" readonly="">
-                      </div>
-                    </div>
-                    <div class="col-sm-6">
-                       <div class="form-group">
-                        <label for="brand">Grand Total <span style="color:red;">*</span></label>
-                        <input type="text" name="grandtotal" value="{{old('grandtotal')}}" class="form-control" id="grandtotal" placeholder="Grand total">
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-sm-6">
-                     <div class="form-group">
-                      <label for="brand">Requisition Dept. <span style="color:red;">*</span></label>
+                    <div class="col-sm-3 form-group">
+                      <label for="reqdept"> Requistion Department <span style="color: red">*</span></label><br>
                       <select class="form-control" name="reqdept" id="reqdept">
                         <option value="">select</option>
                         @if($department->count() > 0)
-                          @foreach($department as $row)
-                            <option value="{{$row->dep_name}}">{{$row->dep_name}}</option>
-                          @endforeach
+                        {{$sl = 0 }}
+                        @foreach($department as $row)
+                        <option value="{{$row->dep_name}}">{{ $sl +=1 }}.  {{$row->dep_name}}</option>
+                        @endforeach
                         @endif
                       </select>
                     </div>
-                  </div>
-                  <div class="col-sm-6">
-                     <div class="form-group">
-                      <label for="brand">Supplier <span style="color:red;">*</span></label>
+                    <div class="col-sm-3 form-group">
+                      <label for="supplier">Supplier <span class="text-danger">*</span></label>
+                      {{-- Supplier --}}
                       <select class="form-control" name="supplier" id="supplier">
-                        <option value="">select</option>
-                        @if($supplier->count() > 0)
+                        <option value="">Select</option>
+                        @if(isset($supplier) && $supplier->count() > 0)
+                          {{$sl = 0 }}
                           @foreach($supplier as $row)
-                            <option value="{{$row->supplier_name}}">{{$row->supplier_name}}</option>
+                            <option value="{{$row->supplier_name}}">{{ $sl +=1 }}. {{$row->supplier_name}}</option>
                           @endforeach
                         @endif
                       </select>
                     </div>
-                  </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-sm-6">
-                       <div class="form-group">
-                        <label for="expirydate">Expiry Date</label>
-                        <input type="text" name="expirydate" placeholder="expiry date" readonly="" value="{{old('expirydate')}}" class="form-control" id="expirydate" >
-                      </div>
-                    </div>
-                    <div class="col-sm-6">
-                       <div class="form-group">
-                        <label for="expiryalert">Expiry Alert Date</label>
-                        <input type="text" readonly="" name="expiryalert" value="{{old('expiryalert')}}" class="form-control" id="expiryalert" placeholder="Expiry alert date">
-                      </div>
+                    <div class="col-sm-2 form-group">
+                      <label for="">No. of Entries <span style="color: red">*</span></label><br>
+                      <label for="entryCount" name="entries" class="form-control" id="entryCount">0</label>
                     </div>
                   </div>
-                  <div class="row">
-                    <div class="col-sm-6">
-                       <div class="form-group">
-                        <label for="brand">Product Brand(Opt)</label>
-                        <input type="text" name="brand" class="form-control" value="{{old('brand')}}" id="brand" placeholder="Enter product brand">
-                      </div>
-                    </div>
-                    <div class="col-sm-6">
-                       <div class="form-group">
-                        <label for="brand">Purchase From(Opt)</label>
-                      <input type="text" name="purchasefrom" class="form-control" value="{{old('purchasefrom')}}" id="purchasefrom" placeholder="Purchase from">
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-sm-6">
-                     <div class="form-group">
-                      <label for="brand">Remarks (Opt)</label>
-                      <textarea rows="5" placeholder="Product remarks" class="form-control" name="remarks" id="remarks">{{old('remarks')}}</textarea>
-                    </div>
-                  </div>
-                  </div>
-                 </div>
-                <!-- /.card-body -->
-                <div class="card-footer">
-                  <button type="submit" id="saveproduct" class="btn btn-primary">Save Product</button>
                 </div>
-              </form>
-            </div>
-            <!-- /.card -->
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      {{-- Product Table --}}
+                      <table class="table table-bordered product-table" id="product-table">
+                        <thead>
+                          <tr>
+                            <th><label for="name[]">Product Name <span style="color: red">*</span></label></th>
+                            <th><label for="quantity[]">Quantity <span style="color: red">*</span></label></th>
+                            <th><label for="unit[]">Unit <span style="color: red">*</span></label></th>
+                            <th><label for="quantityprice[]">Product Price <span style="color: red">*</span></label></th>
+                            <th><label for="totalprice[]">Total Price <span style="color: red">*</span></label></th>
+                            <th><label for="Action">Action</th>
+                          <tr>
+                        </thead>
+                        <tbody>
+                          {{-- the product details here --}}
+                          @include('pages/product/store-add-row')
+                          <tr>
+                            <td colspan="1">
+                              <button type="button" class="btn btn-secondary" id="add-row">Add More</button>
+                            </td>
+                            <td colspan="5">
+                              <label for="showMsg" id="showMsg" class="text-success large"></label>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- /.card-body -->
+              <div class="card-footer">
+                <button type="submit" class="btn btn-primary" id="saveprd">Save Product</button>
+              </div>
+            </form>
           </div>
-          <!-- /.col -->
         </div>
-        <!-- /.row -->
-      </div><!--/. container-fluid -->
-    </section>
-    <!-- /.content -->
+        <!-- /.card -->
+      </div>
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!--/. container-fluid -->
+</section>
+
+<!-- /.content -->
 @endsection
 @push('scripts')
-    <script>
-  $(function(){
-    $(document).on('change','#name',function(){
-      var nameid = $('#name').val();
-      $.ajax({
-          url:"{{route('get-product-unit') }}",
-          type:"GET",
-          data:{nameid:nameid},
-          success:function(data){
-              $('#unit').val(data);
-          }
-      });
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $('.product-name').select2();
+    $('#reqdept').select2();
+    $('#supplier').select2();
+    $("#purchasedate").datepicker({dateFormat: "dd-M-yy"});
+    // Add new row for product entry    
+    $(document).on('click', '#add-row', function (e) {
+      e.preventDefault();
+      var $this = $(this);  
+      var row = `@include("pages/product/store-add-row")`;
+      $this.closest('tr').before(row);
+      $('.product-name').select2();
+      getUnit();
+      getTotalPrice();
+      getEntryNumber();
+    });
+    // Delete row 
+    deleteRow();
+    // Get unit and show previous price 
+    getUnit();
+    // Get total price
+    getTotalPrice();
+    // Get entry numbers
+    getEntryNumber();
+    // Form Submission 
+    $('#quickform').on("submit", function (e) {       
+      $('#saveprd').prop('disabled', true); // Disable the submit button
     });
   });
 
-    $(document).on('keyup','#quantityprice',function(){
-      var price     = $(this).val();
-      var productId = $('#name').val();
-      if (productId == "") {
-        alert('Product Name can not be empty !!');
-      }else{
-        $('#showmsg').text('Processing...');
-        $.ajax({
-            url:"{{route('get-product-price') }}",
-            type:"GET",
-            data:{prdprice:price, productId:productId},
-            success:function(data){
-                console.log(data);
-                if (data.status == 'error') {
-                  $('#showmsg').html('<span style="color:#ff0000">Previous price was -></span>'+data.price);
-                }else if(data.status == 'success'){
-                   $('#showmsg').html('<span style="color:#008000">Both price are same</span>');
-                }else if(data.status == 'fentry'){
-                   $('#showmsg').html('<span style="color:#008000">This is first entry</span>');
-                }else{
-                   console.log('something wrong !!');
-                }
-            }
-        });
+  function checkValid() {
+    let isValid = true;
+    $("#quickform input, #quickform select, #quickform textarea").each(function () {
+      if ($(this).val() === "") {
+        isValid = false;
       }
     });
-//multiplication
-$(document).ready(function() {
-    //this calculates values automatically 
-    sum();
-    $("#quantity, #quantityprice").on("keydown keyup", function() {
-        sum();
-    });
-});
-
-
-
-function sum() {
-    var num1 = document.getElementById('quantity').value;
-    var num2 = document.getElementById('quantityprice').value;
-    var result = num1 * num2;
-    if (!isNaN(result)) {
-        document.getElementById('totalprice').value = result;
-        document.getElementById('grandtotal').value = result;
+    if (!isValid) {
+      alert("Please input all fields!!");
+      saveButton.prop("disabled", false);
+      return false;
     }
-}
-</script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script type="text/javascript">
-  // In your Javascript (external .js resource or <script> tag)
-  $(document).ready(function() {
-      $('.js-example-basic-single').select2();
-  });
-</script>
-<script type="text/javascript">
-  $("#purchasedate").datepicker({ dateFormat: "dd-M-yy"});
-  $("#expirydate").datepicker({ dateFormat: "dd-M-yy",changeYear:true, yearRange: "2021:2050"});
-  $("#expiryalert").datepicker({ dateFormat: "dd-M-yy",changeYear:true, yearRange: "2021:2050"});
+  }
 
-  $(document).ready(function () {
-    $("#quickForm").submit(function () {
-        $("#saveproduct").attr("disabled", true);
-        return true;
+  function getEntryNumber() {
+    var num = $('.product-table tbody tr').length-1;
+    $('#entryCount').text(num);
+  }
+
+  function getTotalPrice() {
+    var totalprice = 0.00;
+    $(document).on('input', '.quantity, .quantityprice', function () {
+      const $this = $(this);
+      const $row = $this.closest('tr');
+      const msg = $row.find('.priceMsg');
+      const product_id = $row.find('.product-name').val();
+      if(product_id){
+        const qtyprice = parseFloat($row.find('.quantityprice').val());
+        const quantity = parseFloat($row.find('.quantity').val());
+        totalprice = (qtyprice * quantity ? qtyprice * quantity : 0.000 );
+        $row.find('.totalprice').val(totalprice.toFixed(3));
+        if (qtyprice) {
+          msg.removeClass('text-danger').addClass('text-success').text('processing...');
+          checkPrice(qtyprice, product_id, function (message, cls) {
+              (msg.hasClass('text-danger') ? 
+                      msg.removeClass('text-danger').addClass(cls).text(message) 
+                        : msg.removeClass('text-success').addClass(cls).text(message));
+            });
+        }
+      } else{
+          alert("Product name can't be empty!!!")
+      }
     });
-});
+  }
+
+   function checkPrice(price, id, callback) {
+     var msg = '';
+     var cls = '';
+     $.ajax({
+       type: "GET",
+       url: "{{ route('get-product-price') }}",
+       data: {prdprice:price, productId:id},
+       dataType: "json",
+       success: function (data) {
+         if (data.status == 'error') {
+           msg = `The previous price was - ${data.price}`;
+           cls = 'text-danger';
+         } else if (data.status == 'success') {
+           msg = "The prices are same!!";
+           cls = "text-success";
+         } else if (data.status == 'fentry') {
+           msg = 'First entry!!';
+           cls = 'text-success';
+         } else {
+           console.log('something went wrong!!');
+           msg = 'Something went wrong!!';
+           cls = 'text-danger';
+         }
+         callback(msg, cls);
+        },
+        error: function(xhr, status, error) {
+            console.error('AJAX error', error);
+            callback('Something was wrong!!');
+        }
+      });
+   }
+
+  function checkDuplicate(check) {
+    var isDuplicate = false;
+    var productName = check.val();
+    $('.product-name').not(check).each(function(){
+      if($(this).val() === productName) {
+        isDuplicate = true;
+      }
+    });
+    return isDuplicate;
+  }
+
+  function getUnit() {
+    $(document).on('change', '.product-name', function (e) {
+      e.preventDefault();
+      var $this = $(this);
+      var $row = $this.closest('tr');
+      var product_id = $this.val();
+      if (checkDuplicate($this)) {
+        $row.find('.showErrorMsg').text('Pruduct already entered!!!'); // Show error msg 
+        $this.val();
+      } else {
+        $row.find('.showErrorMsg').text('');  // Reset any error
+        // Request for product unit
+        $.ajax({
+          type: "GET",
+          url: "{{ route('get-product-unit') }}",
+          data: {
+            nameid: product_id,
+          },
+          dataType: "json",
+          success: function (data) {
+            $row.find('.unit').val(data.unit); // Get product unit
+          },
+        });        
+      }
+    });
+  }
+
+  function deleteRow() {
+    $(document).on('click', '.deleteRow', function (event) {
+      // row deletion logic
+      event.preventDefault();
+      let isConfirmed = confirm("Do you want delete this row?");
+      if(isConfirmed){
+        var $this = $(this);
+        const $row = $this.closest('tr');
+        $row.remove();
+        $("#showMsg").text('Row was deleted!!!').fadeOut(3000);
+        getEntryNumber();
+      }else {
+        $("#showMsg").text('Row was not deleted!!!');
+      }
+    });
+  }
+
+  function submit() {
+    
+  }
 </script>
 @endpush
