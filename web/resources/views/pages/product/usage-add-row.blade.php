@@ -1,7 +1,7 @@
 <tr>
                           <td>
                             {{-- Product Name Entry --}}
-                            <select class="js-example-basic-single form-control product-name" name="name[]" id="name">
+                            <select class="form-control product-name" name="name[]">
                               <option value="">Select Product Name</option>
                               @if(isset($prdnames) && count($prdnames) > 0)
                               @foreach($prdnames as $row)
@@ -9,27 +9,26 @@
                               @endforeach
                               @endif
                             </select>
-                            <label for="showErrorMsg" class="text-danger small showErrorMsg"></label>
                           </td>
                           <td>
                             {{-- Product Quantity --}}
-                            <input type="text" min="1" name="quantity[]" value="{{old('quantity[]')}}" class="form-control quantity" id="quantity" placeholder="Enter quantity">
+                            <input type="text" min="1" name="quantity[]" value="{{old('quantity[]')}}" class="form-control quantity" placeholder="Enter quantity">
                             <span class="text-success text-sm stock
                             " id="stock"></span>
                           </td>
                           <td>
                             {{-- Product Unit --}}
-                            <input readonly="" type="text" name="unit[]" value="{{old('unit[]')}}" class="form-control unit" id="unit" placeholder="Product Unit">
+                            <input readonly="" type="text" name="unit[]" value="{{old('unit[]')}}" class="form-control unit" placeholder="Product Unit">
                           </td>
                           <td>
                             {{-- Product Price --}}
-                            <input type="text" min="1" name="quantityprice[]" value="{{old('quantityprice[]')}}" class="form-control quantityprice" id="quantityprice" placeholder="Enter price">
+                            <input type="text" min="1" name="quantityprice[]" value="{{old('quantityprice[]')}}" class="form-control quantityprice" placeholder="Enter price">
                             <label id="prev_price" for="prev_price" class="text-success small prev_price"></label>
                             {{-- <input type="hidden" name="grandtotal" value="" class="grandtotal"> --}}
                           </td>
                           <td>
                             {{-- Total Price --}}
-                            <input type="text" name="totalprice[]" value="{{old('totalprice[]')}}" class="form-control totalprice" id="totalprice" readonly="">
+                            <input type="text" name="totalprice[]" value="{{old('totalprice[]')}}" class="form-control totalprice" readonly="">
                           </td>
                           <td>
                             {{-- Action --}}

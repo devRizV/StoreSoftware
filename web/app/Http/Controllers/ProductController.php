@@ -17,8 +17,7 @@ use App\Http\Requests\ProductStorageRequest;
 use App\Exports\ProductsExport;
 use App\Exports\LiveStockExport;
 use App\Http\Requests\ProductUpdateRequest;
-
-
+use App\Http\Requests\UsageProductUpdateRequest;
 
 class ProductController extends Controller
 {
@@ -88,7 +87,7 @@ class ProductController extends Controller
         // dd($data['supplier']);
         $data['department'] = DepartmentModel::all();
         $data['productsname'] = DB::table('prd_name')->orderBy('pk_no', 'DESC')->get();
-        return view('pages.product.', compact('data'));
+        return view('pages.product.index', compact('data'));
     }
     //get store product
     public function getMultiStoreProduct()
@@ -119,7 +118,7 @@ class ProductController extends Controller
             ->orderBy('N.pk_no', 'DESC')
             ->get();
         $data['department'] = DepartmentModel::all();
-        return view('pages.product.usage-product', compact('data'));
+        return view('pages.product.usage-multi-product', compact('data'));
     }
     //get product unit
     public function getProductUnit(Request $request)
@@ -216,7 +215,7 @@ class ProductController extends Controller
         }
     }
     //update storage product
-    public function updateUsageProduct(ProductUpdateRequest $request, $id)
+    public function updateUsageProduct(UsageProductUpdateRequest $request, $id)
     {
         $resp = $this->prdusage->updateUsageProduct($request, $id);
         return redirect()->back()->with('msg', $resp);
@@ -322,6 +321,7 @@ class ProductController extends Controller
     // Store multiple
     public function storeMultiProduct(ProductRequest $request)
     {
+
         foreach ($request->name as $product => $value) {
             $prdinfo = [
                 'name'              => $request->name[$product],
@@ -343,7 +343,10 @@ class ProductController extends Controller
         }
 
         // Optionally handle responses and provide more detail if needed
-        return redirect()->back()->with('msg', $resp);
+        // return redirect()->back()->with('msg', $resp);
+        return response()->json([
+            'msg' => $resp,
+        ], 200);
     }
 
     //store Storage Product
@@ -390,14 +393,17 @@ class ProductController extends Controller
             ->first();
         if ($getPrdPrice == null) {
             $data['status'] = 'fentry';
+            $data['message'] = 'First entry!!!';
             return response()->json($data);
         } else {
             if ($productPrice != $getPrdPrice->prd_qty_price) {
                 $data['price']  = $getPrdPrice->prd_qty_price;
                 $data['status'] = 'error';
+                $data['message'] = 'The previous price was -' . $data['price'];
                 return response()->json($data);
             } else {
                 $data['status'] = 'success';
+                $data['message'] = 'The prices are the same.';
                 return response()->json($data);
             }
         }

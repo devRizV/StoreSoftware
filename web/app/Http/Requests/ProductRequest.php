@@ -39,27 +39,24 @@ class ProductRequest extends FormRequest
             'quantityprice.*'               => 'required|numeric|min:0',
             'totalprice'                    => 'required|array',
             'totalprice.*'                  => 'required|numeric|min:0',
-            'purchasedate'                  => 'required|date',
+            'purchasedate'                  => 'required|date', 
             'reqdept'                       => 'required|string',
             'supplier'                      => 'required|string',
         ];
         return $req;
-    }
+    }      
 
-        
-        
-        
     public function messages()
     {
         return [
-            'name.required'                   => 'Product name is required!',
-            'quantity.required'               => 'Product quantity is required!',
-            'unit.required'                   => 'Product quantity unit is required!',
-            'quantityprice.required'          => 'Product price is required!',
-            'totalprice.required'             => 'Product total price is required!',
-            'purchasedate.required'           => 'Purchase date is required',
-            'reqdept.required'                => 'Requisition department is required',
-            'supplier.required'               => 'Supplier name is required',
+            'name.*.required'                   => 'Product name is required!',
+            'quantity.*.required'               => 'Product quantity is required!',
+            'unit.*.required'                   => 'Product quantity unit is required!',
+            'quantityprice.*.required'          => 'Product price is required!',
+            'totalprice.*.required'             => 'Product total price is required!',
+            'purchasedate.required'             => 'Purchase date is required',
+            'reqdept.required'                  => 'Requisition department is required',
+            'supplier.required'                 => 'Supplier name is required',
         ];
     }
   }  

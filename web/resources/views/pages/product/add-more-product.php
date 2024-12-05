@@ -56,11 +56,11 @@ $supplier = $data['supplier'];
           <div class="form-group">
             <label for="reqdept">Requisition Dept. <span style="color:red;">*</span></label>
             <select class="form-control" name="reqdept" id="reqdept">
-              <option value="">Select</option>
+              <option value="">Select a department</option>
               @if($department->count() > 0)
-              @foreach($department as $row)
-              <option value="{{$row->dep_name}}">{{$row->dep_name}}</option>
-              @endforeach
+                @foreach($department as $row)
+                  <option value="{{$row->dep_name}}">{{$row->dep_name}}</option>
+                @endforeach
               @endif
             </select>
           </div>
@@ -69,11 +69,11 @@ $supplier = $data['supplier'];
           <div class="form-group">
             <label for="supplier">Supplier <span style="color:red;">*</span></label>
             <select class="form-control" name="supplier" id="supplier">
-              <option value="">Select</option>
+              <option value="">Select a supplier</option>
               @if($supplier->count() > 0)
-              @foreach($supplier as $row)
-              <option value="{{$row->supplier_name}}">{{$row->supplier_name}}</option>
-              @endforeach
+                @foreach($supplier as $row)
+                  <option value="{{$row->supplier_name}}">{{$row->supplier_name}}</option>
+                @endforeach
               @endif
             </select>
           </div>

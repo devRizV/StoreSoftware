@@ -93,7 +93,7 @@
                  </div>
                 <!-- /.card-body -->
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-primary" id="saveprd">Save Product</button>
+                  {{-- <button type="submit" class="btn btn-primary" id="saveprd">Save Product</button> --}}
                  </div>
               </form>
             </div>

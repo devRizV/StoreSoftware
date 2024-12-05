@@ -35,14 +35,14 @@ $supplier = $data['supplier']
           @endif
           <div>
             <!-- form start -->
-            <form id="quickForm" action="{{ route('save-product') }}" method="POST">
+            <form id="quickForm" {{--action="{{ route('save-product') }}" method="POST"  --}}>
               @csrf
               @method('post')
               <div class="card-body">
                 <div class="row">
                   <div class="row col-md-12">
                     <div class="col-sm-4 form-group">
-                      <label for="purchasedate">Purchase Date <span style="color: red">*</span></label><br>
+                      {{-- <label for="purchasedate">Purchase Date <span style="color: red">*</span></label><br> --}}
                       <input type="text" name="purchasedate" value="{{old('purchasedate')}}" placeholder="Purchase date" class="form-control" id="purchasedate">
                     </div>
                     <div class="col-sm-3 form-group">

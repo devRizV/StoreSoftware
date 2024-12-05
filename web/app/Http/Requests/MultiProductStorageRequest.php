@@ -47,14 +47,14 @@ class ProductStorageRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required'                   => 'Product name is required!',
-            'takenby.required'                => 'Product taken by is required!',
-            'takendate.required'              => 'Product taken date is required!',
-            'quantity.required'               => 'Product quantity is required!',
-            'unit.required'                   => 'Product quantity unit is required!',
-            'quantityprice.required'          => 'Product price is required!',
-            'totalprice.required'             => 'Product total price is required!',
-            'reqdept.required'                => 'Department can not be empty !!'
+            'name.*.required'                   => 'Product name cannot be empty!',
+            'takenby.required'                  => 'Product taken by is required!',
+            'takendate.required'                => 'Product cannot be empty!',
+            'quantity.*.required'               => 'Product quantity is required!',
+            'unit.*.required'                   => 'Product quantity unit is required!',
+            'quantityprice.*.required'          => 'Product price is required!',
+            'totalprice.*.required'             => 'Product total price is required!',
+            'reqdept.required'                  => 'Department can not be empty !!'
         ];
     }
 

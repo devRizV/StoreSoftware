@@ -34,7 +34,7 @@
                   </div>
               @endif
               <!-- form start -->
-              <form id="quickForm" action="{{route('update-usage-product', $product->pk_no)}}" method="get">
+              <form id="quickForm" action="{{route('update-usage-product', $product->pk_no)}}" method="put">
                 @csrf
                 <div class="card-body">
                   <div class="row">
@@ -150,7 +150,7 @@
 @endsection
 @push('scripts')
 <script type="text/javascript">
-  $("#takendate").datepicker({ dateFormat: "dd-M-yy"});
+  $("#takendate").datepicker({dateFormat: "dd-M-yy"});
 </script>
     <script>
   $(function(){
@@ -161,7 +161,7 @@
           type:"GET",
           data:{nameid:nameid},
           success:function(data){
-              $('#unit').val(data);
+            $('#unit').val(data.unit);
           }
       });
     });

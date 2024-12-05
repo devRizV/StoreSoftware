@@ -42,10 +42,9 @@
 
   <!-- Main Footer -->
   <footer class="main-footer">
-    <strong>Copyright &copy; 2014-2020 <a href="https://www.facebook.com/freelancerrony.bd/" target="_blank">Programmer Rony</a>.</strong>
-    All rights reserved.
+    An open-source program for everyone's use
     <div class="float-right d-none d-sm-inline-block">
-      <b>Version</b> 1.0
+      <b>No versioning added</b>
     </div>
   </footer>
 </div>
@@ -72,6 +71,10 @@
 
 <!-- AdminLTE for demo purposes -->
 <script src="{{asset('assets/js/demo.js')}}"></script>
+
+<!-- Custom JS -->
+<script src="{{asset('assets/js/custom.js')}}"></script>
+
 @stack('scripts')
 </body>
 </html>
