@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # StoreSoftware - Inventory Management System
 
 ## Overview
@@ -17,3 +18,7 @@ StoreSoftware is an open-source inventory management system designed to streamli
 - Frontend: HTML, CSS, JS, Bootstrap
 - Backend: PHP, laravel
 - Database: MySQL
+=======
+# asia store
+
+>>>>>>> StoreSoftware/master
