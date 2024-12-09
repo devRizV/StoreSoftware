@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventory Management System - Setup Guide</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -68,7 +67,7 @@
         <h2>Setup Instructions</h2>
         <h3>Step 1: Clone the Repository</h3>
         <pre><code>git clone https://github.com/devRizV/StoreSoftware.git
-        cd repository</code></pre>
+cd repository</code></pre>
         <h3>Step 2: Install Dependencies</h3>
         <pre><code>composer install</code></pre>
         <h3>Step 3: Configure the Environment</h3>
