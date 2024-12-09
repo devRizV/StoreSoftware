@@ -76,11 +76,11 @@
         <pre><code>cp .env.example .env</code></pre>
         <p>Edit the <code>.env</code> file and update the database connection details:</p>
         <pre><code>DB_CONNECTION=mysql
-                    DB_HOST=127.0.0.1
-                    DB_PORT=3306
-                    DB_DATABASE=your_database_name
-                    DB_USERNAME=your_username
-                    DB_PASSWORD=your_password</code></pre>
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=your_database_name
+DB_USERNAME=your_username
+DB_PASSWORD=your_password</code></pre>
         <h3>Step 4: Import the Database</h3>
         <p>Import the provided SQL file into your MySQL database:</p>
         <pre><code>mysql -u username -p your_database_name &lt; db/storesoft.sql</code></pre>
