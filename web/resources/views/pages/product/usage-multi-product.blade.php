@@ -2,13 +2,27 @@
 @push('custom_css')
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
   <style>
-  .is-invalid-select2 .select2-selection {
-      border-color: red !important;
-  }
-  .product-name {
-        width: 150px;
+    .is-invalid-select2 .select2-selection {
+        border-color: red !important;
     }
-</style>
+    .product-name {
+          width: 150px;
+      }
+    
+    #successMsg {
+      position: relative;
+      padding-right: 3rem; /* Ensure enough space for the close button */
+    }
+
+    .btn-close {
+      position: absolute;
+      top: 0;
+      right: 0;
+      margin-top: 10px;  /* Adjust the top margin */
+      margin-right: 10px;  /* Adjust the right margin */
+    }
+
+  </style>
 @endpush
 @php
   $prdnames = $data['productsname'];
@@ -18,14 +32,21 @@
     <!-- Main content -->
     <section class="content pt-2">
       <div class="container-fluid">
+        <div class="mt-2 mb-2">
+  <div id="successMsg" class="position-relative alert alert-success">
+    <button type="button" class="position-absolute top-0 end-0 me-2 mt-2 btn btn-close">
+      <span class="fas fa-times"></span>
+    </button>
+    THIS IS A TEXT <br>
+    THIS IS A TEXT <br>
+    THIS IS A TEXT <br>
+    THIS IS A TEXT <br>
+  </div>
+</div>
+
         <!-- Main row -->
         <div class="row">
-          <div class="col-sm-10">
-            <div class="mt-2 mb-2 position-relative">
-              <div id="successMsg" class="alert alert-dismissible fade show" role="alert">
-              </div>
-              <button type="button" class="position-absolute btn btn-close" data-bs-dismiss="alert" aria-label="Close"><span class="fas fa-times"></span></button>
-            </div>
+          <div class="col-sm-12">
             <div class="card card-primary">
               <div class="card-header">
                 <h3 class="card-title">Usage Product</h3>
@@ -41,7 +62,7 @@
                   </div>
               @endif
               <!-- form start -->
-              <form id="quickForm" action="{{route('save-multiple-storage-product')}}" method="post">
+              <form id="quickForm">
                 @csrf
                 <div class="card-body">
                   <div class="row">
@@ -259,8 +280,8 @@
               success: function (response) {
                   // On success, update the UI with the success message and reset the form
                   $button.html('Save Product'); // Reset button text
-                  $('#product-table tbody').empty().append(row + addRowSection); // Add new row to the table
-                  $('#successMsg').empty().removeClass('alert-success alert-danger')
+                  $('#product-table tbody').empty().append(row + addRowSection); // Remove previous rows and Add new row to the table
+                  $('#successMsg').empty().removeClass('alert-success alert-danger');
                       .addClass('alert-success').append(response.msg); // Display success message
                   resetFormAndSelect2(form);
                   initializeProductNameSelect2(); // Reinitialize Select2 for product names
@@ -300,6 +321,10 @@
               }
           });
       });
+    }
+
+    function handleSessionMessage(message) {
+      const msgContainer = ``;
     }
 </script>
 @endpush

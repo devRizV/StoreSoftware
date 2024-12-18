@@ -368,7 +368,9 @@ class ProductController extends Controller
 
             $resp = $this->prdusage->StoreUsagesProduct($prdinfo);
         }
-        return redirect()->back()->with('msg', $resp);
+        return response()->json([
+            'msg' => $resp,
+        ], 200);
     }
     //delete usage product
     public function deleteUsageProduct($prdid)

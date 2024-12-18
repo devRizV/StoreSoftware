@@ -9,8 +9,6 @@
         width: 150px;
     }
 </style>
-
-
 @endpush
 @php
 $prdnames = $data['productsname'];
@@ -27,7 +25,6 @@ $supplier = $data['supplier']
         <div class="mt-2 mb-2 position-relative">
           <div id="successMsg" class="alert alert-dismissible fade show" role="alert">
           </div>
-          <button type="button" class="position-absolute btn btn-close" data-bs-dismiss="alert" aria-label="Close"><span class="fas fa-times"></span></button>
         </div>
 
         <div class="card card-primary">
@@ -46,7 +43,6 @@ $supplier = $data['supplier']
          @endif
           <!-- form start -->
           <form id="quickForm">
-          {{-- action="{{ route('save-multiple-product') }}" method="POST" --}}
             @csrf
             @method('post')
             <div class="card-body">
