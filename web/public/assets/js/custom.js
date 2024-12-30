@@ -189,3 +189,33 @@ function updateTotalPrice() {
     });
 }
 
+
+function handleSessionMessage(message, status) {
+    let className = '';
+    const msgContainer = `<button type="button" class="position-absolute top-0 end-0 me-2 mt-2 btn btn-close">
+                              <span class="fas fa-times"></span>
+                            </button>
+                            ${message}`;
+    if (status === "success") {
+        className = "alert-success";
+    } else if (status === "failed") {
+        className = "alert-danger";
+    } else {
+        className = "";
+    }
+
+    $('#successMsg').empty().removeClass('alert-success alert-danger')
+        .addClass(className).append(msgContainer);
+    
+    // Call remove session message function
+    removeSessionMessage('.btn-close');
+}
+
+// removes the session message and the classes
+
+function removeSessionMessage(button) {
+    $(document).on('click', button, function () {
+        $(this).parent().empty()
+            .removeClass('alert-success alert-danger');
+    });
+}

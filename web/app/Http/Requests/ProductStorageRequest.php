@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class ProductStorageRequest extends FormRequest
 {
@@ -25,8 +24,6 @@ class ProductStorageRequest extends FormRequest
 
     public function rules()
     {
-        
-
         return [
             'name'                          => 'required|array',
             'name.*'                        => 'required|integer|exists:prd_name,pk_no',
@@ -57,5 +54,4 @@ class ProductStorageRequest extends FormRequest
             'reqdept.required'                  => 'Department name is required!'
         ];
     }
-
-  }  
+}  

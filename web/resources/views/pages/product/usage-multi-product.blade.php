@@ -33,16 +33,9 @@
     <section class="content pt-2">
       <div class="container-fluid">
         <div class="mt-2 mb-2">
-  <div id="successMsg" class="position-relative alert alert-success">
-    <button type="button" class="position-absolute top-0 end-0 me-2 mt-2 btn btn-close">
-      <span class="fas fa-times"></span>
-    </button>
-    THIS IS A TEXT <br>
-    THIS IS A TEXT <br>
-    THIS IS A TEXT <br>
-    THIS IS A TEXT <br>
-  </div>
-</div>
+          <div id="successMsg" class="position-relative alert">
+          </div>
+        </div>
 
         <!-- Main row -->
         <div class="row">
@@ -281,8 +274,7 @@
                   // On success, update the UI with the success message and reset the form
                   $button.html('Save Product'); // Reset button text
                   $('#product-table tbody').empty().append(row + addRowSection); // Remove previous rows and Add new row to the table
-                  $('#successMsg').empty().removeClass('alert-success alert-danger');
-                      .addClass('alert-success').append(response.msg); // Display success message
+                  handleSessionMessage(response.msg, 'success');
                   resetFormAndSelect2(form);
                   initializeProductNameSelect2(); // Reinitialize Select2 for product names
                   $button.after(`<small class='ml-2 text-success success-msg'>${response.msg}</small>`)
@@ -291,7 +283,6 @@
               error: function (xhr) {
                   // On error, display the error message and handle validation errors
                   $button.html('Save Product'); // Reset button text
-                  $('#successMsg').removeClass('alert-success alert-danger').empty().addClass('alert-danger'); // Show error alert
                   $button.after(`<small class='ml-2 text-danger'>${xhr.responseJSON.message}</small>`)
                       .next().fadeOut(4000); // Show error message and fade out
 
@@ -307,24 +298,20 @@
                           // Display field-specific errors
                           displayFieldError(field, messages);
                           messages.forEach(message => {
-                              errorList += `<li>${message}</li>`; // List each error message
+                              errorList += `<li>${message}</li>`; // List each error messageer
                           });
                       });
 
                       errorList += '</ul>';
-                      $('#successMsg').append(errorList); // Display the list of errors
+                      handleSessionMessage(errorList, 'failed');
                   } else if (xhr.responseJSON && xhr.responseJSON.message) {
-                      $('#successMsg').text(xhr.responseJSON.message); // Display general error message
+                      handleSessionMessage(xhr.responseJSON.message, 'failed');
                   } else {
-                      $('#successMsg').text('An unexpected error occurred. Please try again!'); // Display fallback error message
+                      handleSessionMessage('An unexpected error occurred. Please try again!', 'failed');
                   }
               }
           });
       });
-    }
-
-    function handleSessionMessage(message) {
-      const msgContainer = ``;
     }
 </script>
 @endpush

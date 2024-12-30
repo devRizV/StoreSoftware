@@ -2,11 +2,23 @@
 @push('custom_css')
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <style>
-  .is-invalid-select2 .select2-selection {
-      border-color: red !important;
-  }
-  .product-name {
-        width: 150px;
+    .is-invalid-select2 .select2-selection {
+        border-color: red !important;
+    }
+    .product-name {
+          width: 150px;
+    }
+    #successMsg {
+      position: relative;
+      padding-right: 3rem; /* Ensure enough space for the close button */
+    }
+
+    .btn-close {
+      position: absolute;
+      top: 0;
+      right: 0;
+      margin-top: 10px;  /* Adjust the top margin */
+      margin-right: 10px;  /* Adjust the right margin */
     }
 </style>
 @endpush
@@ -22,8 +34,8 @@ $supplier = $data['supplier']
     <!-- Main row -->
     <div class="row">
       <div class="col-sm-12">
-        <div class="mt-2 mb-2 position-relative">
-          <div id="successMsg" class="alert alert-dismissible fade show" role="alert">
+        <div class="mt-2 mb-2">
+          <div id="successMsg" class="position-relative alert">
           </div>
         </div>
 
@@ -255,8 +267,7 @@ $supplier = $data['supplier']
                   // On success, update the UI with the success message and reset the form
                   $button.html('Save Product'); // Reset button text
                   $('#product-table tbody').empty().append(row + addRowSection); // Add new row to the table
-                  $('#successMsg').empty().removeClass('alert-success alert-danger')
-                      .addClass('alert-success').append(response.msg); // Display success message
+                  handleSessionMessage(response.msg, 'success'); // Shows session message
                   resetFormAndSelect2(form);
                   initializeProductNameSelect2(); // Reinitialize Select2 for product names
                   $button.after(`<small class='ml-2 text-success success-msg'>${response.msg}</small>`)
@@ -265,7 +276,6 @@ $supplier = $data['supplier']
               error: function (xhr) {
                   // On error, display the error message and handle validation errors
                   $button.html('Save Product'); // Reset button text
-                  $('#successMsg').removeClass('alert-success alert-danger').empty().addClass('alert-danger'); // Show error alert
                   $button.after(`<small class='ml-2 text-danger'>${xhr.responseJSON.message}</small>`)
                       .next().fadeOut(4000); // Show error message and fade out
 
@@ -286,11 +296,11 @@ $supplier = $data['supplier']
                       });
 
                       errorList += '</ul>';
-                      $('#successMsg').append(errorList); // Display the list of errors
+                      handleSessionMessage(errorList, 'failed');
                   } else if (xhr.responseJSON && xhr.responseJSON.message) {
-                      $('#successMsg').text(xhr.responseJSON.message); // Display general error message
+                      handleSessionMessage(xhr.responseJSON.message, 'failed');
                   } else {
-                      $('#successMsg').text('An unexpected error occurred. Please try again!'); // Display fallback error message
+                      handleSessionMessage('An unexpected error occurred. Please try again!', 'failed');
                   }
               }
           });

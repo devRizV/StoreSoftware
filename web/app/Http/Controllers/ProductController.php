@@ -16,6 +16,8 @@ use App\Http\Requests\ProductRequest;
 use App\Http\Requests\ProductStorageRequest;
 use App\Exports\ProductsExport;
 use App\Exports\LiveStockExport;
+use App\Http\Requests\MultiProductRequest;
+use App\Http\Requests\MultiProductStorageRequest;
 use App\Http\Requests\ProductUpdateRequest;
 use App\Http\Requests\UsageProductUpdateRequest;
 
@@ -233,8 +235,7 @@ class ProductController extends Controller
                 ->join('prd_stock', 'prd_stock.prd_id', '=', 'prd_master.prd_id')
                 ->select(
                     'prd_master.*',
-                    'prd_stock.prd_qty as stock',
-               )
+                    'prd_stock.prd_qty as stock')
                  ->orderBy('prd_master.pk_no', 'DESC')
                 ->get();
         $data['sum'] = $data['products']->sum('prd_price'); 
@@ -318,10 +319,9 @@ class ProductController extends Controller
         }
         return redirect()->back()->with('msg', $resp);
     }
-    // Store multiple
-    public function storeMultiProduct(ProductRequest $request)
+    // Store multiple purch=ase product
+    public function storeMultiProduct(MultiProductRequest $request)
     {
-
         foreach ($request->name as $product => $value) {
             $prdinfo = [
                 'name'              => $request->name[$product],
@@ -350,9 +350,8 @@ class ProductController extends Controller
     }
 
     //store Storage Product
-    public function storeMultiStorageProduct(ProductStorageRequest $request)
+    public function storeMultiStorageProduct(MultiProductStorageRequest $request)
     {
-        // dd($request->all());
         foreach ($request->name as $product => $value) {
             $prdinfo = [
                 'name'              => $request->name[$product],
