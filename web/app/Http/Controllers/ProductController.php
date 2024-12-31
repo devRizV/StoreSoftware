@@ -251,7 +251,7 @@ class ProductController extends Controller
                 ->select(
                     'prd_usage.*',
                     'prd_stock.prd_qty as stock')
-                ->orderBy('pk_no', 'DESC')->paginate(10);
+                ->orderBy('pk_no', 'DESC')->get();
         $data['sum'] = $data['products']->sum('prd_price');
         $data['department'] = DepartmentModel::all();
         return view('pages.product.product-usage-list', compact('data'));

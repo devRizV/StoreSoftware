@@ -195,7 +195,6 @@
       function fetchAndPopulateProductUnit() {
         $(document).on('change', '.product-name', function (e) {
           e.preventDefault()
-
           const $productSelect = $(this); // The product name select element
           const $row = $productSelect.closest('tr'); // The row containing the product select
           const productId = $productSelect.val(); // The selected product ID
@@ -255,16 +254,16 @@
     }
 
     function saveMultipleUsageProducts(params) {
-      $(document).on('click', '#saveprd', function () {
+      $(document).on('click', '#saveprd', function (e) {
+          e.preventDefault();
           const $button = $(this); // The button that triggered the action
+          $button.attr('disabled', true).html('Saving...'); // Change button text to indicate saving in progress
           const form = $button.closest('form'); // The form containing the product data
           const formData = form.serialize(); // Serializing form data for submission
           const url = "{{ route('save-multiple-storage-product') }}"; // The URL for the AJAX request
           const addRowSection = $('#product-table tbody tr:last-child').html(); // HTML for the last row to append
           const row = `@include('pages.product.usage-add-row')`;
 
-          $button.html('Saving...'); // Change button text to indicate saving in progress
-          
           $.ajax({
               type: "POST",
               url: url,
@@ -272,17 +271,17 @@
               dataType: "json",
               success: function (response) {
                   // On success, update the UI with the success message and reset the form
-                  $button.html('Save Product'); // Reset button text
                   $('#product-table tbody').empty().append(row + addRowSection); // Remove previous rows and Add new row to the table
                   handleSessionMessage(response.msg, 'success');
                   resetFormAndSelect2(form);
                   initializeProductNameSelect2(); // Reinitialize Select2 for product names
+                  $button.attr('disabled', false).html('Save Product'); // Reset button text
                   $button.after(`<small class='ml-2 text-success success-msg'>${response.msg}</small>`)
                       .next().fadeOut(4000); // Show success message and fade out
               },
               error: function (xhr) {
                   // On error, display the error message and handle validation errors
-                  $button.html('Save Product'); // Reset button text
+                  $button.attr('disabled', false).html('Save Product'); // Reset button text
                   $button.after(`<small class='ml-2 text-danger'>${xhr.responseJSON.message}</small>`)
                       .next().fadeOut(4000); // Show error message and fade out
 

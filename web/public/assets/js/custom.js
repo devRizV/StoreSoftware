@@ -149,8 +149,6 @@ function resetFormAndSelect2($form) {
     });
 }
 
-
-
 /**
  * Calculates and updates the total price based on quantity and unit price, 
  * and triggers a price validation check whenever a quantity or price is modified.
@@ -158,7 +156,7 @@ function resetFormAndSelect2($form) {
 function updateTotalPrice() {
     let totalPrice = 0.00;
 
-    $(document).on('input', '.quantity, .quantityprice', function () {
+    $(document).on('keyup', '.quantity, .quantityprice', function () {
         const $inputElement = $(this); // The element that triggered the input event
         const $row = $inputElement.closest('tr'); // The row containing the input element
         const $unitPriceInput = $row.find('.quantityprice'); // The unit price input field
