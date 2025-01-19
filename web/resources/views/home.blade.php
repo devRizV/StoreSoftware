@@ -18,6 +18,7 @@
 @endpush
 @php
   $notify = $data['notify'] ?? '';
+  $todayPurchaseList = $data['todayPurchaseList'] ?? '';
 @endphp
     <!-- Content Header (Page header) -->
     <div class="content-header">
@@ -93,7 +94,20 @@
 
               <div class="info-box-content">
                 <span class="info-box-text">Total Department</span>
-                <span class="info-box-number">{{$department}}</span>
+                <span class="info-box-number">{{$departments}}</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+          <!-- /.col -->
+          <div class="col-12 col-sm-4">
+            <div class="info-box mb-3">
+              <span class="info-box-icon bg-secondary elevation-1"><i class="fas fa-users"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Total Suppliers</span>
+                <span class="info-box-number">{{$suppliers}}</span>
               </div>
               <!-- /.info-box-content -->
             </div>
@@ -106,6 +120,12 @@
       <div class="container-fluid landing-warning">
         <!-- Info boxes -->
         <div class="row">
+            <div class="card-header ml-4">
+              <h3 class="card-title">Product Alert List</h3>
+              <span>{{ now()->format('d-M-y') }}</span>
+            </div>
+            <div class="">
+            </div>
             <div class="card-body table-responsive">
                 <table id="tblalrtlist" class="table table-bordered table-striped">
                   <thead>
@@ -120,27 +140,67 @@
                   </tr>
                   </thead>
                   <tbody>
-              @if(isset($notify) && count($notify) > 0)
-                @foreach($notify as $row)
-                  <tr>
-                    <td>{{$loop->iteration}}</td>
-                    <td style="color:#FF0000;">{{$row->prd_name}}</td>
-                    <td>{{$row->supplier}}</td>
-                    <td>{{$row->prd_req_dep}}</td>
-                    <td>{{$row->prd_qty}} {{$row->prd_unit}}</td>
-                    <td>{{$row->min_qty}} {{$row->prd_unit}}</td>
-                    <td>
-                     <a href="{{route('product-store',['unit'=>$row->prd_unit, 'name'=>$row->prd_name])}}" class="alert-link"> Take Action <i class="fa fa-arrow-right"></i></a>
-                    </td>
-                  </tr>
-              @endforeach    
-               @endif
+                    @if(isset($notify) && count($notify) > 0)
+                      @foreach($notify as $row)
+                        <tr>
+                          <td>{{$loop->iteration}}</td>
+                          <td style="color:#FF0000;">{{$row->prd_name}}</td>
+                          <td>{{$row->supplier}}</td>
+                          <td>{{$row->prd_req_dep}}</td>
+                          <td>{{$row->prd_qty}} {{$row->prd_unit}}</td>
+                          <td>{{$row->min_qty}} {{$row->prd_unit}}</td>
+                          <td>
+                          <a href="{{route('product-store',['unit'=>$row->prd_unit, 'name'=>$row->prd_name])}}" class="alert-link"> Take Action <i class="fa fa-arrow-right"></i></a>
+                          </td>
+                        </tr>
+                    @endforeach    
+                    @endif
                   </tbody>
                 </table>
               </div>
           <!-- /.col -->
         </div>
       </div><!--/. container-fluid -->
+      {{-- Container Fluid --}}
+      <div class="container-fluid">
+        <div class="row">
+          <div class="card-header ml-4">
+            <h3 class="card-title">Today Purchase List</h3>
+          </div>
+          <div class="card-body table-responsive">
+            <table id="todayPurchaseList" class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <td>SL.</td>
+                  <td>Name</td>
+                  <td>Unit</td>
+                  <td>Quantity</td>
+                  <td>Purchase Price</td>
+                  <td>Total Price</td>
+                  <td>Requisition Department</td>
+                  <td>Supplier</td>
+                </tr>
+              </thead>
+              <tbody>
+                @if (isset($todayPurchaseList) && count($todayPurchaseList) > 0) 
+                  @foreach ($todayPurchaseList as $product)
+                    <tr>
+                      <td>{{ $loop->iteration }}</td>
+                      <td>{{ $product->prd_name }}</td>
+                      <td>{{ $product->prd_unit }}</td>
+                      <td>{{ $product->prd_qty }}</td>
+                      <td>{{ $product->prd_qty_price }}</td>
+                      <td>{{ $product->prd_price }}</td>
+                      <td>{{ $product->prd_req_dep }}</td>
+                      <td>{{ $product->supplier }}</td>
+                    </tr>
+                  @endforeach
+                @endif
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </section>
     <!-- /.content -->
     <div class="printarea d-none" id="printdata">
@@ -172,12 +232,15 @@
                   </tbody>
           </table>
     </div>
+
+
 @endsection
 @push('scripts')
   <script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
   <script type="text/javascript">
     $(document).ready(function() {
       $('#tblalrtlist').DataTable();
+      $('#todayPurchaseList').DataTable();
   } );
     function printData(){
        var divToPrint=document.getElementById("printdata");
@@ -187,8 +250,10 @@
        newWin.close();
     }
 
-    $('#printOut').on('click',function(){
+    $('#printOut').on('click',function(e){
+      $(this).prop('disabled', true);
       printData();
+      $(this).prop('disabled', false);
     })
   </script>
 @endpush

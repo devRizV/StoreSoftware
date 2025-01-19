@@ -20,6 +20,7 @@ use App\Http\Requests\MultiProductRequest;
 use App\Http\Requests\MultiProductStorageRequest;
 use App\Http\Requests\ProductUpdateRequest;
 use App\Http\Requests\UsageProductUpdateRequest;
+use Doctrine\DBAL\Query;
 
 class ProductController extends Controller
 {
@@ -228,21 +229,88 @@ class ProductController extends Controller
         $resp = $this->product->UpdateProduct($request);
         return redirect()->back()->with('msg', $resp);
     }
-    //get all product
-    public function getAllProduct()
+    public function getAllProduct(Request $request)
     {
-        $data['products'] = DB::table('prd_master')
-                ->join('prd_stock', 'prd_stock.prd_id', '=', 'prd_master.prd_id')
-                ->select(
-                    'prd_master.*',
-                    'prd_stock.prd_qty as stock')
-                 ->orderBy('prd_master.pk_no', 'DESC')
-                ->get();
-        $data['sum'] = $data['products']->sum('prd_price'); 
+        // Check if the request is an AJAX request
+        if ($request->ajax()) {
+            // Initialize variables for server-side DataTables processing
+            $start = $request->input('start', 0); // Starting point for pagination
+            $length = $request->input('length', 10); // Number of records per page
+            $search = $request->input('search.value'); // Search query from DataTables
+            $orderColumn = $request->input('order.0.column'); // Column index for ordering
+            $orderDirection = $request->input('order.0.dir', 'asc'); // Sorting direction
+
+            
+            // Build the query with necessary joins, filtering, and sorting
+            $query = DB::table('prd_master')
+            ->join('prd_stock', 'prd_stock.prd_id', '=', 'prd_master.prd_id')
+            ->select(
+                DB::raw("ROW_NUMBER() OVER(ORDER BY prd_master.created_at DESC) as sl"), // Fixed SL based on latest product purchase
+                'prd_master.*', 
+                'prd_stock.prd_qty as stock')
+                ->orderBy($this->getColumnNameForOrdering($orderColumn), $orderDirection); // Dynamic sorting for all columns
+                
+            // get total records
+            $totalRecords = $query->count();
+            $filteredQuery = clone $query;
+            $recordsFiltered = $filteredQuery->count();
+            // Calculate the total price sum of all products
+            $totalPriceSum = $query->sum('prd_price');
+            // Apply search term if exists
+            if (!empty($search)) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('prd_master.prd_name', 'like', "%{$search}%")
+                    ->orWhere('prd_master.prd_req_dep', 'like', "%{$search}%")
+                    ->orWhere('prd_master.prd_qty', 'like', "%{$search}%")
+                    ->orWhere('prd_master.prd_unit', 'like', "%{$search}%");
+                });
+            }
+            // Apply Pagination
+            $products = $query->offset($start)->limit($length)->get();
+
+           
+            // calculate the total price sum of the loaded pages products
+            $loadedTotalPriceSum = $products->sum('prd_price');
+
+            // Return the results in suitable format for DataTables
+            return response()->json([
+                'draw' => $request->input('draw'),
+                'recordsTotal' => $totalRecords,
+                'recordsFiltered' => $recordsFiltered,
+                'data' => $products,
+                'totalPriceSum' => $totalPriceSum,
+                'loadedTotalPriceSum' => $loadedTotalPriceSum,
+            ]);
+        }
+
         $data['department'] = DepartmentModel::all();
         $data['supplier'] = SupplierModel::all();
+
         return view('pages.product.product-list', compact('data'));
     }
+
+    // Helper function to map all the column indexes to actual column names
+    private function getColumnNameForOrdering($columnIndex)
+    {
+        // Array of column names corresponding to DataTables column indexes
+        $columns = [
+            'prd_master.pk_no',
+            'prd_master.prd_name',
+            'prd_master.prd_req_dep',
+            'prd_master.prd_qty',
+            'prd_master.prd_unit',
+            'prd_master.prd_qty_price',
+            'prd_master.prd_price',
+            'prd_master.prd_grand_price',
+            'prd_master.prd_purchase_date',
+            'prd_master.created_at',
+            'prd_stock.prd_qty',
+        ];
+
+        // Return column name based on the passed index
+        return isset($columns[$columnIndex]) ? $columns[$columnIndex] : 'prd_master.pk_no';
+    }
+
     //get get All Usage Product
     public function getAllUsageProduct()
     {
@@ -301,7 +369,6 @@ class ProductController extends Controller
     //store Storage Product
     public function storeStorageProduct(ProductStorageRequest $request)
     {
-        // dd($request->all());
         foreach ($request->name as $product => $value) {
             $prdinfo = [
                 'name'              => $request->name[$product],
@@ -319,7 +386,7 @@ class ProductController extends Controller
         }
         return redirect()->back()->with('msg', $resp);
     }
-    // Store multiple purch=ase product
+    // Store multiple purchase product
     public function storeMultiProduct(MultiProductRequest $request)
     {
         foreach ($request->name as $product => $value) {
@@ -342,8 +409,6 @@ class ProductController extends Controller
             $resp = $this->product->StoreProduct($prdinfo);
         }
 
-        // Optionally handle responses and provide more detail if needed
-        // return redirect()->back()->with('msg', $resp);
         return response()->json([
             'msg' => $resp,
         ], 200);
@@ -381,7 +446,8 @@ class ProductController extends Controller
     public function deleteProduct($prdid)
     {
         $resp = $this->product->DeleteProduct($prdid);
-        return redirect()->back()->with('msg', $resp);
+        // return redirect()->back()->with('msg', $resp);
+        return response()->json(['msg'=> $resp], 200);
     }
     //check product price
     public function checkProductPrice(Request $request)

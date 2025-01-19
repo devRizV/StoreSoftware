@@ -20,10 +20,9 @@ input#from_date,input#to_date,input#specific_date {
   </style>
 @endpush
 @php
-  $products = $data['products'];
+  // $products = $data['products'];
   $department = $data['department'] ?? null;
   $supplier = $data['supplier'] ?? null;
-  $sum = $data['sum'] ?? null;
 @endphp
 @section('content')
     <!-- Content Header (Page header) -->
@@ -71,14 +70,11 @@ input#from_date,input#to_date,input#specific_date {
         @if(session('msg'))
           <div class="alert alert-success">{{session('msg')}}</div>
         @endif
+        <div id="show-alert" class="show-alert"></div>
       </div>
       <div  class="mt-2 mb-2">
-        @if($sum ?? '')
-          <div class="alert alert-success">{{ $sum }} <div>
-        @endif
+          <div id="sum"><div>
       </div>
-
-
     </div>
     <!-- /.content-header -->
 
@@ -112,18 +108,10 @@ input#from_date,input#to_date,input#specific_date {
                   </tr>
                   </thead>
                   <tbody>
+                    {{-- Previous server side loading.
                     @if(isset($products) && count($products) > 0)
                       @foreach($products as $row)
                         <tr>
-                          @php
-                              // $prdName = DB::table('prd_name')
-                              //     ->where('pk_no', $row->prd_id)
-                              //     ->first();
-                              // // $prdStock = DB::table('prd_stock')
-                              // //       ->where('prd_id', $row->prd_id)
-                              // //       ->first();
-                              // // dd($prdStock, $row->prd_id);
-                          @endphp
                           <td>{{$loop->iteration}}</td>
                           <td>{{$row->prd_name}}</td>
                           <td>{{$row->prd_req_dep}}</td>
@@ -142,8 +130,15 @@ input#from_date,input#to_date,input#specific_date {
                           </td>
                         </tr>
                     @endforeach
-                    @endif
+                    @endif 
+                    --}}
                   </tbody>
+                  <tfoot>
+                    <tr>
+                      <th colspan="6"></th>
+                      <th colspan="6"></th>
+                    </tr>
+                  </tfoot>
                 </table>
               </div>
               <!-- /.card-body -->
@@ -159,17 +154,97 @@ input#from_date,input#to_date,input#specific_date {
 @endsection
 @push('scripts')
   <script>
-  $( function() {
-    $( "#from_date" ).datepicker({ dateFormat: 'yy-mm-dd' });
-    $( "#to_date" ).datepicker({ dateFormat: 'yy-mm-dd' });
-    $( "#fix_date" ).datepicker({ dateFormat: 'yy-mm-dd' });
-  } );
+    $( function() {
+      $( "#from_date" ).datepicker({ dateFormat: 'yy-mm-dd' });
+      $( "#to_date" ).datepicker({ dateFormat: 'yy-mm-dd' });
+      $( "#fix_date" ).datepicker({ dateFormat: 'yy-mm-dd' });
+    });
   </script>
-  <script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+  <!-- DataTables JS -->
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
   <script type="text/javascript">
     $(document).ready(function() {
-      $('#productlist').DataTable();
-      
-  } );
+      const table = $('#productlist').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+          url: "{{ route('all-product') }}",
+          type: 'GET',
+          dataSrc: function (response) {  
+            const loadedTotalPriceContainer = $("#productlist tfoot th:nth-child(1)");
+            const totalPriceContainer = $("#productlist tfoot th:nth-child(2)");
+
+            if (loadedTotalPriceContainer) {
+              loadedTotalPriceContainer.html(`Current page total: ${response.loadedTotalPriceSum}`);
+            }
+            if (totalPriceContainer) {
+              totalPriceContainer.html(`Total: ${response.totalPriceSum.toFixed(3)}`);
+            }
+
+            return response.data;
+          },
+        },
+        columns: [
+          { data: 'sl', title: 'SL' }, // SL
+          { data: 'prd_name', title: 'Name' }, // Name
+          { data: 'prd_req_dep', title: 'Req. Dept.' }, // Req. Dept.
+          { data: 'prd_qty', title: 'Quantity' }, // Quantity.
+          { data: 'prd_unit', title: 'Unit' }, // Unit
+          { data: 'prd_qty_price', title: 'Purchase Date' }, // Purchase price
+          { data: 'prd_price', title: 'Total Price' }, // Total Price
+          { data: 'prd_grand_price', title: 'G. Total Price' }, // G. Total Price
+          { data: 'prd_purchase_date', Title: 'Purchase Date' }, // Purchase Date
+          { data: 'created_at', title: "Created" }, // Created
+          { data: 'stock', title: 'Stock' }, // Stock
+          { 
+            data: 'pk_no',
+            title: 'Action',
+            render: function (data, type, row) { 
+              return `
+                <a href="edit-product/${data}" class="btn btn-primary btn-xs"> 
+                  <i class="fa fa-edit"></i>
+                  </a>
+                <a href="view-product/${data}" class="btn btn-primary btn-xs"> 
+                  <i class="fa fa-eye"></i>
+                </a>
+                <a class="btn btn-danger btn-xs delete-btn" data-id=${data}> 
+                  <i class="fa fa-trash"></i>
+                </a>
+              `;
+            },
+            orderable: false,
+          }, // Action
+        ],
+        order: [[0, 'desc']], // Default sorting (by SL)
+      });
+
+      $(document).on('click', '.delete-btn', function (e) {
+        e.preventDefault();
+
+        const productId = $(this).data('id');
+        console.log(productId);
+        
+        const url = `delete-product/${productId}`;
+
+        if (confirm("Are you sure to delete you want to delete this product?")) {
+          console.log("delete");
+          $.ajax({
+            type: "POST",
+            url: url,
+            headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function (response) {
+              handleSessionMessage(response.msg, "success",  '#show-alert');
+              table.ajax.reload(null, false);
+            },
+            error: function (xhr, stutus, error) { 
+              handleSessionMessage(xhr.responseJSON.message, status, "#show-alert");
+            }
+          });
+        }
+      });
+
+    });
   </script>
 @endpush

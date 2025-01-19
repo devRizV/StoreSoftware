@@ -138,16 +138,22 @@ class ProductModel extends Model
             $getrow        = DB::table('prd_master')->where('pk_no', $prdId)->first();
             $prdQty        = $getrow->prd_qty;
             $prdNameId     = $getrow->prd_id;
+            $prdName       = $getrow->prd_name;
+            $prdQty        = $getrow->prd_qty;
+            $prdPrice      = $getrow->prd_qty_price;
+            $purchasedAt   = $getrow->prd_purchase_date;
+
             $delete        = DB::table($this->table)->where('pk_no', $prdId)->delete();
+            
             if ($delete) {
                 $this->handleStockUpdate($prdNameId, $prdQty);
             }
         } catch (\Exception $e) {
             DB::rollback();
-            return 'Product not deleted successfully !!' . $e;
+            return "Product ({$prdName}) not deleted successfully !!" . $e;
         }
         DB::commit();
-        return 'Product has been deleted successfully !!';
+        return "Product has been deleted successfully !! ( Name: {$prdName} - Quantity: {$prdQty} - Price: {$prdPrice} - Purchased - {$purchasedAt})";
     }
 
     /**

@@ -49,7 +49,7 @@ Route::post('/save-multiple-storage-product', 'ProductController@storeMultiStora
 Route::post('/save-storage-product', 'ProductController@storeStorageProduct')->name('save-storage-product');
 Route::post('/update-product', 'ProductController@updateProduct')->name('update-product');
 Route::get('/update-usage-product/{id}', 'ProductController@updateUsageProduct')->name('update-usage-product');
-Route::get('/delete-product/{id}', 'ProductController@deleteProduct')->name('delete-product');
+Route::post('/delete-product/{id}', 'ProductController@deleteProduct')->name('delete-product');
 Route::get('/delete-usage-product/{id}', 'ProductController@deleteUsageProduct')->name('delete-usage-product');
 Route::get('/view-product/{id}', 'ProductController@viewProduct')->name('view-product');
 Route::get('/all-product', 'ProductController@getAllProduct')->name('all-product');
