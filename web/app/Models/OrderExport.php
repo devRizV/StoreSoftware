@@ -35,6 +35,7 @@ class OrderExport implements FromCollection, WithHeadings
                 $row->prd_qty_price,
                 $row->prd_price,
                 $row->prd_grand_price,
+                $row->prd_purchase_date,
             ];
         }
         return collect($output);
@@ -50,6 +51,7 @@ class OrderExport implements FromCollection, WithHeadings
             'Proudct Qty Price',
             'Product Price',
             'Product Grand Price',
+            'Purchase Date',
         ];
     }
 

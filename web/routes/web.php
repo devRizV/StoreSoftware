@@ -11,7 +11,6 @@
 |
 */
 
-
 Route::get('/cc', function() {
     \Artisan::call('cache:clear');
     \Artisan::call('view:clear');
@@ -65,6 +64,8 @@ Route::get('/live-stock', 'ProductController@getLiveStock')->name('live-store');
 Route::get('/edit-product/{id}', 'ProductController@getEditProduct')->name('edit-product');
 Route::get('/edit-usage-product/{id}', 'ProductController@getEditUsageProduct')->name('edit-usage-product');
 Route::get('/get-product-price', 'ProductController@checkProductPrice')->name('get-product-price');
+// Get product lists in JSON format for DataTable
+Route::get('get-purchase-product-list', 'ProductController@getPurchaseProductList')->name('get-purchase-product-list');
 
 //product name
 Route::get('/save-product-name', 'ProductNameController@getAddProductName')->name('save-product-name');

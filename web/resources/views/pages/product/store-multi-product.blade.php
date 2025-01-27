@@ -179,33 +179,6 @@ $supplier = $data['supplier']
   });
 
   /**
-   * Compares the previously stored price with the currently entered price 
-   * and calls a callback with the appropriate message and status.
-   * 
-   * @param {number} currentPrice - The price currently entered by the user.
-   * @param {number} productId - The ID of the product to check.
-   * @param {function} callback - A function to be called with the comparison result.
-   */
-  function validateProductPrice(currentPrice, productId, callback) {
-      $.ajax({
-          type: "GET",
-          url: "{{ route('get-product-price') }}",
-          data: { prdprice: currentPrice, productId: productId },
-          dataType: "json",
-          success: function (response) {
-              // Pass the comparison result and status to the callback
-              callback(response.message, response.status);
-          },
-          error: function (xhr, status, error) {
-              // Log the error and pass an error message to the callback
-              console.error('AJAX error:', error);
-              callback('Something went wrong!', status);
-          }
-      });
-  }
-
-
-  /**
    * Fetches and populates the product unit for the selected product, 
    * and prevents duplicate product names from being entered.
    */
@@ -266,14 +239,14 @@ $supplier = $data['supplier']
               success: function (response) {
                   // On success, update the UI with the success message and reset the form
                   $('#product-table tbody').empty().append(row + addRowSection); // Add new row to the table
-                  handleSessionMessage(response.msg, 'success'); // Shows session message
+                  handleSessionMessage(response.msg, 'success', '#successMsg'); // Shows session message
                   resetFormAndSelect2(form);
                   initializeProductNameSelect2(); // Reinitialize Select2 for product names
                   $button.attr('disabled', false).html('Save Product'); // Reset button text
                   $button.after(`<small class='ml-2 text-success success-msg'>${response.msg}</small>`)
                   .next().fadeOut(4000); // Show success message and fade out
               },
-              error: function (xhr) {
+              error: function (xhr, status, error) {
                   // On error, display the error message and handle validation errors
                   $button.attr('disabled', false).html('Save Product'); // Reset button text
                   $button.after(`<small class='ml-2 text-danger'>${xhr.responseJSON.message}</small>`)
@@ -296,11 +269,11 @@ $supplier = $data['supplier']
                       });
 
                       errorList += '</ul>';
-                      handleSessionMessage(errorList, 'failed');
+                      handleSessionMessage(errorList, status, '#successMsg');
                   } else if (xhr.responseJSON && xhr.responseJSON.message) {
-                      handleSessionMessage(xhr.responseJSON.message, 'failed');
+                      handleSessionMessage(xhr.responseJSON.message, status, '#successMsg');
                   } else {
-                      handleSessionMessage('An unexpected error occurred. Please try again!', 'failed');
+                      handleSessionMessage('An unexpected error occurred. Please try again!', 'error', '#successMsg');
                   }
               }
           });

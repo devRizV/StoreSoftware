@@ -291,9 +291,5 @@ $supplier = $data['supplier']
       }
     });
   }
-
-  function submit() {
-    
-  }
 </script>
 @endpush

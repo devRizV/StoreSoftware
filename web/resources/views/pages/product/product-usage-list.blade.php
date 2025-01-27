@@ -153,7 +153,7 @@ input#from_date,input#to_date,input#specific_date {
   <script type="text/javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
   <script type="text/javascript">
     $(document).ready(function() {
-      $('#productlist').DataTable();
-  } );
+      const table = $('#productlist').DataTable();
+    });
   </script>
 @endpush

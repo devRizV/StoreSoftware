@@ -110,14 +110,15 @@ class ProductModel extends Model
 
             $isChanged = ($oldProductId != $request->name); // Checks if name has been changed or not 
 
-            $update        = DB::table($this->table)->where('pk_no', $prdId)->update($this->data);
+            $update    = DB::table($this->table)->where('pk_no', $prdId)->update($this->data);
 
             if ($update) {
                 if ($isChanged) {
                     $this->handleStockUpdate($oldProductId, -$oldProductQty);
                     $this->handkeStockUpdate($request->name, $request->quantity);
+
                 } else {
-                    $newQty = $this->getStockQuantity($oldProductId) - $oldProductQty + $request->quantity;
+                    $newQty = $request->quantity - $oldProductQty;
                     $this->handleStockUpdate($request->name, $newQty);
                 }
             }
@@ -127,7 +128,10 @@ class ProductModel extends Model
             return 'Product not updated successfully!!!\n' . $e;
         }
         DB::commit();
-        return 'Product has been updated successfully !!';
+        return [
+            'msg' => 'Product update successfully.',
+            'data' => $this->data,
+        ];
     }
 
     public function DeleteProduct($prdId)

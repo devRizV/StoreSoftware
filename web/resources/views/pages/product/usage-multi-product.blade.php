@@ -226,33 +226,7 @@
     $(document).on("wheel", "input[type=number]", function (e) {
         $(this).blur();
     });
-
-    /**
-     * Compares the previously stored price with the currently entered price 
-     * and calls a callback with the appropriate message and status.
-     * 
-     * @param {number} currentPrice - The price currently entered by the user.
-     * @param {number} productId - The ID of the product to check.
-     * @param {function} callback - A function to be called with the comparison result.
-     */
-    function validateProductPrice(currentPrice, productId, callback) {
-        $.ajax({
-            type: "GET",
-            url: "{{ route('get-product-price') }}",
-            data: { prdprice: currentPrice, productId: productId },
-            dataType: "json",
-            success: function (response) {
-                // Pass the comparison result and status to the callback
-                callback(response.message, response.status);
-            },
-            error: function (xhr, status, error) {
-                // Log the error and pass an error message to the callback
-                console.error('AJAX error:', error);
-                callback('Something went wrong!', status);
-            }
-        });
-    }
-
+    
     function saveMultipleUsageProducts(params) {
       $(document).on('click', '#saveprd', function (e) {
           e.preventDefault();

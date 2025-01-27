@@ -1,4 +1,4 @@
-@extends('layouts.app')
+
 @push('custom_css')
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 @endpush
@@ -6,13 +6,13 @@
   $product = $data['products'];
   $prdnames = $data['prdnames'];
 @endphp
-@section('content')
+<div class="">
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
         <!-- Main row -->
         <div class="row">
-          <div class="col-sm-10">
+          <div class="col-md-12">
             <div class="mt-2 mb-2">
                 @if(session('msg'))
                   <div class="alert alert-success">{{session('msg')}}</div>
@@ -39,7 +39,7 @@
                   <div class="row">
                       <div class="col-sm-6">
                        <div class="form-group">
-                        <label for="name"></label> <br>
+                        <label for="name">Product Name</label> <br>
                         <select class="js-example-basic-single form-control" name="name" id="name">
                           <option value="">Select Product Name</option>
                            @if(isset($prdnames) && count($prdnames) > 0)
@@ -138,8 +138,8 @@
                   </div>
                  </div>
                 <!-- /.card-body -->
-                <div class="card-footer">
-                  <a href="{{route('all-product')}}" class="btn btn-primary">Back</a>
+                <div class="d-flex card-footer justify-content-end">
+                  <a class="btn btn-primary" data-bs-dismiss="modal">Back</a>
                 </div>
               </form>
             </div>
@@ -151,8 +151,13 @@
       </div><!--/. container-fluid -->
     </section>
     <!-- /.content -->
-@endsection
-@push('scripts')
+</div>
 
-
+@push("scripts")
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $('.js-example-basic-single').select2();
+    });
+  </script>
 @endpush
+
