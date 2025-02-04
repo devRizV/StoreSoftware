@@ -32,15 +32,16 @@ class OrderModel extends Model
                 $query->where('supplier', $request->supplier);
             }
     
-            $data = $query->orderBy('prd_master.pk_no','DESC')
+            $data = $query
                 ->join('prd_stock', 'prd_stock.prd_id', '=', 'prd_master.prd_id')
                 ->select(
-                    DB::raw("ROW_NUMBER() OVER(ORDER BY prd_master.prd_purchase_date DESC) as sl"), // Fixed SL based on latest product purchase
+                    DB::raw("ROW_NUMBER() OVER(ORDER BY prd_master.pk_no DESC) as sl"), // Fixed SL based on latest product purchase
                     'prd_master.*',
                     'prd_stock.prd_qty as stock',
                 )
                 ->orderBy('prd_master.pk_no', 'DESC')
                 ->get();
+                
             return [ 'products' => $data ];
          }
     
@@ -61,14 +62,13 @@ class OrderModel extends Model
                 $query->where('dept', $request->department);
             }
             $sum = $query->sum('prd_price');
-            $data = $query->orderBy('prd_usage.pk_no','DESC')
-                ->join('prd_stock', 'prd_stock.prd_id', '=', 'prd_usage.prd_name_id')
+            $data = $query->join('prd_stock', 'prd_stock.prd_id', '=', 'prd_usage.prd_name_id')
                 ->select(
+                    DB::raw("ROW_NUMBER() OVER(ORDER BY prd_usage.pk_no DESC) as sl"), // Fixed SL based on latest product purchase
                     'prd_usage.*',
                     'prd_stock.prd_qty as stock'
                 )
                 ->get();
-            // dd($data);
             return [
                 'products'  => $data,
                 'sum'       => $sum,

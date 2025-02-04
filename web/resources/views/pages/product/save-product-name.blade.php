@@ -80,42 +80,39 @@
 @endsection
 @push('scripts')
     <script>
-$(function () {
-  $('#quickForm').validate({
-    rules: {
-      name: {
-        required: true,
-        name: true,
-      },
-      unit: {
-        required: true,
-        unit: true,
-      },
-    },
-    messages: {
-      name: {
-        required: "Please enter product name"
-      },
-      unit: {
-        required: "Please enter product unit"
-      },
-    },
-    errorElement: 'span',
-    errorPlacement: function (error, element) {
-      error.addClass('invalid-feedback');
-      element.closest('.form-group').append(error);
-    },
-    highlight: function (element, errorClass, validClass) {
-      $(element).addClass('is-invalid');
-    },
-    unhighlight: function (element, errorClass, validClass) {
-      $(element).removeClass('is-invalid');
-    }
-  });
-});
-
-
-
-</script>
+      $(function () {
+        $('#quickForm').validate({
+          rules: {
+            name: {
+              required: true,
+              name: true,
+            },
+            unit: {
+              required: true,
+              unit: true,
+            },
+          },
+          messages: {
+            name: {
+              required: "Please enter product name"
+            },
+            unit: {
+              required: "Please enter product unit"
+            },
+          },
+          errorElement: 'span',
+          errorPlacement: function (error, element) {
+            error.addClass('invalid-feedback');
+            element.closest('.form-group').append(error);
+          },
+          highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid');
+          },
+          unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid');
+          }
+        });
+      });
+  </script>
 @endpush
 -->

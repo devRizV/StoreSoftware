@@ -362,7 +362,7 @@ function initializePurchaseDataTable(tableSelector, url, tableOrder = [0, 'desc'
             { data: 'prd_req_dep', title: 'Req. Dept.' }, // Req. Dept.
             { data: 'prd_qty', title: 'Quantity' }, // Quantity.
             { data: 'prd_unit', title: 'Unit' }, // Unit
-            { data: 'prd_qty_price', title: 'Purchase Date' }, // Purchase price
+            { data: 'prd_qty_price', title: 'Purchase Price' }, // Purchase price
             { data: 'prd_price', title: 'Total Price' }, // Total Price
             { data: 'prd_grand_price', title: 'G. Total Price' }, // G. Total Price
             { 
@@ -385,6 +385,91 @@ function initializePurchaseDataTable(tableSelector, url, tableOrder = [0, 'desc'
                     return ""; // if no data, return empty
                 }
              }, // Created
+            { data: 'stock', title: 'Stock' }, // Stock
+            {
+                data: 'pk_no',
+                title: 'Action',
+                render: function (data, type, row) {
+                    return `
+                <a class="btn btn-primary btn-xs edit-btn" data-id="${data}"> 
+                  <i class="fa fa-edit"></i>
+                  </a>
+                <a class="btn btn-primary btn-xs view-btn" data-id="${data}"> 
+                  <i class="fa fa-eye"></i>
+                </a>
+                <a class="btn btn-danger btn-xs delete-btn" data-id=${data}> 
+                  <i class="fa fa-trash"></i>
+                </a>
+              `;
+                },
+                orderable: false,
+            }, // Action
+        ],
+        order: [tableOrder], // Default sorting (by SL)
+    });
+
+    return table;
+}
+
+/**
+ * Function initializes the usage products list as a DataTable with server-side processing with dynamic URL
+ * 
+ * @param {string} tableSelector - The CSS selector for the table element
+ * @param {string} url - The dynamic URL for fetching neccessary data.
+ * @param {Array} tableOrder - The order of the data based on the columns: format - [columnIndex, orderDirection] - e.g. : [0, 'asc']
+ * 
+ * @returns {Object}0
+ */
+function initializeUsageDataTable(tableSelector, url, tableOrder = [0, 'desc']) {
+    const table = $(tableSelector).DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: url,
+            type: 'GET',
+            dataSrc: function (response) {
+                const totalPriceContainer = $(`${tableSelector} tfoot th:nth-child(1)`);
+                const loadedTotalPriceContainer = $(`${tableSelector} tfoot th:nth-child(2)`);
+
+                if (totalPriceContainer) {
+                    totalPriceContainer.html(`Total: ${response.totalPriceSum.toFixed(3)}`);
+                }
+                if (loadedTotalPriceContainer) {
+                    loadedTotalPriceContainer.html(`Current page total: ${response.loadedTotalPriceSum}`);
+                }
+
+                return response.data;
+            },
+        },
+        columns: [
+            { data: 'sl', title: 'SL' }, // SL
+            { data: 'prd_name', title: 'Name' }, // Name
+            { data: 'dept', title: 'Req. Dept.' }, // Req. Dept.
+            { data: 'prd_qty', title: 'Quantity' }, // Quantity.
+            { data: 'prd_unit', title: 'Unit' }, // Unit
+            { data: 'prd_qty_price', title: 'Purchase Price' }, // Purchase price
+            { data: 'prd_price', title: 'Total Price' }, // Total Price
+            { data: 'prd_grand_price', title: 'G. Total Price' }, // G. Total Price
+            {
+                data: 'taken_date',
+                Title: 'Taken Date',
+                render: function (data, type, row) {
+                    if (data) {
+                        return formatUserFriendlyDate(data);
+                    }
+                    return ""; // if no data, return empty
+                }
+            }, // Purchase Date
+            {
+                data: 'created_at',
+                title: "Created",
+                render: function (data, type, row) {
+                    if (data) {
+                        return formatUserFriendlyDate(data);
+                    }
+                    return ""; // if no data, return empty
+                }
+            }, // Created
             { data: 'stock', title: 'Stock' }, // Stock
             {
                 data: 'pk_no',
@@ -520,4 +605,36 @@ function formatUserFriendlyDate(date) {
 
     // Return the formatted HTML with tooltip
     return `<span title="${detailedDate}">${shortDate}</span>`;
+}
+
+/**
+ * Binds a click event to a button that triggers a form submission with an extra hidden input field.
+ * 
+ * @param {string} buttonSelector - The selector for the button that triggers the form submission.
+ * @param {string} formSelector - The selector for the form to be submitted.
+ * @param {string} hiddenFieldName - The name of the hidden input field to be added.
+ * @param {string} hiddenFieldValue - The value of the hidden input field.
+ */
+function bindFormSubmit(buttonSelector, formSelector, hiddenFieldName, hiddenFieldValue) {
+    $(document).on('click', buttonSelector, function () {
+        let form = $(formSelector);
+
+        // Check if form exists
+        if (form.length === 0) {
+            alert("Form not found: " + formSelector);
+            return;
+        }
+
+        // Remove any existing hidden field with the same name to avoid duplicates
+        form.find(`input[name="${hiddenFieldName}"]`).remove();
+
+        // Create a hidden input field
+        let hiddenInput = $('<input>')
+            .attr('type', 'hidden')
+            .attr('name', hiddenFieldName)
+            .val(hiddenFieldValue);
+
+        // Append the hidden input to the form and submit
+        form.append(hiddenInput).submit();
+    });
 }

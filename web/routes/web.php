@@ -47,13 +47,14 @@ Route::post('/save-multiple-product', 'ProductController@storeMultiProduct')->na
 Route::post('/save-multiple-storage-product', 'ProductController@storeMultiStorageProduct')->name('save-multiple-storage-product');
 Route::post('/save-storage-product', 'ProductController@storeStorageProduct')->name('save-storage-product');
 Route::post('/update-product', 'ProductController@updateProduct')->name('update-product');
-Route::get('/update-usage-product/{id}', 'ProductController@updateUsageProduct')->name('update-usage-product');
+Route::post('/update-usage-product/{id}', 'ProductController@updateUsageProduct')->name('update-usage-product');
 Route::post('/delete-product/{id}', 'ProductController@deleteProduct')->name('delete-product');
-Route::get('/delete-usage-product/{id}', 'ProductController@deleteUsageProduct')->name('delete-usage-product');
+Route::post('/delete-usage-product/{id}', 'ProductController@deleteUsageProduct')->name('delete-usage-product');
 Route::get('/view-product/{id}', 'ProductController@viewProduct')->name('view-product');
+Route::get('/view-usage-product/{id}', 'ProductController@viewUsageProduct')->name('view-usage-product');
 Route::get('/all-product', 'ProductController@getAllProduct')->name('all-product');
 Route::get('/order-list', 'ProductController@getPaginatedList')->name('order.list');
-Route::get('/usage.order.list', 'ProductController@getUsageProductList')->name('usage.order.list');
+Route::get('/usage-order-list', 'ProductController@getUsageProductList')->name('usage.order.list');
 Route::get('/all-usage-product', 'ProductController@getAllUsageProduct')->name('all-usage-product');
 Route::get('/get-product-unit', 'ProductController@getProductUnit')->name('get-product-unit');
 Route::get('/get-product-usage-unit', 'ProductController@getUsageProductUnit')->name('get-product-usage-unit');
@@ -64,8 +65,10 @@ Route::get('/live-stock', 'ProductController@getLiveStock')->name('live-store');
 Route::get('/edit-product/{id}', 'ProductController@getEditProduct')->name('edit-product');
 Route::get('/edit-usage-product/{id}', 'ProductController@getEditUsageProduct')->name('edit-usage-product');
 Route::get('/get-product-price', 'ProductController@checkProductPrice')->name('get-product-price');
+
 // Get product lists in JSON format for DataTable
 Route::get('get-purchase-product-list', 'ProductController@getPurchaseProductList')->name('get-purchase-product-list');
+Route::get('get-usage-products-list', 'ProductController@getUsageProductsList')->name('get-usage-products-list');
 
 //product name
 Route::get('/save-product-name', 'ProductNameController@getAddProductName')->name('save-product-name');

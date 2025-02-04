@@ -64,15 +64,6 @@ class ProductUsageModel extends Model
              *   Get flag by comparing the previous prd_id and current prd_id;
              */
 
-            //if update prd_usage table then update qty on prd_stock table
-            // $getrow        = DB::table('prd_usage')->where('pk_no', $prdId)->first();
-            // $prdQty        = $getrow->prd_qty;
-            // $prdNameId     = $getrow->prd_name_id;
-            // $getStockId    = DB::table('prd_stock')->where('prd_id', $prdNameId)->first();
-            // $prdStockQty   = $getStockId->prd_qty;
-            // $Qty           = $prdStockQty + $prdQty;
-            // $newQty        = $Qty - $request->quantity;
-
             $product          = DB::table('prd_usage')->where('pk_no', $prdId)->first();
 
             $oldProductId     = $product->prd_name_id;
@@ -102,8 +93,13 @@ class ProductUsageModel extends Model
             DB::rollback();
             return 'Product not updated successfully !!'.$e;
         }
+        
         DB::commit();
-        return 'Product has been updated successfully !!';
+
+        return [
+          'msg' => 'Product updated successfully',
+          'data' => $this->data,
+        ];
        }
 
        public function DeleteProduct($prdId){

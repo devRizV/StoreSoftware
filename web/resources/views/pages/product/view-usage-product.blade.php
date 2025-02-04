@@ -15,8 +15,8 @@
           <div class="col-md-12">
             <div class="card card-primary">
               <div class="card-header modal-header">
-                <h3 class="card-title">Product Details</h3>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" arial-label="Close"></button>
+                <h3 class="card-title"></h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>              
               <!-- form start -->
               <form id="quickForm" action="{{route('update-product')}}" method="post">
@@ -30,7 +30,7 @@
                           <option value="">Select Product Name</option>
                            @if(isset($prdnames) && count($prdnames) > 0)
                             @foreach($prdnames as $row)
-                              <option disabled value="{{$row->pk_no}}" <?php if($row->pk_no == $product->prd_id){echo 'selected';}?>>{{$row->prd_name}}</option>
+                              <option disabled value="{{$row->pk_no}}" <?php if($row->pk_no == $product->prd_name_id){echo 'selected';}?>>{{$row->prd_name}}</option>
                             @endforeach    
                           @endif
                         </select>
@@ -39,7 +39,7 @@
                     <div class="col-sm-6">
                        <div class="form-group">
                         <label for="brand">Purchase Date <span style="color:red;">*</span></label>
-                        <input type="text" name="purchasedate" value="{{date('d-M-Y', strtotime($product->prd_purchase_date))}}" disabled class="form-control" id="purchasedate" >
+                        <input type="text" name="purchasedate" value="{{date('d-M-Y', strtotime($product->taken_date))}}" disabled class="form-control" id="purchasedate" >
                       </div>
                     </div>
                   </div>
@@ -55,7 +55,7 @@
                           <div class="col-6">
                             <div class="form-group">
                               <label for="brand">Quantity In (kg,pcs,etc)</label>
-                              <input disabled  type="text" name="unit" value="{{$product->prd_unit}}" class="form-control" id="unit">
+                              <input disabled type="text" name="unit" value="{{$product->prd_unit}}" class="form-control" id="unit">
                             </div>
                           </div>
                         </div>
@@ -71,7 +71,7 @@
                       <div class="col-sm-6">
                        <div class="form-group">
                         <label for="brand">Total Price</label>
-                        <input type="number" readonly="" min="1" name="totalprice" value="{{$product->prd_price}}" class="form-control" id="totalprice" readonly="">
+                        <input type="number" disabled min="1" name="totalprice" value="{{$product->prd_price}}" class="form-control" id="totalprice" readonly="">
                       </div>
                     </div>
                     <div class="col-sm-6">
@@ -85,24 +85,17 @@
                     <div class="col-sm-6">
                      <div class="form-group">
                       <label for="brand">Requisition Dept</label>
-                      <input type="text" disabled name="reqdept" value="{{$product->prd_req_dep}}" class="form-control" id="reqdept" placeholder="Requisition department">
+                      <input type="text" disabled name="reqdept" value="{{$product->dept}}" class="form-control" id="reqdept" placeholder="Requisition department">
                     </div>
-                  </div>
-                    <div class="col-sm-6">
-                     <div class="form-group">
-                      <label for="brand">Supplier</label>
-                      <input type="text" disabled name="supplier" class="form-control" value="{{$product->supplier}}" id="supplier" placeholder="Supplier name">
                     </div>
-                  </div>    
-                   
-                  </div>
-                  <div class="row">
-                    <div class="col-sm-6">
-                       <div class="form-group">
-                        <label for="brand">Purchase From</label>
-                        <input type="text" disabled placeholder="Purchase from" value="{{$product->prd_purchase_from}}" class="form-control" name="purchasefrom" id="purchasefrom" >
+                      <div class="col-sm-6">
+                      <div class="form-group">
+                        <label for="brand">Taken by</label>
+                        <input type="text" readonly="" name="supplier" class="form-control" value="{{$product->taken_by}}" id="supplier" placeholder="Supplier name">
                       </div>
                     </div>
+                  </div>
+                  <div class="row">
                     <div class="col-sm-6">
                        <div class="form-group">
                         <label for="brand">Product Brand(Opt)</label>
@@ -114,14 +107,13 @@
                     <div class="col-sm-6">
                      <div class="form-group">
                       <label for="brand">Remarks</label>
-                      <textarea rows="5" disabled placeholder="Product remarks" class="form-control" name="remarks" id="remarks">{{$product->prd_details}}</textarea>
+                      <textarea rows="5" disabled placeholder="Product remarks" class="form-control" name="remarks" id="remarks">{{$product->prd_remarks}}</textarea>
                     </div>
                   </div>
                   <div class="col-sm-6">
                     <div>
                       <label for="brand">Created At</label>
                       <input type="text" class="form-control" disabled value="{{date('d-M-y', strtotime($product->created_at))}}" name="">
-
                       <label for="brand">Last Updated At</label>
                       <input type="text" class="form-control" disabled value="{{date('d-M-y', strtotime($product->updated_at))}}" name="">
                     </div>

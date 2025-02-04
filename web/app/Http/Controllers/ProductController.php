@@ -107,17 +107,70 @@ class ProductController extends Controller
             'data' => $products,
             'totalPriceSum' => $totalPriceSum,
             'loadedTotalPriceSum' => $loadedTotalPriceSum,
+            'filteredData' => $data['products'],
+            'query' => $query,
         ]);
     }
     //get usage product list
     public function getUsageProductList(Request $request)
     {
         $data = $this->getProductList->fetchUsagePrdDate($request);
+
         if ($request->download_excel == 1) {
             return \Excel::download(new UsageOrderExport($data), date('d-m-Y') . '_usage_order.xlsx');
         }
-        $data['department'] = DepartmentModel::all();
-        return view('pages.product.product-usage-list', compact('data'));
+
+        $query = $data['products'];
+
+        // Initialize variables for server-side DataTables processing
+        $start = $request->input('start', 0); // Starting point for pagination
+        $length = $request->input('length', 10); // Number of records per page
+        $search = $request->input('search.value'); // Search query from DataTables
+        $orderColumn = $request->input('order.0.column'); // Column index for ordering
+        $orderDirection = $request->input('order.0.dir', 'desc'); // Sorting direction
+
+        $columnName = $this->getColumnNameForOrderingUsageProducts($orderColumn);
+
+        // Sorting the collection dynamically
+        $query = $query->sortBy(function ($product) use ($columnName) {
+            return data_get($product, $columnName); // Get nested or dot-notated properties
+        });
+
+        if ($orderDirection == 'desc') {
+            $query = $query->reverse();
+        }
+
+        // Get total records
+        $totalRecords = $query->count();
+        $filteredQuery = clone $query;
+        $recordsFiltered = $filteredQuery->count();
+
+        // Calculate the total price of all the products
+        $totalPriceSum = $query->sum('prd_price');
+        // // Apply search term if exists
+        if (!empty($search)) {
+            $query = $query->filter(function ($item) use ($search) {
+                return Str::contains(strtolower($item->prd_name), strtolower($search)) ||
+                    Str::contains(strtolower($item->prd_unit), strtolower($search)) ||
+                    Str::contains(strtolower($item->dept), strtolower($search)) ||
+                    Str::contains(strtolower($item->prd_qty), strtolower($search));
+            });
+        }
+
+        $products = $query->slice($start, $length)->values();
+
+        // Calculate the total price sum of the loaded pages
+        $loadedTotalPriceSum = $products->sum('prd_price');
+
+        // Return the results in suitable format for DataTables
+        return response()->json([
+            'draw' => $request->input('draw'),
+            'recordsTotal' => $totalRecords,
+            'recordsFiltered' => $recordsFiltered,
+            'data' => $products,
+            'totalPriceSum' => $totalPriceSum,
+            'loadedTotalPriceSum' => $loadedTotalPriceSum,
+        ]);
     }
     // Export as excel or csv
     public function export(Request $request)
@@ -163,6 +216,7 @@ class ProductController extends Controller
         $data['department'] = DepartmentModel::all();
         return view('pages.product.usage-multi-product', compact('data'));
     }
+
     public function getMultiUsageProduct()
     {
         $data['productsname'] = DB::table('prd_stock as S')
@@ -171,6 +225,7 @@ class ProductController extends Controller
             ->orderBy('N.pk_no', 'DESC')
             ->get();
         $data['department'] = DepartmentModel::all();
+
         return view('pages.product.usage-multi-product', compact('data'));
     }
     //get product unit
@@ -203,22 +258,36 @@ class ProductController extends Controller
             return response()->json([
                 "html" => $editPage,
                 'data' => $data,
-                "message" => "THis is message",
             ]);
         }
 
         return view('pages.product.edit-product', compact('data'));
     }
     //get edit usage product
-    public function getEditUsageProduct($prdId)
-    {
-        $data['products'] = DB::table('prd_usage')->where('pk_no', $prdId)->first();
-        $data['department'] = DepartmentModel::all();
-        $data['prdnames'] = DB::table('prd_stock as S')
-            ->leftJoin('prd_name as N', 'N.pk_no', '=', 'S.prd_id')
-            ->select('N.prd_name', 'N.pk_no')
-            ->orderBy('N.pk_no', 'DESC')
-            ->get();
+    public function getEditUsageProduct($prdId, Request $request)
+    {   
+        $product = DB::table('prd_usage')->where('pk_no', $prdId)->first();
+        $departments = DepartmentModel::all();
+        $prdnames = DB::table('prd_stock as S')
+                ->leftJoin('prd_name as N', 'N.pk_no', '=', 'S.prd_id')
+                ->select('N.prd_name', 'N.pk_no')
+                ->orderBy('N.pk_no', 'DESC')
+                ->get();
+        
+        $data = [
+            'product' => $product,
+            'departments' => $departments,
+            'prdnames' => $prdnames,
+        ];
+
+        if ($request->ajax()) {
+            $editPage = view('pages.product.edit-usage-product', compact('data'))->render();
+            return response()->json([
+                'html' => $editPage,
+                'data' => $data,
+            ]);
+        }
+
         return view('pages.product.edit-usage-product', compact('data'));
     }
     //get product unit and price for usage page
@@ -292,8 +361,22 @@ class ProductController extends Controller
     public function updateUsageProduct(UsageProductUpdateRequest $request, $id)
     {
         $resp = $this->prdusage->updateUsageProduct($request, $id);
+        $message = $resp['msg'];
+        $data = DB::table('prd_name')
+            ->where('pk_no', $resp['data']['prd_name_id'])
+            ->value('prd_name');
+        
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'msg' => $message,
+                'data' => $data,
+            ]);
+        }
+
         return redirect()->back()->with('msg', $resp);
     }
+
     //update product
     public function updateProduct(ProductUpdateRequest $request)
     {
@@ -333,9 +416,9 @@ class ProductController extends Controller
         $query = DB::table('prd_master')
         ->join('prd_stock', 'prd_stock.prd_id', '=', 'prd_master.prd_id')
         ->select(
-            DB::raw("ROW_NUMBER() OVER(ORDER BY prd_master.created_at DESC) as sl"), // Fixed SL based on latest product purchase
-            'prd_master.*',
-            'prd_stock.prd_qty as stock')
+            DB::raw("ROW_NUMBER() OVER(ORDER BY prd_master.pk_no DESC) as sl"), // Fixed SL based on latest product purchase
+                'prd_master.*',
+                'prd_stock.prd_qty as stock')
         ->orderBy($this->getColumnNameForOrderingPurchaseProducts($orderColumn), $orderDirection); // Dynamic sorting for all columns
 
         // get total records
@@ -355,7 +438,6 @@ class ProductController extends Controller
         }
         // Apply Pagination
         $products = $query->offset($start)->limit($length)->get();
-
 
         // calculate the total price sum of the loaded page's products
         $loadedTotalPriceSum = $products->sum('prd_price');
@@ -396,19 +478,12 @@ class ProductController extends Controller
     //get get All Usage Product
     public function getAllUsageProduct()
     {
-        $data['products'] = DB::table('prd_usage')
-                ->join('prd_stock', 'prd_stock.prd_id', '=', 'prd_usage.prd_name_id')
-                ->select(
-                    'prd_usage.*',
-                    'prd_stock.prd_qty as stock')
-                ->orderBy('pk_no', 'DESC')->get();
-        $data['sum'] = $data['products']->sum('prd_price');
         $data['department'] = DepartmentModel::all();
         return view('pages.product.product-usage-list', compact('data'));
     }
 
-    // Get usage product list in DataTable format
-    public function getUsageProducts(Request $request)
+    // get purchase product list for in data table format
+    public function getUsageProductsList(Request $request)
     {
         // Initialize variables for server-side DataTables processing
         $start = $request->input('start', 0); // Starting point for pagination
@@ -417,15 +492,15 @@ class ProductController extends Controller
         $orderColumn = $request->input('order.0.column'); // Column index for ordering
         $orderDirection = $request->input('order.0.dir', 'asc'); // Sorting direction
 
-        $query =DB::table('prd_usage')
-                    ->join('prd_stock', 'prd_stock.prd_id', '=', 'prd_usage.prd_name_id')
-                    ->select(
-                        DB::raw("ROW_NUMBER() OVER(ORDER BY prd_usage.created_at DESC) as sl"), // Fixed SL based on Latest product usage
-                        'prd_usage.*',
-                        'prd_stock.prd_qty as stock')
-                    ->orderBy($this->getColumnNameForOrderingUsageProducts($orderColumn), $orderDirection);
-                
-        // get total records 
+        $query = DB::table('prd_usage')
+            ->join('prd_stock', 'prd_stock.prd_id', '=', 'prd_usage.prd_name_id')
+            ->select(
+                DB::raw("ROW_NUMBER() OVER(ORDER BY prd_usage.pk_no DESC) as sl"), // Fixed SL based on latest product purchase
+                'prd_usage.*',
+                'prd_stock.prd_qty as stock')
+            ->orderBy($this->getColumnNameForOrderingUsageProducts($orderColumn), $orderDirection); // Dynamic sorting for all columns
+
+        // get total records
         $totalRecords = $query->count();
         $filteredQuery = clone $query;
         $recordsFiltered = $filteredQuery->count();
@@ -435,18 +510,19 @@ class ProductController extends Controller
         if (!empty($search)) {
             $query->where(function ($query) use ($search) {
                 $query->where('prd_usage.prd_name', 'like', "%{$search}%")
-                ->orWhere('prd_usage.dept', 'like', "%{$search}%")
+                ->orWhere('prd_usage.prd_req_dep', 'like', "%{$search}%")
                 ->orWhere('prd_usage.prd_qty', 'like', "%{$search}%")
                 ->orWhere('prd_usage.prd_unit', 'like', "%{$search}%");
             });
         }
-        // Apply pagination
+        // Apply Pagination
+        
         $products = $query->offset($start)->limit($length)->get();
 
-        // Calculate the total price sum of the loaded page's products
+        // calculate the total price sum of the loaded page's products
         $loadedTotalPriceSum = $products->sum('prd_price');
 
-        // Return the results in suitable format for DataTable
+        // Return the results in suitable format for DataTables
         return response()->json([
             'draw' => $request->input('draw'),
             'recordsTotal' => $totalRecords,
@@ -456,6 +532,7 @@ class ProductController extends Controller
             'loadedTotalPriceSum' => $loadedTotalPriceSum,
         ]);
     }
+
 
     // Helper function to map all the column indexes to actual column names
     private function getColumnNameForOrderingUsageProducts($columnIndex) {
@@ -467,13 +544,14 @@ class ProductController extends Controller
             'prd_usage.prd_qty',
             'prd_usage.prd_unit',
             'prd_usage.prd_qty_price',
+            'prd_usage.prd_price',
             'prd_usage.prd_grand_price',
-            'prd_usage.takendate',
+            'prd_usage.taken_date',
             'prd_usage.created_at',
             'prd_stock.prd_qty',
         ];
 
-        return $columns;
+        return $columns[$columnIndex] ?? 'prd_usage.created_at';
     }
 
     //get live stock
@@ -500,6 +578,19 @@ class ProductController extends Controller
 
         if ($request->ajax()) {
             return view('pages.product.view-product', compact('data'))->render();
+        }
+
+        return view('pages.product.view-product', compact('data'));
+    }
+    
+    // View Usage product
+    public function viewUsageProduct(Request $request, $prdId)
+    {
+        $data['products'] = DB::table('prd_usage')->where('pk_no', $prdId)->first();
+        $data['prdnames'] = DB::table('prd_name')->get();
+
+        if ($request->ajax()) {
+            return view('pages.product.view-usage-product', compact('data'))->render();
         }
 
         return view('pages.product.view-product', compact('data'));
@@ -603,9 +694,17 @@ class ProductController extends Controller
         ], 200);
     }
     //delete usage product
-    public function deleteUsageProduct($prdid)
+    public function deleteUsageProduct(Request $request,$prdid)
     {
         $resp = $this->prdusage->DeleteProduct($prdid);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'msg' => $resp,
+                'status' => 'success',
+            ]);
+        }
+
         return redirect()->back()->with('msg', $resp);
     }
     //delete product
